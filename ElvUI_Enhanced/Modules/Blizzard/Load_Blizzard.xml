@@ -1,0 +1,14 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="Blizzard.lua"/>
+	<Script file="DeathRecap.lua"/>
+	<Script file="TakeAllMail.lua"/>
+	<Script file="DressUpFrame.lua"/>
+	<Script file="BetterSearchBox.lua"/>
+	<Script file="AnimatedAchievementsBars.lua"/>
+	<Script file="ErrorFrame.lua"/>
+
+	<Include file="TimerTracker.xml"/>
+	<Script file="TimerTracker.lua"/>
+
+	<Script file="Modelframes.lua"/>
+</Ui>

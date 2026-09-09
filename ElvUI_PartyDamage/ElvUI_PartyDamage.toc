@@ -1,0 +1,8 @@
+## Interface: 30300
+## Title: |cff1784d1E|r|cffe5e3e3lvUI|r |cff1784d1P|r|cffe5e3e3arty Damage|r
+## Notes: Displays incoming damage values and top damage source icons next to ElvUI party frames.
+## Author: User
+## Version: 1.0
+## RequiredDeps: ElvUI
+
+Core.lua
