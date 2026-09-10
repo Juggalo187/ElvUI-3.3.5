@@ -311,6 +311,7 @@ end
 
 -- mouse over the location panel
 local function LocPanel_OnEnter(self,...)
+	if not E.db.locplus.enable then return end
 	GameTooltip:SetOwner(self, "ANCHOR_BOTTOM", 0, -4)
 	GameTooltip:ClearAllPoints()
 	GameTooltip:SetPoint("BOTTOM", self, "BOTTOM", 0, 0)
@@ -362,6 +363,7 @@ end
 
 -- clicking the location panel
 local function LocPanel_OnClick(self, btn)
+	if not E.db.locplus.enable then return end
 	local zoneText = GetRealZoneText() or UNKNOWN
 	if btn == "LeftButton" then
 		if IsShiftKeyDown() then
@@ -585,6 +587,7 @@ function LPB:TransparentPanels()
 end
 
 function LPB:UpdateLocation()
+	if not E.db.locplus.enable then return end
 	local subZoneText = GetMinimapZoneText() or ""
 	local zoneText = GetRealZoneText() or UNKNOWN
 	local displayLine
@@ -643,6 +646,7 @@ function LPB:UpdateLocation()
 end
 
 function LPB:UpdateCoords()
+	if not E.db.locplus.enable then return end
 	local x, y = CreateCoords()
 	local xt,yt
 
@@ -732,6 +736,38 @@ function LPB:LocPlusDefaults()
 	end
 end
 
+function LPB:ToggleModule(enable)
+	if enable == nil then enable = E.db.locplus.enable end
+
+	if enable then
+		-- Show everything
+		LocationPlusPanel:Show()
+		XCoordsPanel:Show()
+		YCoordsPanel:Show()
+		self:TimerUpdate()
+		self:ScheduleRepeatingTimer("UpdateLocation", 0.5)
+		E:EnableMover("LocationMover")
+
+		if E.db.locplus.combat then
+			LocationPlusPanel:RegisterEvent("PLAYER_REGEN_DISABLED")
+			LocationPlusPanel:RegisterEvent("PLAYER_REGEN_ENABLED")
+		end
+	else
+		-- Hide everything
+		LocationPlusPanel:Hide()
+		XCoordsPanel:Hide()
+		YCoordsPanel:Hide()
+		LeftCoordDtPanel:Hide()
+		RightCoordDtPanel:Hide()
+
+		self:CancelAllTimers()          -- AceTimer-3.0
+		E:DisableMover("LocationMover")
+
+		LocationPlusPanel:UnregisterEvent("PLAYER_REGEN_DISABLED")
+		LocationPlusPanel:UnregisterEvent("PLAYER_REGEN_ENABLED")
+	end
+end
+
 function LPB:ToggleBlizZoneText()
 	if E.db.locplus.zonetext then
 		ZoneTextFrame:UnregisterAllEvents()
@@ -757,17 +793,25 @@ f:SetScript("OnEvent",function(self, event)
 end)
 
 function LPB:Initialize()
+	print("|cff33ffffLPB|r Initialize: start")
+	print("  E.EnableMover:", tostring(E.EnableMover))
+	print("  E.DisableMover:", tostring(E.DisableMover))
+	print("  LPB.AddOptions:", tostring(LPB.AddOptions))
+	print("  EP.RegisterPlugin:", tostring(EP and EP.RegisterPlugin))
 	self:LocPlusDefaults()
 	CreateLocPanel()
+	print("|cff33ffffLPB|r after CreateLocPanel")
 	CreateDTPanels()
 	CreateCoordPanels()
+	print("|cff33ffffLPB|r after panel creation")
 	self:LocPlusUpdate()
-	self:TimerUpdate()
+	print("|cff33ffffLPB|r after LocPlusUpdate")
 	self:ToggleBlizZoneText()
-	self:ScheduleRepeatingTimer("UpdateLocation", 0.5)
+	print("|cff33ffffLPB|r before RegisterPlugin")
 	EP:RegisterPlugin("ElvUI_LocPlus", LPB.AddOptions)
-	LocationPlusPanel:RegisterEvent("PLAYER_REGEN_DISABLED")
-	LocationPlusPanel:RegisterEvent("PLAYER_REGEN_ENABLED")
+	print("|cff33ffffLPB|r after RegisterPlugin")
+	self:ToggleModule(E.db.locplus.enable)
+	print("|cff33ffffLPB|r after ToggleModule")
 
 	if E.db.locplus.LoginMsg then
 		print(L["Location Plus "]..format("v|cff33ffff%s|r",LPB.version)..L[" is loaded. Thank you for using it."])

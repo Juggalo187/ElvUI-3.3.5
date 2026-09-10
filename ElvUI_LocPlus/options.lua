@@ -10,6 +10,7 @@ local COLOR, CLASS_COLORS, CUSTOM, COLOR_PICKER = COLOR, CLASS_COLORS, CUSTOM, C
 -- Defaults
 P["locplus"] = {
 -- Options
+	["enable"] = true,
 	["both"] = true,
 	["combat"] = false,
 	["timer"] = 0.5,
@@ -62,7 +63,7 @@ local LEVEL_ICON = "|TInterface\\AddOns\\ElvUI_LocPlus\\media\\levelup.tga:22:22
 
 function LPB:AddOptions()
 	E.Options.args.locplus = {
-		order = 9000,
+		order = 52,
 		type = "group",
 		name = L["Location Plus"],
 		args = {
@@ -87,6 +88,18 @@ function LPB:AddOptions()
 				name = L["General"],
 				guiInline = true,
 				args = {
+					enable = {
+							order = 0,
+							name = L["Enable"],
+							desc = L["Enable/Disable the Location Plus module."],
+							type = "toggle",
+							width = "full",
+							get = function(info) return E.db.locplus[ info[#info] ] end,
+							set = function(info, value)
+								E.db.locplus[ info[#info] ] = value
+								LPB:ToggleModule(value)
+							end,
+					},
 					LoginMsg = {
 							order = 1,
 							name = L["Login Message"],

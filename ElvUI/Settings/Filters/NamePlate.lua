@@ -36,6 +36,7 @@ G.nameplates.filters = {
 				enemyNPC = true
 			},
 			overHealthThreshold = 0.85,
+			notTarget = true,
 			healthThreshold = true
 		},
 		actions = {

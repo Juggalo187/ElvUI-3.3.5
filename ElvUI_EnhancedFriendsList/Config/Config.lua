@@ -7,7 +7,7 @@ end
 
 function EFL:InsertOptions()
 	E.Options.args.enhanceFriendsList = {
-		order = 54,
+		order = 51,
 		type = "group",
 		childGroups = "tab",
 		name = ColorizeSettingName(L["Enhanced Friends List"]),

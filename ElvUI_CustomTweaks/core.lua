@@ -106,7 +106,7 @@ end
 
 local function buildCategory(category, groupName)
 	E.Options.args.CustomTweaks.args[category] = {
-		order = 100,
+		order = 53,
 		type = "group",
 		name = groupName,
 		childGroups = "tab",
@@ -145,7 +145,7 @@ end
 
 function CT:ConfigTable()
 	E.Options.args.CustomTweaks = {
-		order = 100,
+		order = 53,
 		type = "group",
 		name = CT.Title,
 		args = {
