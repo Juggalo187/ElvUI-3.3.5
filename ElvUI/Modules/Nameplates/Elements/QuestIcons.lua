@@ -52,6 +52,28 @@ local function IsQuestIconsEnabled()
     return E.db.nameplates.questIcons and E.db.nameplates.questIcons.enable
 end
 
+local function AreQuestIconsAllowedHere()
+    if not IsQuestIconsEnabled() then return false end
+
+    local inInstance, instanceType = IsInInstance()
+    if not inInstance then
+        return true
+    end
+
+    -- Arenas and battlegrounds: always hidden.
+    if instanceType == "arena" or instanceType == "pvp" then
+        return false
+    end
+
+    -- Dungeons and raids: only if the user opted in.
+    if instanceType == "party" or instanceType == "raid" then
+        return E.db.nameplates.questIcons.showInInstances and true or false
+    end
+
+    -- Any other instance type: hide by default.
+    return false
+end
+
 -- Parse an objective line into a remaining count. Returns count, isPercent.
 -- Mirrors the newer version's CheckTextForQuest.
 local function CheckTextForQuest(text)
@@ -82,7 +104,7 @@ end
 local function GetQuests(unitID)
     if not unitID then return nil end
     if strfind(unitID, "pet") or UnitIsUnit(unitID, "pet") then return nil end
-    if IsInInstance() then return nil end
+    if not AreQuestIconsAllowedHere() then return nil end
 
     local unitName = UnitName(unitID)
     if not unitName then return nil end
@@ -235,6 +257,17 @@ end
 
 function NP:Update_QuestIcons(frame)
     if not frame or not frame.UnitType then return end
+	
+	if not AreQuestIconsAllowedHere() then
+        if questIconOverlay[frame] then
+            for _, data in ipairs(questIconOverlay[frame]) do
+                data.icon:Hide()
+                data.text:Hide()
+            end
+        end
+        frameQuestData[frame] = nil
+        return
+    end
 
     if not IsQuestIconsEnabled() then
         if questIconOverlay[frame] then
@@ -331,7 +364,7 @@ function NP:PositionQuestIcons(frame)
     local QuestList = frameQuestData[frame]
     local db = E.db.nameplates.questIcons
 
-    if not QuestList or #QuestList == 0 or not db or not db.enable then
+    if not QuestList or #QuestList == 0 or not db or not db.enable or not AreQuestIconsAllowedHere() then
         for _, data in ipairs(dataList) do
             data.icon:Hide()
             data.text:Hide()

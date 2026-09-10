@@ -3338,7 +3338,7 @@ local function GetUnitSettings(unit, name)
 				}
 			}
 		}
-				group.args.iconFrame = {
+		group.args.iconFrame = {
 			order = 8,
 			type = "group",
 			name = L["Icon Frame"],
@@ -3396,7 +3396,6 @@ local function GetUnitSettings(unit, name)
 				}
 			}
 		}
-
 	end
 
 	ORDER = ORDER + 2
@@ -3740,143 +3739,6 @@ E.Options.args.nameplate = {
 											max = 75,
 											step = 1
 										}
-									}
-								}
-							}
-						},
-						loadDistance = {
-							order = 53,
-							type = "group",
-							childGroups = "tabs",
-							name = "Load Distance",
-							get = function(info)
-								return E.db.nameplates.loadDistance
-							end,
-							set = function(info, value)
-							E.db.nameplates.loadDistance = value
-							NP:UpdateCVars()
-							end,
-						args = {
-							distance = {
-							order = 1,
-							type = "range",
-							name = "Distance",
-							desc = "Only load nameplates for units within this range.",
-							min = 5,
-							max = 200,
-							step = 1
-								}
-							}
-						},
-						questIcons = {
-							order = 54,
-							type = "group",
-							name = "Quest Icons",
-							disabled = function() 
-								return false
-							end,
-							get = function(info)
-								return E.db.nameplates.questIcons[info[#info]]
-							end,
-							set = function(info, value)
-								E.db.nameplates.questIcons[info[#info]] = value
-								NP:ConfigureAll()
-								if C_NamePlate and C_NamePlate.GetNamePlateForUnit then
-									NP:RefreshAllQuestIcons()
-								end
-							end,
-							args = {
-								 status = {
-									order = 0.5,
-									type = "description",
-									name = function()
-										if C_NamePlate and C_NamePlate.GetNamePlateForUnit then
-											return "|cFF00FF00 API Available|r"
-										else
-											return "|cFFFF0000 API NOT AVAILABLE|r\nRequires AwesomeWotLK patch for C_NamePlate API."
-										end
-									end,
-									fontSize = "medium"
-								},
-								header = {
-									order = 1,
-									type = "header",
-									name = "Quest Icons"
-								},
-								enable = {
-									order = 2,
-									type = "toggle",
-									name = L["Enable"],
-									desc = "Show quest icons on nameplates for kill/collect objectives.",
-									disabled = function() return false end
-								},
-								showInInstances = {
-									order = 2.5,
-									type = "toggle",
-									name = "Show in Instances",
-									desc = "Show quest icons while inside dungeons and raids. Arenas and battlegrounds always hide quest icons.",
-									disabled = function()
-										return not E.db.nameplates.questIcons.enable
-									end
-								},
-								size = {
-									order = 3,
-									type = "range",
-									name = L["Size"],
-									min = 8, max = 40, step = 1,
-								},
-								spacing = {
-									order = 4,
-									type = "range",
-									name = L["Spacing"],
-									min = 0, max = 10, step = 1,
-								},
-								position = {
-									order = 5,
-									type = "select",
-									name = L["Position"],
-									values = {
-										["CENTER"] = "Center (Above Name)",
-										["LEFT"] = "Left of Health Bar",
-										["RIGHT"] = "Right of Health Bar"
-									}
-								},
-								xOffset = {
-									order = 6,
-									name = L["X-Offset"],
-									type = "range",
-									min = -100, max = 100, step = 1
-								},
-								yOffset = {
-									order = 7,
-									name = L["Y-Offset"],
-									type = "range",
-									min = -100, max = 100, step = 1
-								},
-								killIcon = {
-									order = 8,
-									type = "select",
-									name = "Kill Icon",
-									desc = "Icon to display for kill quests.",
-									values = {
-										["SKULL"] = "Skull",
-										["SWORD"] = "Sword",
-										["CROSS"] = "Cross",
-										["DIAMOND"] = "Diamond",
-										["STAR"] = "Star"
-									}
-								},
-								collectIcon = {
-									order = 9,
-									type = "select",
-									name = "Collect Icon",
-									desc = "Icon to display for collect quests.",
-									values = {
-										["BAG"] = "Bag",
-										["GEM"] = "Gem",
-										["COIN"] = "Coin",
-										["FLOWER"] = "Flower",
-										["CHEST"] = "Chest"
 									}
 								}
 							}

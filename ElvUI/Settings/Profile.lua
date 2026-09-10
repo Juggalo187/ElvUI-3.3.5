@@ -322,6 +322,7 @@ P.nameplates = {
 	
 	questIcons = {
 		enable = false,
+		showInInstances = false,
 		size = 15,
 		spacing = 2,
 		position = "RIGHT",
