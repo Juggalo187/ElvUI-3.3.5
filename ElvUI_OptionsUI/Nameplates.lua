@@ -3773,7 +3773,7 @@ E.Options.args.nameplate = {
 							type = "group",
 							name = "Quest Icons",
 							disabled = function() 
-								return not (C_NamePlate and C_NamePlate.GetNamePlateForUnit)
+								return false
 							end,
 							get = function(info)
 								return E.db.nameplates.questIcons[info[#info]]
@@ -3808,7 +3808,7 @@ E.Options.args.nameplate = {
 									type = "toggle",
 									name = L["Enable"],
 									desc = "Show quest icons on nameplates for kill/collect objectives.",
-									disabled = function() return not (C_NamePlate and C_NamePlate.GetNamePlateForUnit) end
+									disabled = function() return false end
 								},
 								size = {
 									order = 3,
