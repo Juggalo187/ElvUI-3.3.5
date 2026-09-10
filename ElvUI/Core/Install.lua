@@ -209,7 +209,29 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		--Shared base layout, tweaks to individual layouts will be below
 		E:ResetMovers("")
 		if not E.db.movers then E.db.movers = {} end
-
+		if not E.db.enhanced then E.db.enhanced = {} end
+		if not E.db.enhanced.nameplates then E.db.enhanced.nameplates = {} end
+		
+		if not E.db.nameplates then E.db.nameplates = {} end
+		if not E.db.nameplates.units then E.db.nameplates.units = {} end
+		if not E.db.nameplates.units.ENEMY_NPC then E.db.nameplates.units.ENEMY_NPC = {} end
+		if not E.db.nameplates.units.ENEMY_NPC.health then E.db.nameplates.units.ENEMY_NPC.health = {} end
+		if not E.db.nameplates.units.ENEMY_NPC.health.text then E.db.nameplates.units.ENEMY_NPC.health.text = {} end
+		if not E.db.nameplates.units.ENEMY_NPC.iconFrame then E.db.nameplates.units.ENEMY_NPC.iconFrame = {} end
+		if not E.db.nameplates.units.ENEMY_NPC.questIcons then E.db.nameplates.units.ENEMY_NPC.questIcons = {} end
+		if not E.db.nameplates.filters then E.db.nameplates.filters = {} end
+		if not E.db.nameplates.filters.test then E.db.nameplates.filters.test = {} end
+		if not E.db.nameplates.filters.test.triggers then E.db.nameplates.filters.test.triggers = {} end
+		
+		if not E.db.nameplates.filters.nme then E.db.nameplates.filters.nme = {} end
+		if not E.db.nameplates.filters.nme.triggers then E.db.nameplates.filters.nme.triggers = {} end
+		if not E.db.nameplates.filters.nme.triggers.nameplateType then E.db.nameplates.filters.nme.triggers.nameplateType = {} end
+		if not E.db.nameplates.filters.nme.actions then E.db.nameplates.filters.nme.actions = {} end
+		E.db.nameplates.filters.test.triggers.enable = false
+		E.db.nameplates.filters.nme.triggers.enable = false
+		E.db.actionbar.microbar.enabled = true
+		E.db.movers.MicrobarMover = "TOPLEFT,ElvUIParent,TOPLEFT,4,-4"
+		
 		--ActionBars
 		E.db.actionbar.backdropSpacingConverted = true
 		E.db.actionbar.bar1.buttons = 8
@@ -230,6 +252,13 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		E.db.actionbar.bar5.enabled = false
 		E.db.actionbar.bar5.visibility = "[vehicleui] hide; show"
 		E.db.actionbar.bar6.visibility = "[vehicleui] hide; show"
+		
+		E.db.actionbar.bar7.enabled = false
+		E.db.actionbar.bar8.enabled = false
+		E.db.actionbar.bar9.enabled = false
+		E.db.actionbar.bar10.enabled = false
+		
+		
 		--Auras
 		E.db.auras.buffs.countFontSize = 10
 		E.db.auras.buffs.size = 40
@@ -395,7 +424,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			--Raid40
 		E.db.unitframe.units.raid40.enable = false
 		E.db.unitframe.units.raid40.rdebuffs.font = "PT Sans Narrow"
-
+		E.db.nameplates.filters.nme.triggers.enable = false
 		--[[
 		--	Layout Tweaks will be handled below.
 		--	These are changes that deviate from the shared base layout
@@ -410,47 +439,23 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.movers.ElvUF_RaidMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,202,373"
 			E.db.movers.LootFrameMover = "TOPLEFT,ElvUIParent,TOPLEFT,250,-104"
 			E.db.movers.ShiftAB = "TOPLEFT,ElvUIParent,BOTTOMLEFT,4,273"
-			E.db.unitframe.units.party.enable = false
+			--E.db.unitframe.units.party.enable = false
 			E.db.unitframe.units.party.health.frequentUpdates = true
 			E.db.unitframe.units.raid.visibility = "[nogroup] hide;show"
 			E.db.unitframe.units.raid40.health.frequentUpdates = true
 		elseif layout == "skulytheme" then
 			-- ============================================
-			-- SKULYTHEME LAYOUT (Exported from working profile)
+			-- SKULYTHEME LAYOUT
 			-- ============================================
-			
-			-- ENSURE ALL PARENT TABLES EXIST FIRST
-			if not E.db.enhanced then E.db.enhanced = {} end
-			if not E.db.enhanced.nameplates then E.db.enhanced.nameplates = {} end
-			
-			if not E.db.nameplates then E.db.nameplates = {} end
-			if not E.db.nameplates.units then E.db.nameplates.units = {} end
-			if not E.db.nameplates.units.ENEMY_NPC then E.db.nameplates.units.ENEMY_NPC = {} end
-			if not E.db.nameplates.units.ENEMY_NPC.health then E.db.nameplates.units.ENEMY_NPC.health = {} end
-			if not E.db.nameplates.units.ENEMY_NPC.health.text then E.db.nameplates.units.ENEMY_NPC.health.text = {} end
-			if not E.db.nameplates.units.ENEMY_NPC.iconFrame then E.db.nameplates.units.ENEMY_NPC.iconFrame = {} end
-			if not E.db.nameplates.units.ENEMY_NPC.questIcons then E.db.nameplates.units.ENEMY_NPC.questIcons = {} end
-			if not E.db.nameplates.filters then E.db.nameplates.filters = {} end
-			if not E.db.nameplates.filters.test then E.db.nameplates.filters.test = {} end
-			if not E.db.nameplates.filters.test.triggers then E.db.nameplates.filters.test.triggers = {} end
-			
-			if not E.db.nameplates.filters.nme then E.db.nameplates.filters.nme = {} end
-			if not E.db.nameplates.filters.nme.triggers then E.db.nameplates.filters.nme.triggers = {} end
-			if not E.db.nameplates.filters.nme.triggers.nameplateType then E.db.nameplates.filters.nme.triggers.nameplateType = {} end
-			if not E.db.nameplates.filters.nme.actions then E.db.nameplates.filters.nme.actions = {} end
-			
-			E.db.nameplates.filters.test.triggers.enable = false
+
 			E.db.nameplates.filters.nme.triggers.enable = true
-			
 			E.db.nameplates.filters.nme.triggers.nameplateType.enable = true
-			E.global.nameplates.filters.nme.triggers.notTarget = true
+			E.db.nameplates.filters.nme.triggers.notTarget = true
 			E.db.nameplates.filters.nme.triggers.nameplateType.enemyNPC = true
 			E.db.nameplates.filters.nme.triggers.healthThreshold = true
 			E.db.nameplates.filters.nme.triggers.overHealthThreshold = 0.85
 			
 			E.db.nameplates.filters.nme.actions.nameOnly = true
-			E.global.nameplates.filters.nme.actions.nameOnly = true
-			
 			
 			-- DATABARS
 			E.db.databars.reputation.enable = true
@@ -625,9 +630,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.unitframe.units.target.health.attachTextTo = "Health"
 			E.db.unitframe.units.target.health.position = "CENTER"
 			E.db.unitframe.units.target.health.frequentUpdates = true
-			
-			
-			
+
 			-- UNITFRAME - ARENA
 			E.db.unitframe.units.arena.health.frequentUpdates = true
 			
@@ -749,8 +752,6 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.actionbar.bar7.buttonsize = 25
 			E.db.actionbar.bar7.visibility = "[vehicleui] hide;show"
 			
-			E.db.actionbar.microbar.enabled = true
-			
 			E.db.actionbar.backdropSpacingConverted = true
 			
 			-- LAYOUT SET
@@ -803,7 +804,6 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.movers.AlertFrameMover = "TOP,ElvUIParent,TOP,-1,-18"
 			E.db.movers.ElvUF_TargetTargetMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-410,444"
 			E.db.movers.ElvUF_TargetCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,424"
-			E.db.movers.MicrobarMover = "TOPLEFT,ElvUIParent,TOPLEFT,4,-4"
 			E.db.movers.ShiftAB = "TOPLEFT,ElvUIParent,BOTTOMLEFT,22,1043"
 			
 		end

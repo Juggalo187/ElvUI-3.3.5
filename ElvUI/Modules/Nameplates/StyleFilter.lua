@@ -830,9 +830,22 @@ function mod:StyleFilterUpdate(frame, event)
 	mod:StyleFilterClear(frame)
 
 	for filterNum in ipairs(mod.StyleFilterTriggerList) do
-		local filter = E.global.nameplates.filters[mod.StyleFilterTriggerList[filterNum][1]]
-		if filter then
-			mod:StyleFilterConditionCheck(frame, filter, filter.triggers)
+		local filterName = mod.StyleFilterTriggerList[filterNum][1]
+		local globalFilter = E.global.nameplates.filters[filterName]
+		if globalFilter then
+			-- Prefer the profile-scoped actions table if it exists,
+			-- otherwise fall back to the global actions table.
+			local profileFilter = E.db.nameplates and E.db.nameplates.filters and E.db.nameplates.filters[filterName]
+			local actions = (profileFilter and profileFilter.actions) or globalFilter.actions
+
+			-- Build a shallow resolved filter so the condition check uses
+			-- global triggers but profile actions.
+			local resolved = {
+				triggers = globalFilter.triggers,
+				actions  = actions,
+			}
+
+			mod:StyleFilterConditionCheck(frame, resolved, resolved.triggers)
 		end
 	end
 end
@@ -895,7 +908,13 @@ function mod:StyleFilterCopyDefaults(tbl)
 end
 
 function mod:StyleFilterInitialize()
-	for _, filterTable in pairs(E.global.nameplates.filters) do
+	E.db.nameplates.filters = E.db.nameplates.filters or {}
+	for filterName, filterTable in pairs(E.global.nameplates.filters) do
 		mod:StyleFilterCopyDefaults(filterTable)
+
+		E.db.nameplates.filters[filterName] = E.db.nameplates.filters[filterName] or {}
+		local profileFilter = E.db.nameplates.filters[filterName]
+		profileFilter.actions = profileFilter.actions or {}
+		copyDefaults(profileFilter.actions, filterTable.actions)
 	end
 end
