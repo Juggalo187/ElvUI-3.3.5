@@ -229,6 +229,13 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		if not E.db.nameplates.filters.nme.actions then E.db.nameplates.filters.nme.actions = {} end
 		E.db.nameplates.filters.test.triggers.enable = false
 		E.db.nameplates.filters.nme.triggers.enable = false
+		E.db.nameplates.filters.nme.triggers.nameplateType.enable = false
+		E.db.nameplates.filters.nme.triggers.notTarget = false
+		E.db.nameplates.filters.nme.triggers.nameplateType.enemyNPC = false
+		E.db.nameplates.filters.nme.triggers.healthThreshold = false
+			
+			E.db.nameplates.filters.nme.actions.nameOnly = true
+		
 		E.db.actionbar.microbar.enabled = true
 		E.db.movers.MicrobarMover = "TOPLEFT,ElvUIParent,TOPLEFT,4,-4"
 		
@@ -450,8 +457,8 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 
 			E.db.nameplates.filters.nme.triggers.enable = true
 			E.db.nameplates.filters.nme.triggers.nameplateType.enable = true
-			E.db.nameplates.filters.nme.triggers.notTarget = true
 			E.db.nameplates.filters.nme.triggers.nameplateType.enemyNPC = true
+			E.db.nameplates.filters.nme.triggers.notTarget = true
 			E.db.nameplates.filters.nme.triggers.healthThreshold = true
 			E.db.nameplates.filters.nme.triggers.overHealthThreshold = 0.85
 			
@@ -805,8 +812,12 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.movers.ElvUF_TargetTargetMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-410,444"
 			E.db.movers.ElvUF_TargetCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,424"
 			E.db.movers.ShiftAB = "TOPLEFT,ElvUIParent,BOTTOMLEFT,22,1043"
-			
+			local NP = E:GetModule("NamePlates")
+			if NP and NP.StyleFilterConfigure then
+				NP:StyleFilterConfigure()
+			end
 		end
+		
 	end
 
 	E:UpdateAll(true)
