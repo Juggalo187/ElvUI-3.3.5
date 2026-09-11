@@ -11,21 +11,6 @@ if not string.find(string.lower(E.myrealm), "rogue-lite", 1, true) then
 S:AddCallback("Skin_DressingRoom", function()
 	if not E.private.skins.blizzard.enable or not E.private.skins.blizzard.dressingroom then return end
 
-	-- Ebonhold: this skin is OFF on this client, on purpose -- same reason as
-	-- Skin_Character (see Character.lua for the long version).
-	--
-	-- patch-D replaces Interface\FrameXML\DressUpFrame.xml outright: 14 widgets in the stock file, 6 in patch-D's (12 dropped),
-	-- i.e. a stripped-down dressing room, not a tweak of the Blizzard one. Everything
-	-- below re-anchors widgets by offsets measured against the STOCK 3.3.5
-	-- layout, so letting it run rearranges a frame it was never written for.
-	--
-	-- It used to abort early on a missing widget, which hid this; guarding
-	-- those lookups removed the error and the accidental protection with it.
-	--
-	-- Delete this return to re-enable; the no-edit equivalent is unticking
-	-- /ec -> Skins -> Blizzard -> dressingroom.
-	do return end
-
 	DressUpFrame:StripTextures()
 	DressUpFrame:CreateBackdrop("Transparent")
 	DressUpFrame.backdrop:Point("TOPLEFT", 11, -12)

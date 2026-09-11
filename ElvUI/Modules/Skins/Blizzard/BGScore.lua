@@ -13,21 +13,6 @@ if not string.find(string.lower(E.myrealm), "rogue-lite", 1, true) then
 S:AddCallback("Skin_WorldStateScore", function()
 	if not E.private.skins.blizzard.enable or not E.private.skins.blizzard.bgscore then return end
 
-	-- Ebonhold: this skin is OFF on this client, on purpose -- same reason as
-	-- Skin_Character (see Character.lua for the long version).
-	--
-	-- patch-D replaces Interface\FrameXML\WorldStateFrame.xml outright: 124 stock, 182 in patch-D's (24 dropped, 82 added),
-	-- i.e. a largely custom battleground scoreboard, not a tweak of the Blizzard one. Everything
-	-- below re-anchors widgets by offsets measured against the STOCK 3.3.5
-	-- layout, so letting it run rearranges a frame it was never written for.
-	--
-	-- It used to abort early on a missing widget, which hid this; guarding
-	-- those lookups removed the error and the accidental protection with it.
-	--
-	-- Delete this return to re-enable; the no-edit equivalent is unticking
-	-- /ec -> Skins -> Blizzard -> bgscore.
-	do return end
-
 	WorldStateScoreFrame:StripTextures()
 	WorldStateScoreFrame:CreateBackdrop("Transparent")
 	WorldStateScoreFrame.backdrop:Point("TOPLEFT", 10, -15)

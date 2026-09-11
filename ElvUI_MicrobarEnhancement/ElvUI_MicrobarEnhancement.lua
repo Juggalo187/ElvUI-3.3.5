@@ -149,15 +149,17 @@ function AB:UpdateMicroPositionDimensions()
 
 	for button in pairs(MICRO_BUTTONS) do
 		local b = _G[button]
+		if b then
+			local alpha = AB.db.microbar.symbolic and 0 or 1
+			local normal    = b:GetNormalTexture()
+			local pushed    = b:GetPushedTexture()
+			local disabled  = b:GetDisabledTexture()
+			local highlight = b:GetHighlightTexture()
 
-		if AB.db.microbar.symbolic then
-			b:DisableDrawLayer("ARTWORK")
-			b:DisableDrawLayer("OVERLAY")
-			b:EnableDrawLayer("BORDER")
-		else
-			b:EnableDrawLayer("ARTWORK")
-			b:EnableDrawLayer("OVERLAY")
-			b:DisableDrawLayer("BORDER")
+			if normal    then normal:SetAlpha(alpha)    end
+			if pushed    then pushed:SetAlpha(alpha)    end
+			if disabled  then disabled:SetAlpha(alpha)  end
+			if highlight then highlight:SetAlpha(alpha) end
 		end
 	end
 

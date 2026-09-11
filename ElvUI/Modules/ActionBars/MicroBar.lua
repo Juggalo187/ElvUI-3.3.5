@@ -21,6 +21,8 @@ local MICRO_BUTTONS = {
 	"LFDMicroButton",
 	"MainMenuMicroButton",
 	"HelpMicroButton",
+	"SoloCollectionsCollectionsMicroButton",
+	"SoloCollectionsTransmogMicroButton",
 }
 
 do

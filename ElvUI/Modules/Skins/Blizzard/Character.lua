@@ -30,28 +30,6 @@ local NUM_GEARSET_ICONS_PER_ROW = NUM_GEARSET_ICONS_PER_ROW
 if not string.find(string.lower(E.myrealm), "rogue-lite", 1, true) then
 S:AddCallback("Skin_Character", function()
 	if not E.private.skins.blizzard.enable or not E.private.skins.blizzard.character then return end
-
-	-- Ebonhold: this skin is OFF on this client, on purpose.
-	--
-	-- patch-D does not merely tweak the character frame -- it replaces
-	-- Interface\FrameXML\{CharacterFrame,PaperDollFrame,PetPaperDollFrame,
-	-- SkillFrame,ReputationFrame}.xml wholesale with a custom, retail-style
-	-- paperdoll (Item Level / Base Stats / Melee panels down the right, its own
-	-- slot layout, its own tabs). Everything below repositions and re-anchors
-	-- widgets by hardcoded offsets derived from the STOCK 3.3.5 layout, so
-	-- running it against the custom frame scatters the equipment slots and
-	-- overlaps the tabs.
-	--
-	-- Until now this was hidden: the skin threw on the first missing widget
-	-- (CharacterFrameCloseButton) and aborted before it could reposition much,
-	-- so the nil-error was accidentally acting as a shield. Guarding those
-	-- lookups removed the error AND the shield, and the frame came out
-	-- visibly wrecked -- which is what this early return fixes.
-	--
-	-- Delete this return to re-enable it; the equivalent without touching the
-	-- file is unticking /ec -> Skins -> Blizzard -> Character.
-	do return end
-
 	-- CharacterFrame
 	CharacterFrame:StripTextures(true)
 	CharacterFrame:CreateBackdrop("Transparent")

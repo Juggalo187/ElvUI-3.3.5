@@ -12,21 +12,6 @@ local MAX_SKILLLINE_TABS = MAX_SKILLLINE_TABS
 S:AddCallback("Skin_Spellbook", function()
 	if not E.private.skins.blizzard.enable or not E.private.skins.blizzard.spellbook then return end
 
-	-- Ebonhold: this skin is OFF on this client, on purpose -- same reason as
-	-- Skin_Character (see Character.lua for the long version).
-	--
-	-- patch-D replaces Interface\FrameXML\SpellBookFrame.xml outright: 56 widgets in the stock file, 157 in patch-D's (109 added),
-	-- i.e. a fully redesigned spellbook, not a tweak of the Blizzard one. Everything
-	-- below re-anchors widgets by offsets measured against the STOCK 3.3.5
-	-- layout, so letting it run rearranges a frame it was never written for.
-	--
-	-- It used to abort early on a missing widget, which hid this; guarding
-	-- those lookups removed the error and the accidental protection with it.
-	--
-	-- Delete this return to re-enable; the no-edit equivalent is unticking
-	-- /ec -> Skins -> Blizzard -> spellbook.
-	do return end
-
 	SpellBookFrame:StripTextures(true)
 	SpellBookFrame:CreateBackdrop("Transparent")
 	SpellBookFrame.backdrop:Point("TOPLEFT", 11, -12)
