@@ -27,9 +27,12 @@ local NUM_COMPANIONS_PER_PAGE = NUM_COMPANIONS_PER_PAGE
 local NUM_FACTIONS_DISPLAYED = NUM_FACTIONS_DISPLAYED
 local NUM_GEARSET_ICONS_PER_ROW = NUM_GEARSET_ICONS_PER_ROW
 
-if not string.find(string.lower(E.myrealm), "rogue-lite", 1, true) then
+
 S:AddCallback("Skin_Character", function()
 	if not E.private.skins.blizzard.enable or not E.private.skins.blizzard.character then return end
+	if string.find(string.lower(E.myrealm), "rogue-lite", 1, true) then
+		do return end
+	end
 	-- CharacterFrame
 	CharacterFrame:StripTextures(true)
 	CharacterFrame:CreateBackdrop("Transparent")
@@ -804,4 +807,3 @@ S:AddCallback("Skin_Character", function()
 
 	TokenFramePopup:Point("TOPLEFT", TokenFrame, "TOPRIGHT", -33, -12)
 end)
-end

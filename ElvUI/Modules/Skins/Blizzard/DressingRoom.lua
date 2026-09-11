@@ -11,6 +11,10 @@ if not string.find(string.lower(E.myrealm), "rogue-lite", 1, true) then
 S:AddCallback("Skin_DressingRoom", function()
 	if not E.private.skins.blizzard.enable or not E.private.skins.blizzard.dressingroom then return end
 
+	if string.find(string.lower(E.myrealm), "rogue-lite", 1, true) then
+		do return end
+	end
+
 	DressUpFrame:StripTextures()
 	DressUpFrame:CreateBackdrop("Transparent")
 	DressUpFrame.backdrop:Point("TOPLEFT", 11, -12)

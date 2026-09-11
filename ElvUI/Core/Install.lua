@@ -811,7 +811,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.movers.AlertFrameMover = "TOP,ElvUIParent,TOP,-1,-18"
 			E.db.movers.ElvUF_TargetTargetMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-410,444"
 			E.db.movers.ElvUF_TargetCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,424"
-			E.db.movers.ShiftAB = "TOPLEFT,ElvUIParent,BOTTOMLEFT,22,1043"
+			E.db.movers.ShiftAB = "TOPLEFT,ElvUIParent,BOTTOMLEFT,11,1015"
 			local NP = E:GetModule("NamePlates")
 			if NP and NP.StyleFilterConfigure then
 				NP:StyleFilterConfigure()

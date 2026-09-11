@@ -13,6 +13,10 @@ if not string.find(string.lower(E.myrealm), "rogue-lite", 1, true) then
 S:AddCallback("Skin_WorldStateScore", function()
 	if not E.private.skins.blizzard.enable or not E.private.skins.blizzard.bgscore then return end
 
+	if string.find(string.lower(E.myrealm), "rogue-lite", 1, true) then
+		do return end
+	end
+
 	WorldStateScoreFrame:StripTextures()
 	WorldStateScoreFrame:CreateBackdrop("Transparent")
 	WorldStateScoreFrame.backdrop:Point("TOPLEFT", 10, -15)

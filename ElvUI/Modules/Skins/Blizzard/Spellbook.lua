@@ -12,6 +12,10 @@ local MAX_SKILLLINE_TABS = MAX_SKILLLINE_TABS
 S:AddCallback("Skin_Spellbook", function()
 	if not E.private.skins.blizzard.enable or not E.private.skins.blizzard.spellbook then return end
 
+	if string.find(string.lower(E.myrealm), "rogue-lite", 1, true) then
+		do return end
+	end
+
 	SpellBookFrame:StripTextures(true)
 	SpellBookFrame:CreateBackdrop("Transparent")
 	SpellBookFrame.backdrop:Point("TOPLEFT", 11, -12)
