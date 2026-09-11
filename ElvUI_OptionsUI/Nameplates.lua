@@ -3810,15 +3810,6 @@ E.Options.args.nameplate = {
 									desc = "Show quest icons on nameplates for kill/collect objectives.",
 									disabled = function() return false end
 								},
-								showInInstances = {
-									order = 2.5,
-									type = "toggle",
-									name = "Show in Instances",
-									desc = "Show quest icons while inside dungeons and raids. Arenas and battlegrounds always hide quest icons.",
-									disabled = function()
-										return not E.db.nameplates.questIcons.enable
-									end
-								},
 								size = {
 									order = 3,
 									type = "range",

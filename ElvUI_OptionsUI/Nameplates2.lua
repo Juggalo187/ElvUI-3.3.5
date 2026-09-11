@@ -3742,6 +3742,30 @@ E.Options.args.nameplate = {
 									}
 								}
 							}
+						},
+						loadDistance = {
+							order = 53,
+							type = "group",
+							childGroups = "tabs",
+							name = "Load Distance",
+							get = function(info)
+								return E.db.nameplates.loadDistance
+							end,
+							set = function(info, value)
+							E.db.nameplates.loadDistance = value
+							NP:UpdateCVars()
+							end,
+						args = {
+							distance = {
+							order = 1,
+							type = "range",
+							name = "Distance",
+							desc = "Only load nameplates for units within this range.",
+							min = 5,
+							max = 61,
+							step = 1
+								}
+							}
 						}
 					}
 				},
