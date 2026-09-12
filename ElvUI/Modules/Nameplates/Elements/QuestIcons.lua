@@ -36,7 +36,6 @@ NP.QuestCacheTTL = 5
 local typesLocalized = {
     enUS = {
         KILL = {'slain', 'destroy', 'eliminate', 'repel', 'kill', 'defeat'},
-        CHAT = {'speak', 'talk'},
         COLLECT = {'collect', 'gather', 'obtain', 'retrieve', 'recover', 'acquire', 'reclaim', 'return'}
     },
 }
@@ -131,14 +130,6 @@ local function GetQuests(unitID)
                     if strfind(lowerText, word, nil, true) then
                         questType = "KILL"
                         break
-                    end
-                end
-                if not questType then
-                    for _, word in ipairs(questTypes.CHAT) do
-                        if strfind(lowerText, word, nil, true) then
-                            questType = "CHAT"
-                            break
-                        end
                     end
                 end
                 -- Fallback: if it has a x/y counter it's almost certainly a collect.
@@ -437,8 +428,6 @@ function NP:PositionQuestIcons(frame)
             data.icon:SetTexture(killTexture)
         elseif iconType == "COLLECT" then
             data.icon:SetTexture(collectTexture)
-        elseif iconType == "CHAT" then
-            data.icon:SetTexture("Interface\\WorldMap\\ChatBubble_64.PNG")
         elseif iconType == "QUEST_ITEM" and quest.itemTexture then
             data.icon:SetTexture(quest.itemTexture)
         else
