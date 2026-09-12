@@ -59,7 +59,7 @@ local nameIndex = {
 E.Options.args.search = ACH:Group(L["Search"], nil, 4)
 local Search =  E.Options.args.search.args
 
-local EditBox = ACH:Input(L["Search"], nil, 0, nil, 1.5, function() return SearchText end, function(_, value) C:Search_ClearResults() if strmatch(value, '%S+') then SearchText = strtrim(strlower(value)) C:Search_Config() C:Search_AddResults() end end)
+local EditBox = ACH:Input(L["Search"], nil, 0, nil, 1, function() return SearchText end, function(_, value) C:Search_ClearResults() if strmatch(value, '%S+') then SearchText = strtrim(strlower(value)) C:Search_Config() C:Search_AddResults() end end)
 -- Search.editbox = EditBox
 
 E.Options.args.searchEditBox = EditBox
