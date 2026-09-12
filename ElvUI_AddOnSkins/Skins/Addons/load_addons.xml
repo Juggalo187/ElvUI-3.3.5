@@ -27,6 +27,7 @@
 	<Script file="blackList.lua"/>
 	<Script file="gnomishVendorShrinker.lua"/>
 	<Script file="aCP.lua"/>
+	<Script file="AwesomeCVar.lua"/>
 	<Script file="everyQuest.lua"/>
 	<Script file="_NPCScan.lua"/>
 	<Script file="moveAnything.lua"/>

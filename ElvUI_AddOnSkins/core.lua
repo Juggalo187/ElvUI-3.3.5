@@ -37,6 +37,7 @@ local addonList = {
 	"BlackList",
 	"GnomishVendorShrinker",
 	"ACP",
+	"AwesomeCVar",
 	"EveryQuest",
 	"_NPCScan",
 	"MoveAnything",
