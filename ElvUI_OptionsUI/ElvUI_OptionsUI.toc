@@ -25,4 +25,5 @@ DataBars.lua
 Maps.lua
 Astral.lua
 ModuleControl.lua
+Search.lua
 Tags.lua
