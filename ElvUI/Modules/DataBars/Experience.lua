@@ -218,17 +218,12 @@ function mod:ExperienceBar_QuestXPUpdate(event)
 
     local rawQuestXP = getQuestXP(self.db.experience.questXP.questCompletedOnly, self.db.experience.questXP.questCurrentZoneOnly)
 
-    -- Base multiplier: on Triumvirate the quest log shows 2x baseline,
-    -- so actual base XP = rawQuestXP * (currentXPRate / 2)
-    local multiplier = 1
-    if IsTargetRealm() and currentXPRate > 0 then
-        multiplier = currentXPRate / 2
-    end
-
-    -- RAF adds +2x the quest log value when enabled
+    -- Quest log value already reflects the server XP rate on Triumvirate.
+    -- RAF adds +2x the quest log value when active.
+    -- Total = rawQuestXP * (1 + rafMultiplier)
     local rafMultiplier = rafEnabled and 2 or 0
 
-    self.questTotalXP = rawQuestXP * (multiplier + rafMultiplier)
+    self.questTotalXP = rawQuestXP * (1 + rafMultiplier)
 
     if self.questTotalXP > 0 then
         self.expBar.questBar:SetMinMaxValues(0, self.expBar.maxExp)
