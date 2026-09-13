@@ -465,6 +465,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.nameplates.filters.nme.triggers.overHealthThreshold = 0.85
 			
 			E.db.nameplates.filters.nme.actions.nameOnly = true
+			E.global.nameplates.filters.nme.actions.castBar = true
 			
 			-- DATABARS
 			E.db.databars.reputation.enable = true
@@ -825,6 +826,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			local NP = E:GetModule("NamePlates")
 			if NP and NP.StyleFilterConfigure then
 				NP:StyleFilterConfigure()
+				NP:ForEachPlate("StyleFilterClear")
 			end
 		end
 		

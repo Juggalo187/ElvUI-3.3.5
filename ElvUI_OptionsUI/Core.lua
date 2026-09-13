@@ -3,7 +3,15 @@ local D = E:GetModule("Distributor")
 
 local _, Engine = ...
 Engine[1] = {}
-Engine[2] = E.Libs.ACL:GetLocale("ElvUI", E.global.general.locale or "enUS")
+
+local loc = E.global.general.locale
+if not loc or loc == "auto" then loc = GetLocale() end
+Engine[2] = E.Libs.ACL:GetLocale("ElvUI", loc)
+if type(Engine[2]) ~= "table" then
+    Engine[2] = E.Libs.ACL:GetLocale("ElvUI", "enUS", true)
+        or setmetatable({}, {__index = function(_, k) return k end})
+end
+
 local C, L = Engine[1], Engine[2]
 
 local format = string.format

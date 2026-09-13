@@ -1,5 +1,4 @@
-local E, _, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local L = E.Libs.ACL:GetLocale("ElvUI", E.global.general.locale)
+local E, L, V, P, G = unpack(ElvUI)
 local AddOnName, Engine = ...
 local _G = _G
 

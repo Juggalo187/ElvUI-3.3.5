@@ -270,7 +270,7 @@ function mod:StyleFilterCooldownCheck(names, mustHaveAll)
 	end
 end
 
-function mod:StyleFilterSetChanges(frame, actions, HealthColorChanged, BorderChanged, FlashingHealth, TextureChanged, ScaleChanged, FrameLevelChanged, AlphaChanged, NameColorChanged, NameOnlyChanged, VisibilityChanged, IconChanged, IconOnlyChanged)
+function mod:StyleFilterSetChanges(frame, actions, HealthColorChanged, BorderChanged, FlashingHealth, TextureChanged, ScaleChanged, FrameLevelChanged, AlphaChanged, NameColorChanged, NameOnlyChanged, VisibilityChanged, IconChanged, IconOnlyChanged, CastBarChanged)
 	if VisibilityChanged then
 		frame.StyleChanged = true
 		frame.VisibilityChanged = true
@@ -346,7 +346,9 @@ function mod:StyleFilterSetChanges(frame, actions, HealthColorChanged, BorderCha
 		frame.StyleChanged = true
 		frame.NameOnlyChanged = true
 		--hide the bars
-		if frame.CastBar:IsShown() then frame.CastBar:Hide() end
+		if not CastBarChanged then
+            if frame.CastBar:IsShown() then frame.CastBar:Hide() end
+        end
 		if frame.Health:IsShown() then frame.Health:Hide() end
 		--hide the target indicator
 		mod:Configure_Glow(frame)
@@ -367,6 +369,10 @@ function mod:StyleFilterSetChanges(frame, actions, HealthColorChanged, BorderCha
 			mod:Update_Name(frame, true)
 		end
 	end
+	if CastBarChanged then
+        frame.StyleChanged = true
+        frame.ShowCastBarInNameOnly = true
+    end
 	if IconChanged and (mod.Totems[frame.UnitName] or mod.UniqueUnits[frame.UnitName]) then
 		frame.StyleChanged = true
 		frame.IconChanged = true
@@ -389,7 +395,7 @@ function mod:StyleFilterSetChanges(frame, actions, HealthColorChanged, BorderCha
 	end
 end
 
-function mod:StyleFilterClearChanges(frame, HealthColorChanged, BorderChanged, FlashingHealth, TextureChanged, ScaleChanged, FrameLevelChanged, AlphaChanged, NameColorChanged, NameOnlyChanged, VisibilityChanged, IconChanged, IconOnlyChanged)
+function mod:StyleFilterClearChanges(frame, HealthColorChanged, BorderChanged, FlashingHealth, TextureChanged, ScaleChanged, FrameLevelChanged, AlphaChanged, NameColorChanged, NameOnlyChanged, VisibilityChanged, IconChanged, IconOnlyChanged, CastBarChanged)
 	frame.StyleChanged = nil
 	if VisibilityChanged then
 		frame.VisibilityChanged = nil
@@ -442,6 +448,7 @@ function mod:StyleFilterClearChanges(frame, HealthColorChanged, BorderChanged, F
 	end
 	if NameOnlyChanged then
 		frame.NameOnlyChanged = nil
+        frame.ShowCastBarInNameOnly = nil
 		frame.TopLevelFrame = nil --We can safely clear this here because it is set upon `UpdateElement_Auras` if needed
 		if mod.db.units[frame.UnitType].health.enable or (frame.isTarget and mod.db.alwaysShowTargetHealth) then
 			frame.Health:Show()
@@ -460,6 +467,9 @@ function mod:StyleFilterClearChanges(frame, HealthColorChanged, BorderChanged, F
 			mod:Update_Level(frame)
 		end
 	end
+	if CastBarChanged then
+        frame.ShowCastBarInNameOnly = nil
+    end
 	if IconChanged then
 		frame.IconChanged = nil
 		frame.IconFrame:Hide()
@@ -695,13 +705,14 @@ function mod:StyleFilterPass(frame, actions)
 		(actions.nameOnly), --NameOnlyChanged
 		(actions.hide), --VisibilityChanged
 		(actions.icon), --IconChanged
-		(actions.iconOnly) --IconOnlyChanged
+		(actions.iconOnly), --IconOnlyChanged
+		(actions.nameOnly and actions.castBar)   -- CastBarChanged
 	)
 end
 
 function mod:StyleFilterClear(frame)
 	if frame and frame.StyleChanged then
-		mod:StyleFilterClearChanges(frame, frame.HealthColorChanged, frame.BorderChanged, frame.FlashingHealth, frame.TextureChanged, frame.ScaleChanged, frame.FrameLevelChanged, frame.AlphaChanged, frame.NameColorChanged, frame.NameOnlyChanged, frame.VisibilityChanged, frame.IconChanged, frame.IconOnlyChanged)
+		mod:StyleFilterClearChanges(frame, frame.HealthColorChanged, frame.BorderChanged, frame.FlashingHealth, frame.TextureChanged, frame.ScaleChanged, frame.FrameLevelChanged, frame.AlphaChanged, frame.NameColorChanged, frame.NameOnlyChanged, frame.VisibilityChanged, frame.IconChanged, frame.IconOnlyChanged, frame.ShowCastBarInNameOnly)
 	end
 end
 
@@ -722,87 +733,87 @@ function mod:StyleFilterConfigure()
 	twipe(mod.StyleFilterTriggerList)
 	twipe(mod.StyleFilterTriggerEvents)
 
-	for filterName, globalFilter in pairs(E.global.nameplates.filters) do
-		local profileFilter = E.db.nameplates and E.db.nameplates.filters and E.db.nameplates.filters[filterName]
-		local t = (profileFilter and profileFilter.triggers) or globalFilter.triggers
+	for filterName, filter in pairs(E.global.nameplates.filters) do
+		local t = filter.triggers
+		if t and E.db.nameplates and E.db.nameplates.filters then
+			if E.db.nameplates.filters[filterName] and E.db.nameplates.filters[filterName].triggers and E.db.nameplates.filters[filterName].triggers.enable then
+				tinsert(mod.StyleFilterTriggerList, {filterName, t.priority or 1})
 
-		if t and E.db.nameplates and E.db.nameplates.filters and profileFilter and profileFilter.triggers and profileFilter.triggers.enable then
-			tinsert(mod.StyleFilterTriggerList, {filterName, t.priority or 1})
+				mod.StyleFilterTriggerEvents.UpdateElement_All = 1
+				mod.StyleFilterTriggerEvents.NAME_PLATE_UNIT_ADDED = 1
 
-			mod.StyleFilterTriggerEvents.UpdateElement_All = 1
-			mod.StyleFilterTriggerEvents.NAME_PLATE_UNIT_ADDED = 1
+				if t.casting then
+					if next(t.casting.spells) then
+						for _, value in pairs(t.casting.spells) do
+							if value then
+								mod.StyleFilterTriggerEvents.FAKE_Casting = 0
+								break
+					end end end
 
-			if t.casting then
-				if next(t.casting.spells) then
-					for _, value in pairs(t.casting.spells) do
+					if (t.casting.interruptible or t.casting.notInterruptible)
+					or (t.casting.isCasting or t.casting.isChanneling or t.casting.notCasting or t.casting.notChanneling) then
+						mod.StyleFilterTriggerEvents.FAKE_Casting = 0
+					end
+				end
+
+				if t.raidTarget and (t.raidTarget.star or t.raidTarget.circle or t.raidTarget.diamond or t.raidTarget.triangle or t.raidTarget.moon or t.raidTarget.square or t.raidTarget.cross or t.raidTarget.skull) then
+					mod.StyleFilterTriggerEvents.RAID_TARGET_UPDATE = 1
+				end
+
+				-- real events
+				mod.StyleFilterTriggerEvents.PLAYER_TARGET_CHANGED = true
+
+				if t.healthThreshold then
+					mod.StyleFilterTriggerEvents.UNIT_HEALTH = 1
+					mod.StyleFilterTriggerEvents.UNIT_MAXHEALTH = 1
+				end
+
+				if t.powerThreshold then
+					mod.StyleFilterTriggerEvents.UNIT_MANA = 1
+					mod.StyleFilterTriggerEvents.UNIT_ENERGY = 1
+					mod.StyleFilterTriggerEvents.UNIT_FOCUS = 1
+					mod.StyleFilterTriggerEvents.UNIT_RAGE = 1
+					mod.StyleFilterTriggerEvents.UNIT_RUNIC_POWER = 1
+					mod.StyleFilterTriggerEvents.UNIT_DISPLAYPOWER = 1
+				end
+
+				if t.names and next(t.names) then
+					for _, value in pairs(t.names) do
 						if value then
-							mod.StyleFilterTriggerEvents.FAKE_Casting = 0
+							mod.StyleFilterTriggerEvents.UNIT_NAME_UPDATE = 1
 							break
 				end end end
 
-				if (t.casting.interruptible or t.casting.notInterruptible)
-				or (t.casting.isCasting or t.casting.isChanneling or t.casting.notCasting or t.casting.notChanneling) then
-					mod.StyleFilterTriggerEvents.FAKE_Casting = 0
+				if t.inCombat or t.outOfCombat then
+					mod.StyleFilterTriggerEvents.PLAYER_REGEN_DISABLED = true
+					mod.StyleFilterTriggerEvents.PLAYER_REGEN_ENABLED = true
 				end
+
+				if t.isResting then
+					mod.StyleFilterTriggerEvents.PLAYER_UPDATE_RESTING = 1
+				end
+
+				if t.cooldowns and t.cooldowns.names and next(t.cooldowns.names) then
+					for _, value in pairs(t.cooldowns.names) do
+						if value == "ONCD" or value == "OFFCD" then
+							mod.StyleFilterTriggerEvents.SPELL_UPDATE_COOLDOWN = 1
+							break
+				end end end
+
+				if t.buffs and t.buffs.names and next(t.buffs.names) then
+					for _, value in pairs(t.buffs.names) do
+						if value then
+							mod.StyleFilterTriggerEvents.UNIT_AURA = true
+							break
+				end end end
+
+				if t.debuffs and t.debuffs.names and next(t.debuffs.names) then
+					for _, value in pairs(t.debuffs.names) do
+						if value then
+							mod.StyleFilterTriggerEvents.UNIT_AURA = true
+							break
+				end end end
 			end
-
-			if t.raidTarget and (t.raidTarget.star or t.raidTarget.circle or t.raidTarget.diamond or t.raidTarget.triangle or t.raidTarget.moon or t.raidTarget.square or t.raidTarget.cross or t.raidTarget.skull) then
-				mod.StyleFilterTriggerEvents.RAID_TARGET_UPDATE = 1
-			end
-
-			-- real events
-			mod.StyleFilterTriggerEvents.PLAYER_TARGET_CHANGED = true
-
-			if t.healthThreshold then
-				mod.StyleFilterTriggerEvents.UNIT_HEALTH = 1
-				mod.StyleFilterTriggerEvents.UNIT_MAXHEALTH = 1
-			end
-
-			if t.powerThreshold then
-				mod.StyleFilterTriggerEvents.UNIT_MANA = 1
-				mod.StyleFilterTriggerEvents.UNIT_ENERGY = 1
-				mod.StyleFilterTriggerEvents.UNIT_FOCUS = 1
-				mod.StyleFilterTriggerEvents.UNIT_RAGE = 1
-				mod.StyleFilterTriggerEvents.UNIT_RUNIC_POWER = 1
-				mod.StyleFilterTriggerEvents.UNIT_DISPLAYPOWER = 1
-			end
-
-			if t.names and next(t.names) then
-				for _, value in pairs(t.names) do
-					if value then
-						mod.StyleFilterTriggerEvents.UNIT_NAME_UPDATE = 1
-						break
-			end end end
-
-			if t.inCombat or t.outOfCombat then
-				mod.StyleFilterTriggerEvents.PLAYER_REGEN_DISABLED = true
-				mod.StyleFilterTriggerEvents.PLAYER_REGEN_ENABLED = true
-			end
-
-			if t.isResting then
-				mod.StyleFilterTriggerEvents.PLAYER_UPDATE_RESTING = 1
-			end
-
-			if t.cooldowns and t.cooldowns.names and next(t.cooldowns.names) then
-				for _, value in pairs(t.cooldowns.names) do
-					if value == "ONCD" or value == "OFFCD" then
-						mod.StyleFilterTriggerEvents.SPELL_UPDATE_COOLDOWN = 1
-						break
-			end end end
-
-			if t.buffs and t.buffs.names and next(t.buffs.names) then
-				for _, value in pairs(t.buffs.names) do
-					if value then
-						mod.StyleFilterTriggerEvents.UNIT_AURA = true
-						break
-			end end end
-
-			if t.debuffs and t.debuffs.names and next(t.debuffs.names) then
-				for _, value in pairs(t.debuffs.names) do
-					if value then
-						mod.StyleFilterTriggerEvents.UNIT_AURA = true
-						break
-			end end end
 		end
 	end
 
@@ -830,8 +841,7 @@ function mod:StyleFilterUpdate(frame, event)
 	mod:StyleFilterClear(frame)
 
 	for filterNum in ipairs(mod.StyleFilterTriggerList) do
-		local filterName = mod.StyleFilterTriggerList[filterNum][1]
-		local filter = E.db.nameplates.filters[filterName]
+		local filter = E.global.nameplates.filters[mod.StyleFilterTriggerList[filterNum][1]]
 		if filter then
 			mod:StyleFilterConditionCheck(frame, filter, filter.triggers)
 		end
@@ -896,23 +906,7 @@ function mod:StyleFilterCopyDefaults(tbl)
 end
 
 function mod:StyleFilterInitialize()
-	E.db.nameplates.filters = E.db.nameplates.filters or {}
-	for filterName, filterTable in pairs(E.global.nameplates.filters) do
+	for _, filterTable in pairs(E.global.nameplates.filters) do
 		mod:StyleFilterCopyDefaults(filterTable)
-
-		local profileFilter = E.db.nameplates.filters[filterName]
-		if not profileFilter then
-			profileFilter = {}
-			E.db.nameplates.filters[filterName] = profileFilter
-		end
-
-		-- Merge triggers: start from global, overlay profile values.
-		-- copyDefaults only fills keys missing in dest, so profile wins.
-		profileFilter.triggers = profileFilter.triggers or {}
-		copyDefaults(profileFilter.triggers, filterTable.triggers)
-
-		-- Merge actions: same pattern.
-		profileFilter.actions = profileFilter.actions or {}
-		copyDefaults(profileFilter.actions, filterTable.actions)
 	end
 end

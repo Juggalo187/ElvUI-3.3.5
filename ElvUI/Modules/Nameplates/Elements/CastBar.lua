@@ -113,7 +113,15 @@ function NP:Update_CastBar(frame, event, unit)
 	end
 
 	if self.db.units[frame.UnitType].castbar.enable ~= true then return end
-	if not frame.Health:IsShown() then return end
+
+	-- If the plate is name-only and the filter didn't opt into showing the cast bar, suppress it.
+	if frame.NameOnlyChanged and not frame.ShowCastBarInNameOnly then
+		if castBar:IsShown() then
+			resetAttributes(castBar)
+			castBar:Hide()
+		end
+		return
+	end
 
 	if event == "UNIT_SPELLCAST_START" or event == "UNIT_SPELLCAST_CHANNEL_START" then
 		local name, _, _, texture, startTime, endTime, _, _, notInterruptible = UnitCastingInfo(unit)

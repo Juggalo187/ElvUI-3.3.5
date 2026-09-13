@@ -1,5 +1,4 @@
-﻿local E, _, V, P, G = unpack(ElvUI);
-local L = E.Libs.ACL:GetLocale('ElvUI', E.global.general.locale or 'enUS')
+﻿local E, L, V, P, G = unpack(ElvUI);
 local tcopy = table.copy
 local DT = E:GetModule('DataTexts')
 local DB = E:GetModule('DTBars2')

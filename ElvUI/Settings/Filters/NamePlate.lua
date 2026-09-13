@@ -40,7 +40,8 @@ G.nameplates.filters = {
 			healthThreshold = true
 		},
 		actions = {
-		nameOnly = true
+		nameOnly = true,
+		castBar = true
 		}
 	}
 }

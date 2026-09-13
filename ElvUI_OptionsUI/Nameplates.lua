@@ -1594,6 +1594,23 @@ local function UpdateFilterGroup()
 					end,
 					disabled = function() return E.global.nameplates.filters[selectedNameplateFilter].actions.hide end
 				},
+				castBar = {
+						order = 2.5,
+						type = "toggle",
+						name = L["Cast Bar"],  -- or "Show Cast Bar" if you add the locale string
+						desc = L["Show the cast bar while this filter's Name Only action is applied."],
+						get = function(info)
+							return E.global.nameplates.filters[selectedNameplateFilter].actions.castBar
+						end,
+						set = function(info, value)
+							E.global.nameplates.filters[selectedNameplateFilter].actions.castBar = value
+							NP:ConfigureAll()
+						end,
+						disabled = function()
+							return E.global.nameplates.filters[selectedNameplateFilter].actions.hide
+								or not E.global.nameplates.filters[selectedNameplateFilter].actions.nameOnly
+						end
+					},
 				icon = {
 					order = 3,
 					type = "toggle",
