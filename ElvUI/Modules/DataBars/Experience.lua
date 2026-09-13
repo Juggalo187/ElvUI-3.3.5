@@ -143,24 +143,34 @@ local function OnChatMessage(self, event, msg, ...)
             timerFrame:Show()
         end
         
-        -- Update menu with current rate
-        if mod.expBar and mod.expBar.dropdown then
-            mod.expBar.dropdown:initialize()
-        end
-    end
-    
-    -- Check for rate update
-    if msg and string.find(msg, "You have updated your XP rate to") then
-        local rate = string.match(msg, "to (%d+)")
-        if rate then
-            currentXPRate = tonumber(rate)
-            AddChatMessage(string.format("|cff00ff00[XP]|r XP rate set to %dx", currentXPRate), 1, 1, 1)
-            
-            if mod.expBar and mod.expBar.dropdown then
-                mod.expBar.dropdown:initialize()
-            end
-        end
-    end
+      -- Update menu with current rate
+	if mod.expBar and mod.expBar.dropdown then
+			mod.expBar.dropdown:initialize()
+		end
+		
+		-- Refresh quest XP with new rate
+		if mod.expBar and mod.questXPEnabled and mod.db.experience.questXP.enable then
+			mod:ExperienceBar_QuestXPUpdate()
+		end
+	end
+	
+	-- Check for rate update
+	if msg and string.find(msg, "You have updated your XP rate to") then
+		local rate = string.match(msg, "to (%d+)")
+		if rate then
+			currentXPRate = tonumber(rate)
+			AddChatMessage(string.format("|cff00ff00[XP]|r XP rate set to %dx", currentXPRate), 1, 1, 1)
+			
+			if mod.expBar and mod.expBar.dropdown then
+				mod.expBar.dropdown:initialize()
+			end
+		
+			-- Refresh quest XP with new rate
+			if mod.expBar and mod.questXPEnabled and mod.db.experience.questXP.enable then
+				mod:ExperienceBar_QuestXPUpdate()
+			end
+		end
+	end
     
     -- Check for XP disable
     if msg and string.find(msg, "You have disabled your XP gain") then
@@ -205,7 +215,12 @@ end
 function mod:ExperienceBar_QuestXPUpdate(event)
 	if event == "ZONE_CHANGED_NEW_AREA" and not self.db.experience.questXP.questCurrentZoneOnly then return end
 
-	self.questTotalXP = getQuestXP(self.db.experience.questXP.questCompletedOnly, self.db.experience.questXP.questCurrentZoneOnly)
+	local rawQuestXP = getQuestXP(self.db.experience.questXP.questCompletedOnly, self.db.experience.questXP.questCurrentZoneOnly)
+	local multiplier = 1
+	if IsTargetRealm() and currentXPRate > 0 then
+		multiplier = currentXPRate
+	end
+	self.questTotalXP = rawQuestXP * multiplier
 
 	if self.questTotalXP > 0 then
 		self.expBar.questBar:SetMinMaxValues(0, self.expBar.maxExp)
@@ -334,6 +349,13 @@ function mod.ExperienceBar_OnClick(self, button)
             ToggleDropDownMenu(1, nil, self.dropdown, "cursor", 0, 0, "MENU")
         end
     end
+	
+	if XPRM then -- Warmane exp rates
+		if button == "RightButton" then
+			ToggleDropDownMenu(1, nil, XPRM, "cursor")
+		end
+	end
+	
 end
 
 -- Create the dropdown menu
