@@ -17,6 +17,7 @@ local SelectQuestLogEntry = SelectQuestLogEntry
 local UnitLevel = UnitLevel
 local UnitXP = UnitXP
 local UnitXPMax = UnitXPMax
+local rafEnabled = false
 
 -- GLOBALS: CreateFrame, GameTooltip, LeftChatPanel, ToggleDropDownMenu, XPRM
 
@@ -213,22 +214,29 @@ function mod:CheckWeekendStatusOnLoad()
 end
 
 function mod:ExperienceBar_QuestXPUpdate(event)
-	if event == "ZONE_CHANGED_NEW_AREA" and not self.db.experience.questXP.questCurrentZoneOnly then return end
+    if event == "ZONE_CHANGED_NEW_AREA" and not self.db.experience.questXP.questCurrentZoneOnly then return end
 
-	local rawQuestXP = getQuestXP(self.db.experience.questXP.questCompletedOnly, self.db.experience.questXP.questCurrentZoneOnly)
-	local multiplier = 1
-	if IsTargetRealm() and currentXPRate > 0 then
-		multiplier = currentXPRate
-	end
-	self.questTotalXP = rawQuestXP * multiplier
+    local rawQuestXP = getQuestXP(self.db.experience.questXP.questCompletedOnly, self.db.experience.questXP.questCurrentZoneOnly)
 
-	if self.questTotalXP > 0 then
-		self.expBar.questBar:SetMinMaxValues(0, self.expBar.maxExp)
-		self.expBar.questBar:SetValue(min(self.expBar.curExp + self.questTotalXP, self.expBar.maxExp))
-		self.expBar.questBar:Show()
-	else
-		self.expBar.questBar:Hide()
-	end
+    -- Base multiplier: on Triumvirate the quest log shows 2x baseline,
+    -- so actual base XP = rawQuestXP * (currentXPRate / 2)
+    local multiplier = 1
+    if IsTargetRealm() and currentXPRate > 0 then
+        multiplier = currentXPRate / 2
+    end
+
+    -- RAF adds +2x the quest log value when enabled
+    local rafMultiplier = rafEnabled and 2 or 0
+
+    self.questTotalXP = rawQuestXP * (multiplier + rafMultiplier)
+
+    if self.questTotalXP > 0 then
+        self.expBar.questBar:SetMinMaxValues(0, self.expBar.maxExp)
+        self.expBar.questBar:SetValue(min(self.expBar.curExp + self.questTotalXP, self.expBar.maxExp))
+        self.expBar.questBar:Show()
+    else
+        self.expBar.questBar:Hide()
+    end
 end
 
 function mod:ExperienceBar_Update(event)
@@ -389,14 +397,30 @@ function mod:CreateExperienceBarDropdown()
             
             -- Show current rate if known
             if currentXPRate > 0 then
-                info = UIDropDownMenu_CreateInfo()
-                info.text = string.format("|cff00ccffCurrent XP Rate: %dx|r", currentXPRate)
-                info.notCheckable = true
-                info.disabled = true
-                UIDropDownMenu_AddButton(info)
-            end
-        end
-        
+				info = UIDropDownMenu_CreateInfo()
+				info.text = string.format("|cff00ccffCurrent XP Rate: %dx|r", currentXPRate)
+				info.notCheckable = true
+				info.disabled = true
+				UIDropDownMenu_AddButton(info)
+			end
+		end
+		
+		info = UIDropDownMenu_CreateInfo()
+		info.text = rafEnabled and "|cff00ff00RAF: ENABLED|r" or "|cffff5555RAF: DISABLED|r"
+		info.notCheckable = true
+		info.func = function()
+			rafEnabled = not rafEnabled
+			if rafEnabled then
+				AddChatMessage("|cff00ff00[XP]|r RAF bonus: ENABLED (quest XP will include +2x RAF)", 1, 1, 1)
+			else
+				AddChatMessage("|cffff8800[XP]|r RAF bonus: DISABLED", 1, 1, 1)
+			end
+			if mod.questXPEnabled and mod.db.experience.questXP.enable then
+				mod:ExperienceBar_QuestXPUpdate()
+			end
+		end
+		UIDropDownMenu_AddButton(info)
+	
         -- Separator
         info = UIDropDownMenu_CreateInfo()
         info.text = ""
