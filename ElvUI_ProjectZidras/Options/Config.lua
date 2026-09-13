@@ -235,8 +235,22 @@ local function UnitFramesOptions()
 end
 
 local function actionSubGroup(info, ...)
+	local path = info
 	local which = (info[#info-2] == 'character' or info[#info-2] == 'inspect') and info[#info-2] or info[#info-3]
 	local updateGems = (info[#info-1] == 'gems') or (info[#info-2] == 'gems')
+
+	-- Special keys from the flattened slot entries
+	local keyMap = {
+		mhX = { slot = "MainHandSlot", field = "xOffset" },
+		mhY = { slot = "MainHandSlot", field = "yOffset" },
+		shX = { slot = "SecondaryHandSlot", field = "xOffset" },
+		shY = { slot = "SecondaryHandSlot", field = "yOffset" },
+		rX  = { slot = "RangedSlot", field = "xOffset" },
+		rY  = { slot = "RangedSlot", field = "yOffset" },
+	}
+
+	local lastKey = info[#info]
+	local special = keyMap[lastKey]
 
 	if info.type == 'color' then
 		local color = E.db.pz.wratharmory[info[#info-2]][info[#info-1]][info[#info]]
@@ -246,6 +260,15 @@ local function actionSubGroup(info, ...)
 		else
 			local d = P.pz.wratharmory[info[#info-2]][info[#info-1]][info[#info]]
 			return color.r, color.g, color.b, color.a, d.r, d.g, d.b, d.a
+		end
+	elseif special and which then
+		local dbWhich = which:lower()
+		local container = E.db.pz.wratharmory[dbWhich][info[#info-1]]  -- 'enchant' or 'gems'
+		local value = ...
+		if value ~= nil then
+			container[special.slot][special.field] = value
+		else
+			return container[special.slot][special.field]
 		end
 	else
 		local value = ...
@@ -264,7 +287,7 @@ local function actionSubGroup(info, ...)
 		end
 	end
 
-	local unit = which:gsub("^%l", string.upper)
+	local unit = which and which:gsub("^%l", string.upper)
 	ZA:UpdateOptions(unit, updateGems)
 end
 
@@ -284,20 +307,17 @@ local function GetOptionsTable_FontGroup(name, groupName)
 	config.args.color = ACH:Color(L["COLOR"], nil, 11)
 
 	if groupName == 'enchant' then
-		local MainHandSlot = ACH:Group(L["Main Hand Slot"], nil, 10, nil)
-		config.args.MainHandSlot = MainHandSlot
-		MainHandSlot.args.xOffset = ACH:Range(L["X-Offset"], nil, 6, { min = -300, max = 300, step = 1 })
-		MainHandSlot.args.yOffset = ACH:Range(L["Y-Offset"], nil, 7, { min = -300, max = 300, step = 1 })
+		config.args.headerMH = ACH:Header(L["Main Hand Slot"], 20)
+		config.args.mhX = ACH:Range(L["X-Offset"], nil, 21, { min = -300, max = 300, step = 1 })
+		config.args.mhY = ACH:Range(L["Y-Offset"], nil, 22, { min = -300, max = 300, step = 1 })
 
-		local SecondaryHandSlot = ACH:Group(L["Secondary Hand Slot"], nil, 11, nil, actionSubGroup, actionSubGroup)
-		config.args.SecondaryHandSlot = SecondaryHandSlot
-		SecondaryHandSlot.args.xOffset = ACH:Range(L["X-Offset"], nil, 6, { min = -300, max = 300, step = 1 })
-		SecondaryHandSlot.args.yOffset = ACH:Range(L["Y-Offset"], nil, 7, { min = -300, max = 300, step = 1 })
+		config.args.headerSH = ACH:Header(L["Secondary Hand Slot"], 30)
+		config.args.shX = ACH:Range(L["X-Offset"], nil, 31, { min = -300, max = 300, step = 1 })
+		config.args.shY = ACH:Range(L["Y-Offset"], nil, 32, { min = -300, max = 300, step = 1 })
 
-		local RangedSlot = ACH:Group(L["Ranged Slot"], nil, 12, nil, actionSubGroup, actionSubGroup)
-		config.args.RangedSlot = RangedSlot
-		RangedSlot.args.xOffset = ACH:Range(L["X-Offset"], nil, 6, { min = -300, max = 300, step = 1 })
-		RangedSlot.args.yOffset = ACH:Range(L["Y-Offset"], nil, 7, { min = -300, max = 300, step = 1 })
+		config.args.headerR = ACH:Header(L["Ranged Slot"], 40)
+		config.args.rX = ACH:Range(L["X-Offset"], nil, 41, { min = -300, max = 300, step = 1 })
+		config.args.rY = ACH:Range(L["Y-Offset"], nil, 42, { min = -300, max = 300, step = 1 })
 	end
 
 	return config
@@ -313,20 +333,17 @@ local function GetOptionsTable_Gems()
 	config.args.xOffset = ACH:Range(L["X-Offset"], nil, 6, { min = -300, max = 300, step = 1 })
 	config.args.yOffset = ACH:Range(L["Y-Offset"], nil, 7, { min = -300, max = 300, step = 1 })
 
-	local MainHandSlot = ACH:Group(L["Main Hand Slot"], nil, 10, nil)
-	config.args.MainHandSlot = MainHandSlot
-	MainHandSlot.args.xOffset = ACH:Range(L["X-Offset"], nil, 6, { min = -300, max = 300, step = 1 })
-	MainHandSlot.args.yOffset = ACH:Range(L["Y-Offset"], nil, 7, { min = -300, max = 300, step = 1 })
+	config.args.headerMH = ACH:Header(L["Main Hand Slot"], 20)
+	config.args.mhX = ACH:Range(L["X-Offset"], nil, 21, { min = -300, max = 300, step = 1 })
+	config.args.mhY = ACH:Range(L["Y-Offset"], nil, 22, { min = -300, max = 300, step = 1 })
 
-	local SecondaryHandSlot = ACH:Group(L["Secondary Hand Slot"], nil, 11, nil, actionSubGroup, actionSubGroup)
-	config.args.SecondaryHandSlot = SecondaryHandSlot
-	SecondaryHandSlot.args.xOffset = ACH:Range(L["X-Offset"], nil, 6, { min = -300, max = 300, step = 1 })
-	SecondaryHandSlot.args.yOffset = ACH:Range(L["Y-Offset"], nil, 7, { min = -300, max = 300, step = 1 })
+	config.args.headerSH = ACH:Header(L["Secondary Hand Slot"], 30)
+	config.args.shX = ACH:Range(L["X-Offset"], nil, 31, { min = -300, max = 300, step = 1 })
+	config.args.shY = ACH:Range(L["Y-Offset"], nil, 32, { min = -300, max = 300, step = 1 })
 
-	local RangedSlot = ACH:Group(L["Ranged Slot"], nil, 12, nil, actionSubGroup, actionSubGroup)
-	config.args.RangedSlot = RangedSlot
-	RangedSlot.args.xOffset = ACH:Range(L["X-Offset"], nil, 6, { min = -300, max = 300, step = 1 })
-	RangedSlot.args.yOffset = ACH:Range(L["Y-Offset"], nil, 7, { min = -300, max = 300, step = 1 })
+	config.args.headerR = ACH:Header(L["Ranged Slot"], 40)
+	config.args.rX = ACH:Range(L["X-Offset"], nil, 41, { min = -300, max = 300, step = 1 })
+	config.args.rY = ACH:Range(L["Y-Offset"], nil, 42, { min = -300, max = 300, step = 1 })
 
 	return config
 end

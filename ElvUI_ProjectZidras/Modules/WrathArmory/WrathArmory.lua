@@ -255,7 +255,8 @@ function module:UpdatePageStrings(i, inspectItem, slotInfo, which)
 		if emptySlots[i] and (not text or text == "" ) then
 			if which == "Character" or (which == "Inspect" and (i ~= 11 or i ~= 12)) then
 				if not (i == 17 and slotInfo.subClass ~= shieldsSubClass) then -- Exclusion: Off-hands cannot have enchants
-					text = "|cFFFF0000MISSING|r"
+					--text = "|cFFFF0000MISSING|r"
+					text = ""
 				end
 			end
 		end

@@ -36,6 +36,8 @@ local WorldGetNumChildren = WorldFrame.GetNumChildren
 
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
+local hasModernNameplateAPI = (C_NamePlate and C_NamePlate.GetNamePlates and C_NamePlate.GetNamePlateForUnit) and true or false
+
 local lastChildern, numChildren, hasTarget = 0, 0
 local OVERLAY = [=[Interface\TargetingFrame\UI-TargetingFrame-Flash]=]
 local FSPAT = "%s*"..(gsub(gsub(_G.FOREIGN_SERVER_LABEL, "^%s", ""), "[%*()]", "%%%1")).."$"
@@ -859,35 +861,80 @@ local function findNewPlate(...)
 	end
 end
 
+function NP:OnNamePlateCreated(event, plate)
+    -- If called as NP:OnNamePlateCreated("NAME_PLATE_CREATED", frame), plate is the frame.
+    -- If called as NP:OnNamePlateCreated(frame) (event name omitted), plate is nil and event is the frame.
+    if type(event) ~= "string" then
+        plate, event = event, nil
+    end
+
+    if not plate or not self.CreatedPlates then return end
+
+    -- Guard against non-frame arguments
+    if type(plate) ~= "table" or not plate.GetChildren then return end
+
+    if not self.CreatedPlates[plate] then
+        self:OnCreated(plate)
+    end
+end
+
+function NP:OnNamePlateUnitAdded(event, unitToken)
+    if type(event) ~= "string" then
+        unitToken, event = event, nil
+    end
+
+    if type(unitToken) ~= "string" then return end
+
+    local plate = C_NamePlate.GetNamePlateForUnit(unitToken)
+    if not plate then return end
+
+    if not self.CreatedPlates[plate] then
+        self:OnCreated(plate)
+    end
+
+    if plate.UnitFrame then
+        NP.OnShow(plate, nil, true)
+    end
+end
+
+function NP:OnNamePlateUnitRemoved(unitToken)
+    -- Nothing strictly required here: OnHide is already hooked on the plate itself
+    -- via frame:HookScript("OnHide", self.OnHide) inside OnCreated.
+    -- The native plate's OnHide fires when the unit leaves, and ElvUI cleans up.
+    -- Left as a deliberate no-op so the event is still registered and documented.
+end
+
 function NP:OnUpdate()
-	numChildren = WorldGetNumChildren(WorldFrame)
-	if lastChildern ~= numChildren then
-		findNewPlate(WorldGetChildren(WorldFrame))
-		lastChildern = numChildren
-	end
+    if not hasModernNameplateAPI then
+        numChildren = WorldGetNumChildren(WorldFrame)
+        if lastChildern ~= numChildren then
+            findNewPlate(WorldGetChildren(WorldFrame))
+            lastChildern = numChildren
+        end
+    end
 
-	for frame in pairs(NP.VisiblePlates) do
-		if hasTarget then
-			frame.alpha = frame:GetParent():GetAlpha()
-			frame:GetParent():SetAlpha(1)
-		else
-			frame.alpha = 1
-		end
+    for frame in pairs(NP.VisiblePlates) do
+        if hasTarget then
+            frame.alpha = frame:GetParent():GetAlpha()
+            frame:GetParent():SetAlpha(1)
+        else
+            frame.alpha = 1
+        end
 
-		NP:SetMouseoverFrame(frame)
-		NP:SetTargetFrame(frame)
+        NP:SetMouseoverFrame(frame)
+        NP:SetTargetFrame(frame)
 
-		if frame.UnitReaction ~= NP:GetUnitInfo(frame) then
-			NP:UpdateAllFrame(frame, nil, true)
-		end
+        if frame.UnitReaction ~= NP:GetUnitInfo(frame) then
+            NP:UpdateAllFrame(frame, nil, true)
+        end
 
-		local status = NP:UnitDetailedThreatSituation(frame)
-		if frame.ThreatStatus ~= status then
-			frame.ThreatStatus = status
+        local status = NP:UnitDetailedThreatSituation(frame)
+        if frame.ThreatStatus ~= status then
+            frame.ThreatStatus = status
 
-			NP:Update_HealthColor(frame)
-		end
-	end
+            NP:Update_HealthColor(frame)
+        end
+    end
 end
 
 function NP:CheckRaidIcon(frame)
@@ -1282,6 +1329,12 @@ function NP:Initialize()
 	self:RegisterEvent("UNIT_FOCUS")
 	self:RegisterEvent("UNIT_RAGE")
 	self:RegisterEvent("QUEST_LOG_UPDATE")
+	
+	if hasModernNameplateAPI then
+		self:RegisterEvent("NAME_PLATE_CREATED", "OnNamePlateCreated")
+		self:RegisterEvent("NAME_PLATE_UNIT_ADDED", "OnNamePlateUnitAdded")
+		self:RegisterEvent("NAME_PLATE_UNIT_REMOVED", "OnNamePlateUnitRemoved")
+	end
 
 	-- Arena & Arena Pets
 	self:CacheArenaUnits()

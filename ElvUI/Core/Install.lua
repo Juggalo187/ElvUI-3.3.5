@@ -258,6 +258,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		E.db.actionbar.bar4.visibility = "[vehicleui] hide; show"
 		E.db.actionbar.bar5.enabled = false
 		E.db.actionbar.bar5.visibility = "[vehicleui] hide; show"
+		E.db.actionbar.bar6.enabled = false
 		E.db.actionbar.bar6.visibility = "[vehicleui] hide; show"
 		
 		E.db.actionbar.bar7.enabled = false
