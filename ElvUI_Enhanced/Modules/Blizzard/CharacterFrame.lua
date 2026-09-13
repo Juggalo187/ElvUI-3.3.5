@@ -545,223 +545,10 @@ do
 	for i = 0, 7 do
 		qualityColors[i] = {GetItemQualityColor(i)}
 	end
-
-	if E.myclass == "WARRIOR" then
-		local GetTalentInfo = GetTalentInfo
-
-		local titanGripCheck = CreateFrame("Frame")
-		titanGripCheck:RegisterEvent("PLAYER_ENTERING_WORLD")
-		titanGripCheck:RegisterEvent("SPELL_UPDATE_USABLE")
-		titanGripCheck:RegisterEvent("ACTIVE_TALENT_GROUP_CHANGED")
-		titanGripCheck:RegisterEvent("CHARACTER_POINTS_CHANGED")
-		titanGripCheck:SetScript("OnEvent", function(self, event, ...)
-			titanGrip = select(5, GetTalentInfo(2, 27)) == 1
-
-			if event == "PLAYER_ENTERING_WORLD" or event == "SPELL_UPDATE_USABLE" then
-				self:UnregisterEvent(event)
-			end
-		end)
-	end
-end
-
---[[
-local function OnEvent(event, bagID, slotID)
-	if event == "ITEM_UNLOCKED" then
-		if not slotID then
-			-- equiped item removed
-		else
-			-- bag item removed
-		end
-	end
-end
-
-local slots = {
-	["HeadSlot"] = "INVTYPE_HEAD",
-	["NeckSlot"] = "INVTYPE_NECK",
-	["ShoulderSlot"] = "INVTYPE_SHOULDER",
-	["BackSlot"] = "INVTYPE_CLOAK",
-	["ChestSlot"] = "INVTYPE_ROBE",
-	["WristSlot"] = "INVTYPE_WRIST",
-	["HandsSlot"] = "INVTYPE_HAND",
-	["WaistSlot"] = "INVTYPE_WAIST",
-	["LegsSlot"] = "INVTYPE_LEGS",
-	["FeetSlot"] = "INVTYPE_FEET",
-	["Finger0Slot"] = "INVTYPE_FINGER",
-	["Finger1Slot"] = "INVTYPE_FINGER",
-	["Trinket0Slot"] = "INVTYPE_TRINKET",
-	["Trinket1Slot"] = "INVTYPE_TRINKET",
-	["MainHandSlot"] = {"INVTYPE_WEAPONMAINHAND", "INVTYPE_2HWEAPON", "INVTYPE_WEAPON"},
-	["SecondaryHandSlot"] = {"INVTYPE_WEAPONOFFHAND", "INVTYPE_SHIELD", "INVTYPE_HOLDABLE", "INVTYPE_WEAPON"},
-	["RangedSlot"] = {"INVTYPE_RANGED", "INVTYPE_RANGEDRIGHT", "INVTYPE_THROWN", "INVTYPE_RELIC"}
-}
-
-local bagsTable = {}
-
-local function sortItemLevel(a, b)
-	return a > b
 end
 
 local function GetAverageItemLevel()
-	local _, itemLink, itemLevel, itemEquipLoc, slotID
-	local totalItemLevel, totalEquippedItemLevel = 0, 0
-	local items = 16
-
-	for bag = 0, 4 do
-		for slot = 1, GetContainerNumSlots(bag) do
-			itemLink = GetContainerItemLink(bag, slot)
-			if itemLink then
-				_, _, _, itemLevel, _, _, _, _, itemEquipLoc = GetItemInfo(itemLink)
-				if itemEquipLoc and itemEquipLoc ~= "" then
-					if itemEquipLoc == "INVTYPE_WEAPON" or (titanGrip and itemEquipLoc == "INVTYPE_2HWEAPON") then
-						if not bagsTable[itemEquipLoc] then
-							bagsTable[itemEquipLoc] = {itemLevel}
-						elseif #bagsTable[itemEquipLoc] == 1 then
-							bagsTable[itemEquipLoc][2] = itemLevel
-							sort(bagsTable[itemEquipLoc], sortItemLevel)
-						elseif itemLevel > bagsTable[itemEquipLoc][1] then
-							bagsTable[itemEquipLoc][2] = bagsTable[itemEquipLoc][1]
-							bagsTable[itemEquipLoc][1] = itemLevel
-						elseif itemLevel > bagsTable[itemEquipLoc][2] then
-							bagsTable[itemEquipLoc][2] = itemLevel
-						end
-					else
-						if not bagsTable[itemEquipLoc] then
-							bagsTable[itemEquipLoc] = itemLevel
-						elseif itemLevel > bagsTable[itemEquipLoc] then
-							bagsTable[itemEquipLoc] = itemLevel
-						end
-					end
-				end
-			end
-		end
-	end
-
-	local hasMainHandBag, maxBagItemLevel, countBagOffhand
-	local hasTwoHandBag = bagsTable["INVTYPE_2HWEAPON"]
-
-	for slotName, itemLoc in pairs(slots) do
-		slotID = GetInventorySlotInfo(slotName)
-		itemLink = GetInventoryItemLink("player", slotID)
-
-		if itemLink then
-			_, _, _, itemLevel, _, _, _, _, itemEquipLoc = GetItemInfo(itemLink)
-
-			if itemLevel and itemLevel > 0 then
-				if type(itemLoc) == "table" then
-					local maxLocItemLevel = 0
-					for _, bagItemLoc in ipairs(itemLoc) do
-						maxBagItemLevel = bagsTable[bagItemLoc]
-
-						if maxBagItemLevel and maxBagItemLevel > maxLocItemLevel then
-							maxLocItemLevel = maxBagItemLevel
-						end
-					end
-
-					maxBagItemLevel = maxLocItemLevel ~= 0 and maxLocItemLevel
-				else
-					maxBagItemLevel = bagsTable[itemEquipLoc]
-				end
-
-				if maxBagItemLevel and maxBagItemLevel > itemLevel then
-					totalItemLevel = totalItemLevel + maxBagItemLevel
-				else
-					totalItemLevel = totalItemLevel + itemLevel
-				end
-
-				totalEquippedItemLevel = totalEquippedItemLevel + itemLevel
-
-				if slotName == "MainHandSlot" and (itemEquipLoc ~= "INVTYPE_2HWEAPON" or titanGrip) then
-					items = 17
-					countBagOffhand = true
-				end
-			end
-		else
-			if type(itemLoc) == "table" then
-				local maxLocItemLevel = 0
-
-				if slotName == "SecondaryHandSlot" then
-					if titanGrip then
-						maxLocItemLevel = bagsTable["INVTYPE_2HWEAPON"]
-					end
-
-					if not titanGrip or maxLocItemLevel < bagsTable["INVTYPE_WEAPON"] then
-						maxLocItemLevel = bagsTable["INVTYPE_WEAPON"]
-					end
-				end
-
-				for _, bagItemLoc in ipairs(itemLoc) do
-					maxBagItemLevel = bagsTable[bagItemLoc]
-
-					if maxBagItemLevel and maxBagItemLevel > maxLocItemLevel then
-						maxLocItemLevel = maxBagItemLevel
-					end
-				end
-
-				maxBagItemLevel = maxLocItemLevel ~= 0 and maxLocItemLevel
-			else
-				maxBagItemLevel = bagsTable[itemLoc]
-			end
-
-			if maxBagItemLevel and (slotName ~= "SecondaryHandSlot" or countBagOffhand) then
-				totalItemLevel = totalItemLevel + maxBagItemLevel
-			end
-
-			if slotName == "MainHandSlot" then
-				if hasTwoHandBag then
-					if maxBagItemLevel then
-						if hasTwoHandBag > maxBagItemLevel then
-							hasMainHandBag = hasTwoHandBag
-						end
-					else
-						hasMainHandBag = hasTwoHandBag
-					end
-				end
-			end
-		end
-	end
-
-	wipe(bagsTable)
-
-	if hasMainHandBag then
-		totalItemLevel = totalItemLevel + hasMainHandBag
-	end
-
-	return (totalItemLevel / 17), (totalEquippedItemLevel / items)
-end
-
-local function GetItemLevelColor(unit)
-	if not unit then unit = "player" end
-
-	local i = 0
-	local sumR, sumG, sumB = 0, 0, 0
-	for slotName in pairs(slots) do
-		local slotID = GetInventorySlotInfo(slotName)
-		if GetInventoryItemTexture(unit, slotID) then
-			local itemLink = GetInventoryItemLink(unit, slotID)
-			if itemLink then
-				local quality = select(3, GetItemInfo(itemLink))
-				if quality then
-					i = i + 1
-					local r, g, b = GetItemQualityColor(quality)
-					sumR = sumR + r
-					sumG = sumG + g
-					sumB = sumB + b
-				end
-			end
-		end
-	end
-
-	if i > 0 then
-		return (sumR / i), (sumG / i), (sumB / i)
-	else
-		return 1, 1, 1
-	end
-end
-]]
-
-local function GetAverageItemLevel()
-	local items = 16
-	local ilvl = 0
+	local total, count = 0, 0
 	local colorCount, sumR, sumG, sumB = 0, 0, 0, 0
 
 	for slotID = 1, 18 do
@@ -769,28 +556,30 @@ local function GetAverageItemLevel()
 			local itemLink = GetInventoryItemLink("player", slotID)
 
 			if itemLink then
-				local _, _, quality, itemLevel, _, _, _, _, itemEquipLoc = GetItemInfo(itemLink)
+				local _, _, quality, itemLevel = GetItemInfo(itemLink)
 
-				if itemLevel then
-					ilvl = ilvl + itemLevel
+				if itemLevel and itemLevel > 0 then
+					total = total + itemLevel
+					count = count + 1
 
-					colorCount = colorCount + 1
-					sumR = sumR + qualityColors[quality][1]
-					sumG = sumG + qualityColors[quality][2]
-					sumB = sumB + qualityColors[quality][3]
-
-					if slotID == INVSLOT_MAINHAND and (itemEquipLoc ~= "INVTYPE_2HWEAPON" or titanGrip) then
-						items = 17
+					local qc = qualityColors[quality]
+					if qc then
+						colorCount = colorCount + 1
+						sumR = sumR + qc[1]
+						sumG = sumG + qc[2]
+						sumB = sumB + qc[3]
 					end
 				end
 			end
 		end
 	end
 
-	if colorCount == 0 then
-		return ilvl / items, 1, 1, 1
+	if count == 0 then
+		return 0, 1, 1, 1
+	elseif colorCount == 0 then
+		return total / count, 1, 1, 1
 	else
-		return ilvl / items, (sumR / colorCount), (sumG / colorCount), (sumB / colorCount)
+		return total / count, (sumR / colorCount), (sumG / colorCount), (sumB / colorCount)
 	end
 end
 
@@ -806,35 +595,35 @@ end
 function module:ItemLevel(statFrame, unit)
 	if not self.Initialized then return end
 
-	if GearScore_GetScore then
-		if not self.gearScore or not GS_PlayerIsInCombat then
-			local gearScore = GearScore_GetScore(E.myname, "player")
+	-- if GearScore_GetScore then
+		-- if not self.gearScore or not GS_PlayerIsInCombat then
+			-- local gearScore = GearScore_GetScore(E.myname, "player")
 
-			if not gearScore then
-				if GS_Data and GS_Data[E.myrealm] then
-					gearScore = GS_Data[E.myrealm].Players[E.myname].GearScore
-				end
-			end
+			-- if not gearScore then
+				-- if GS_Data and GS_Data[E.myrealm] then
+					-- gearScore = GS_Data[E.myrealm].Players[E.myname].GearScore
+				-- end
+			-- end
 
-			if gearScore then
-				local r, b, g = GearScore_GetQuality(gearScore)
+			-- if gearScore then
+				-- local r, b, g = GearScore_GetQuality(gearScore)
 
-				self.gearScore = gearScore
-				self.gearScoreR = r
-				self.gearScoreG = g
-				self.gearScoreB = b
+				-- self.gearScore = gearScore
+				-- self.gearScoreR = r
+				-- self.gearScoreG = g
+				-- self.gearScoreB = b
 
-				statFrame.Label:SetText(gearScore)
-				statFrame.Label:SetTextColor(r, g, b)
+				-- statFrame.Label:SetText(gearScore)
+				-- statFrame.Label:SetTextColor(r, g, b)
 
-				return
-			end
-		else
-			statFrame.Label:SetText(self.gearScore)
-			statFrame.Label:SetTextColor(self.gearScoreR, self.gearScoreG, self.gearScoreB)
-			return
-		end
-	end
+				-- return
+			-- end
+		-- else
+			-- statFrame.Label:SetText(self.gearScore)
+			-- statFrame.Label:SetTextColor(self.gearScoreR, self.gearScoreG, self.gearScoreB)
+			-- return
+		-- end
+	-- end
 
 --	local avgItemLevel, avgItemLevelEquipped = GetAverageItemLevel()
 --	if avgItemLevelEquipped == avgItemLevel then
@@ -845,7 +634,7 @@ function module:ItemLevel(statFrame, unit)
 --	statFrame.Label:SetTextColor(GetItemLevelColor())
 
 	local avgItemLevel, r, g, b = GetAverageItemLevel()
-	statFrame.Label:SetFormattedText("%.1f", avgItemLevel)
+	statFrame.Label:SetText(floor(avgItemLevel))
 	statFrame.Label:SetTextColor(r, g, b)
 end
 
@@ -1206,11 +995,7 @@ function module:PaperDollFrame_UpdateStatCategory(categoryFrame)
 	local categoryInfo = PAPERDOLL_STATCATEGORIES[category]
 
 	if category == "ITEM_LEVEL" then
-		if PersonalGearScore then
-			categoryFrame.NameText:SetText("Gear Score")
-		else
-			categoryFrame.NameText:SetText(L["Item Level"])
-		end
+		categoryFrame.NameText:SetText(L["Item Level"])
 	elseif category == "RESISTANCE" then
 		categoryFrame.NameText:SetText(L["Resistance"])
 	elseif category == "DEFENSES" then
