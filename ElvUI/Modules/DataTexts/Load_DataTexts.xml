@@ -13,6 +13,13 @@
 	<Script file="Guild.lua"/>
 	<Script file="Haste.lua"/>
 	<Script file="Hit.lua"/>
+	<Script file="Parry.lua"/>
+	<Script file="Block.lua"/>
+	<Script file="Dodge.lua"/>
+	<Script file="Defense.lua"/>
+	<Script file="ArmorPenetration.lua"/>
+	<Script file="SpellPenetration.lua"/>
+	<Script file="Expertise.lua"/>
 	<Script file="HonorableKills.lua"/>
 	<Script file="HPS.lua"/>
 	<Script file="Regen.lua"/>
