@@ -261,11 +261,6 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		E.db.actionbar.bar6.enabled = false
 		E.db.actionbar.bar6.visibility = "[vehicleui] hide; show"
 		
-		E.db.actionbar.bar7.enabled = false
-		E.db.actionbar.bar8.enabled = false
-		E.db.actionbar.bar9.enabled = false
-		E.db.actionbar.bar10.enabled = false
-		
 		
 		--Auras
 		E.db.auras.buffs.countFontSize = 10
@@ -433,6 +428,12 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		E.db.unitframe.units.raid40.enable = false
 		E.db.unitframe.units.raid40.rdebuffs.font = "PT Sans Narrow"
 		E.db.nameplates.filters.nme.triggers.enable = false
+		
+		local ExtrasLoaded = IsAddOnLoaded("ElvUI_Extras")
+			if ExtrasLoaded then
+				E.db.Extras.nameplates.QuestIcons.enabled = true
+				E.db.Extras.nameplates.QuestIcons.showText = true
+			end
 		--[[
 		--	Layout Tweaks will be handled below.
 		--	These are changes that deviate from the shared base layout
@@ -690,7 +691,10 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			
 			
 			-- ACTIONBARS
-			E.db.actionbar.raidmarkersbar.visible = "HIDE"
+			local raidmarkersbarBarsLoaded = IsAddOnLoaded("ElvUI_ExtraActionBars")
+			if raidmarkersbarBarsLoaded then 
+				E.db.actionbar.raidmarkersbar.visible = "HIDE"
+			end
 			E.db.actionbar.bar3.buttons = 12
 			E.db.actionbar.bar3.buttonspacing = -1
 			E.db.actionbar.bar3.buttonsPerRow = 12
@@ -708,24 +712,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.actionbar.bar6.buttonspacing = -1
 			E.db.actionbar.bar6.buttonsize = 25
 			E.db.actionbar.bar6.visibility = "[vehicleui] hide; show"
-			
-			E.db.actionbar.bar10.enabled = true
-			E.db.actionbar.bar10.backdrop = false
-			E.db.actionbar.bar10.buttonspacing = -1
-			E.db.actionbar.bar10.buttonsize = 25
-			E.db.actionbar.bar10.visibility = "[vehicleui] hide;show"
-			
-			E.db.actionbar.bar8.enabled = true
-			E.db.actionbar.bar8.backdrop = false
-			E.db.actionbar.bar8.buttonspacing = -1
-			E.db.actionbar.bar8.buttonsize = 25
-			E.db.actionbar.bar8.visibility = "[vehicleui] hide;show"
-			
-			E.db.actionbar.bar9.enabled = true
-			E.db.actionbar.bar9.backdrop = false
-			E.db.actionbar.bar9.buttonspacing = -1
-			E.db.actionbar.bar9.buttonsize = 25
-			E.db.actionbar.bar9.visibility = "[vehicleui] hide;show"
+
 			
 			E.db.actionbar.bar2.enabled = true
 			E.db.actionbar.bar2.buttons = 12
@@ -753,13 +740,6 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.actionbar.bar4.buttonsize = 25
 			
 			E.db.actionbar.barTotem.buttonsize = 26
-			
-			E.db.actionbar.bar7.enabled = true
-			E.db.actionbar.bar7.backdrop = false
-			E.db.actionbar.bar7.buttonspacing = -1
-			E.db.actionbar.bar7.buttonsize = 25
-			E.db.actionbar.bar7.visibility = "[vehicleui] hide;show"
-			
 			E.db.actionbar.backdropSpacingConverted = true
 			
 			-- LAYOUT SET
@@ -777,7 +757,6 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.auras.buffs.size = 40
 			
 			-- MOVERS (All positions from your profile)
-			E.db.movers.ElvAB_8 = "BOTTOM,ElvUIParent,BOTTOM,0,52"
 			E.db.movers.ElvUF_PlayerCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,355"
 			E.db.movers.ElvUF_RaidMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,0"
 			E.db.movers.LootFrameMover = "TOPLEFT,ElvUIParent,TOPLEFT,418,-186"
@@ -797,22 +776,52 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.movers.ElvAB_3 = "BOTTOM,ElvUIParent,BOTTOM,0,171"
 			E.db.movers.ReputationBarMover = "TOPRIGHT,ElvUIParent,TOPRIGHT,-2,-245"
 			E.db.movers.TempEnchantMover = "TOPRIGHT,ElvUIParent,TOPRIGHT,-4,-257"
-			E.db.movers.ElvAB_9 = "BOTTOM,ElvUIParent,BOTTOM,0,28"
 			E.db.movers.BNETMover = "TOPRIGHT,ElvUIParent,TOPRIGHT,-4,-274"
 			E.db.movers.ShiftAB = "TOPLEFT,ElvUIParent,BOTTOMLEFT,4,1076"
 			E.db.movers.ElvAB_5 = "BOTTOM,ElvUIParent,BOTTOM,0,124"
 			E.db.movers.WatchFrameMover = "TOPRIGHT,ElvUIParent,TOPRIGHT,-163,-325"
 			E.db.movers.ElvAB_6 = "BOTTOM,ElvUIParent,BOTTOM,0,100"
-			E.db.movers.ElvAB_10 = "BOTTOM,ElvUIParent,BOTTOM,0,4"
 			E.db.movers.ElvUF_PlayerMover = "BOTTOM,ElvUIParent,BOTTOM,-293,403"
 			E.db.movers.ElvUF_PetMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-399,299"
 			E.db.movers.TotemBarMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,431,248"
-			E.db.movers.ElvAB_7 = "BOTTOM,ElvUIParent,BOTTOM,0,76"
+			
 			E.db.movers.ElvUF_PartyMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,568,4"
 			E.db.movers.AlertFrameMover = "TOP,ElvUIParent,TOP,-1,-18"
 			E.db.movers.ElvUF_TargetTargetMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-410,444"
 			E.db.movers.ElvUF_TargetCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,424"
 			E.db.movers.ShiftAB = "TOPLEFT,ElvUIParent,BOTTOMLEFT,11,1015"
+			
+			local ExtraActionBarsLoaded = IsAddOnLoaded("ElvUI_ExtraActionBars")
+			if ExtraActionBarsLoaded then
+				E.db.actionbar.bar7.enabled = true
+				E.db.actionbar.bar7.backdrop = false
+				E.db.actionbar.bar7.buttonspacing = -1
+				E.db.actionbar.bar7.buttonsize = 25
+				E.db.actionbar.bar7.visibility = "[vehicleui] hide;show"
+				E.db.movers.ElvAB_7 = "BOTTOM,ElvUIParent,BOTTOM,0,76"
+				
+				E.db.actionbar.bar8.enabled = true
+				E.db.actionbar.bar8.backdrop = false
+				E.db.actionbar.bar8.buttonspacing = -1
+				E.db.actionbar.bar8.buttonsize = 25
+				E.db.actionbar.bar8.visibility = "[vehicleui] hide;show"
+				E.db.movers.ElvAB_8 = "BOTTOM,ElvUIParent,BOTTOM,0,52"
+				
+				E.db.actionbar.bar9.enabled = true
+				E.db.actionbar.bar9.backdrop = false
+				E.db.actionbar.bar9.buttonspacing = -1
+				E.db.actionbar.bar9.buttonsize = 25
+				E.db.actionbar.bar9.visibility = "[vehicleui] hide;show"
+				E.db.movers.ElvAB_9 = "BOTTOM,ElvUIParent,BOTTOM,0,28"
+				
+				E.db.actionbar.bar10.enabled = true
+				E.db.actionbar.bar10.backdrop = false
+				E.db.actionbar.bar10.buttonspacing = -1
+				E.db.actionbar.bar10.buttonsize = 25
+				E.db.actionbar.bar10.visibility = "[vehicleui] hide;show"
+				E.db.movers.ElvAB_10 = "BOTTOM,ElvUIParent,BOTTOM,0,4"	
+			end
+			
 			local NP = E:GetModule("NamePlates")
 			if NP and NP.StyleFilterConfigure then
 				NP:StyleFilterConfigure()

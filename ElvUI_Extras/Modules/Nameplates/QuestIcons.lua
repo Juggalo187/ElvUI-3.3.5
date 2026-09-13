@@ -5,7 +5,7 @@ local NP = E:GetModule("NamePlates")
 local LSM = E.Libs.LSM
 
 local modName = mod:GetName()
-local isAwesome = C_NamePlate
+local isAwesome = NP.hasModernNameplateAPI
 
 mod.initialized = false
 
@@ -325,6 +325,18 @@ local function scanTooltipText(line)
 	end
 end
 
+local function isDashedTextObjective(line)
+    if not line then return false end
+    local stripped = line:gsub("^[%s\194\160]+", "")
+    return stripped:match("^[\45\226\128\147\226\128\148\226\128\162]") ~= nil
+end
+
+-- Return true if this line carries a numeric pattern (x/y or %).
+local function hasNumericPattern(line)
+    return match(line, "%d+%s*/%s*%d+") ~= nil
+        or match(line, "[%d%.]+%%") ~= nil
+end
+
 local function getQuests(unit)
     scanTool:ClearLines()
     scanTool:SetUnit(unit)
@@ -333,34 +345,64 @@ local function getQuests(unit)
         local str = _G['ElvUI_ExtrasScanTooltipQITextLeft' .. i]
         local line = str and str:GetText()
 
-        if not line or line == '' then break end
+        if line and line ~= '' then
+            local text, progress = scanTooltipText(line)
+            local isTextObj = false
 
-        local text, progress = scanTooltipText(line)
+            -- Fallback: dashed text objective with no number, e.g.
+            -- "-  Samuel's Remains Buried". No count and no percent, but
+            -- still a valid objective that deserves an icon.
+            if not text and isDashedTextObjective(line) and not hasNumericPattern(line) then
+                isTextObj = true
+                text = nil       -- nothing to show as count text
+                progress = 0     -- treat as "not started" for color math
+            end
 
-        if text and progress < 1 then
-			local questType
-			if itemPickupQuests[text] then
-				questType = 'ITEM'
-			else
-                for typeKey, typeTexts in pairs(questTypes) do
-                    for _, typeText in ipairs(typeTexts) do
-                        if find(lower(line), typeText, nil, true) then
-                            questType = typeKey
-                            break
+            if isTextObj or (text and progress < 1) then
+                local questType
+                if itemPickupQuests[text] then
+                    questType = 'ITEM'
+                else
+                    for typeKey, typeTexts in pairs(questTypes) do
+                        for _, typeText in ipairs(typeTexts) do
+                            if find(lower(line), typeText, nil, true) then
+                                questType = typeKey
+                                break
+                            end
                         end
+                        if questType then break end
                     end
-                    if questType then break end
                 end
-			end
 
-			return {
-				text = text,
-				progress = progress,
-                questType = questType or 'DEFAULT'
-            }
+                return {
+                    text = text,             -- nil for pure text objectives
+                    progress = progress,
+                    questType = questType or 'DEFAULT'
+                }
+            end
         end
     end
     return nil
+end
+
+NP.QuestCache = NP.QuestCache or {}
+local QUEST_CACHE_TTL = 5
+
+local function getQuestsCached(unit)
+    local guid = UnitGUID(unit)
+    if not guid then
+        return getQuests(unit)
+    end
+
+    local entry = NP.QuestCache[guid]
+    local now = GetTime()
+    if entry and (now - entry.t) < QUEST_CACHE_TTL then
+        return entry.data
+    end
+
+    local data = getQuests(unit)
+    NP.QuestCache[guid] = { data = data, t = now }
+    return data
 end
 
 local function parseTip(unit, db)
@@ -406,7 +448,7 @@ function mod:UpdateQuestStatus(db, frame, unit, unitName, unitType)
 	local unitQuest
 
 	if unit then
-		unitQuest = getQuests(unit)
+		unitQuest = getQuestsCached(unit)
 		if unitQuest then
 			local data = unitQuest
 			markedUnits[unitType..unitName] = unitQuest
@@ -532,6 +574,7 @@ end
 
 function mod:QUEST_ACCEPTED(questIndex, db)
 	E:Delay(0.1, function()
+		twipe(NP.QuestCache)
 		for j = 1, GetNumQuestLeaderBoards(questIndex) do
 			local _, objectiveType = GetQuestLogLeaderBoard(j, questIndex)
 			if objectiveType == "item" then
@@ -548,6 +591,7 @@ end
 function mod:QUEST_REMOVED(db)
 	E:Delay(0.1, function()
 		twipe(itemPickupQuests)
+		twipe(NP.QuestCache)
 
 		for i = 1, GetNumQuestLogEntries() do
 			for j = 1, GetNumQuestLeaderBoards(i) do
@@ -615,11 +659,13 @@ function mod:Toggle(db)
 
 			if not self:IsHooked(QuestieTooltips, "RemoveQuest") then
 				self:SecureHook(QuestieTooltips, "RemoveQuest", function()
+					twipe(NP.QuestCache)
 					self:QueueUpdate(db)
 				end)
 			end
 			if not self:IsHooked(_QuestEventHandler, "QuestLogUpdate") then
 				self:SecureHook(_QuestEventHandler, "QuestLogUpdate", function()
+					twipe(NP.QuestCache)
 					self:QueueUpdate(db)
 				end)
 			end
@@ -661,6 +707,7 @@ function mod:Toggle(db)
 			self:RegisterEvent("QUEST_ACCEPTED", function(_, questIndex) self:QUEST_ACCEPTED(questIndex, db) end)
 			self:RegisterEvent("QUEST_REMOVED", function() self:QUEST_REMOVED(db) end)
 			self:RegisterEvent("QUEST_LOG_UPDATE", function()
+				twipe(NP.QuestCache)
 				self:QueueUpdate(db)
 			end)
 			self:QueueUpdate(db)

@@ -37,6 +37,7 @@ local WorldGetNumChildren = WorldFrame.GetNumChildren
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
 local hasModernNameplateAPI = (C_NamePlate and C_NamePlate.GetNamePlates and C_NamePlate.GetNamePlateForUnit) and true or false
+NP.hasModernNameplateAPI = hasModernNameplateAPI
 
 local lastChildern, numChildren, hasTarget = 0, 0
 local OVERLAY = [=[Interface\TargetingFrame\UI-TargetingFrame-Flash]=]
@@ -397,10 +398,6 @@ function NP:OnShow(isConfig, dontHideHighlight)
     
     frame:Show()
 	
-	if not isConfig and frame.UnitType and frame.UnitName then
-        NP:Update_QuestIcons(frame)
-    end
-	
 	NP:StyleFilterUpdate(frame, "NAME_PLATE_UNIT_ADDED")
 	NP:ForEachVisiblePlate("ResetNameplateFrameLevel") --keep this after `StyleFilterUpdate`
 end
@@ -437,15 +434,6 @@ function NP:OnHide(isConfig, dontHideHighlight)
 
     if frame.isEventsRegistered then
         NP:UnregisterAllEvents(frame)
-    end
-    
-    -- Hide both quest icon containers
-    if frame.QuestIcons then
-        frame.QuestIcons:Hide()
-    end
-    
-    if frame.QuestIconContainer then
-        frame.QuestIconContainer:Hide()
     end
 
     frame.TopIndicator:Hide()
@@ -635,7 +623,6 @@ function NP:OnCreated(frame)
 
 	unitFrame.BossIcon = BossIcon
 	unitFrame.EliteIcon = EliteIcon
-	NP:GetQuestIconContainer(unitFrame)
 
 	self.OnShow(frame, true)
 	self:SetSize(frame)
@@ -1328,7 +1315,6 @@ function NP:Initialize()
 	self:RegisterEvent("UNIT_ENERGY")
 	self:RegisterEvent("UNIT_FOCUS")
 	self:RegisterEvent("UNIT_RAGE")
-	self:RegisterEvent("QUEST_LOG_UPDATE")
 	
 	if hasModernNameplateAPI then
 		self:RegisterEvent("NAME_PLATE_CREATED", "OnNamePlateCreated")
@@ -1354,14 +1340,6 @@ function NP:Initialize()
 	LAI.RegisterCallback(self, "LibAuraInfo_AURA_APPLIED_DOSE")
 	LAI.RegisterCallback(self, "LibAuraInfo_AURA_CLEAR")
 	LAI.RegisterCallback(self, "LibAuraInfo_UNIT_AURA")
-end
-
-function NP:QUEST_LOG_UPDATE()
-    for frame in pairs(self.VisiblePlates) do
-        if frame.UnitType and frame.UnitName then
-            self:Update_QuestIcons(frame)
-        end
-    end
 end
 
 local function InitializeCallback()
