@@ -680,6 +680,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.unitframe.units.boss.buffs.yOffset = 16
 			
 			-- NAMEPLATES
+			E.db.nameplates.units.FRIENDLY_PLAYER.level.enable = true
 			E.db.nameplates.units.ENEMY_NPC.health.text.enable = true
 			E.db.nameplates.units.ENEMY_NPC.iconFrame.enable = true
 			E.db.nameplates.units.ENEMY_NPC.questIcons.enable = true
