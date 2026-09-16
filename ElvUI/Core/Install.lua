@@ -239,7 +239,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.pz.wratharmory.enable = false
 		end
 		E.db.nameplates.filters.nme.actions.nameOnly = true
-		
+		E.db.general.afk = false
 		E.db.actionbar.microbar.enabled = true
 		E.db.movers.MicrobarMover = "TOPLEFT,ElvUIParent,TOPLEFT,4,-4"
 		
