@@ -116,4 +116,58 @@ S:AddCallbackForAddon("Blizzard_TalentUI", "Skin_Blizzard_TalentUI", function()
 	PlayerSpecTab1.SetPoint = E.noop
 
 	PlayerTalentFrameTab1:Point("BOTTOMLEFT", 11, 46)
+	if string.find(string.lower(E.myrealm), "triumvirate", 1, true) then
+		local function SkinTriumvirateSpecTabs()
+		for i = 1, 4 do
+				local tab = _G["TriumvirateSpecTab"..i]
+				if tab and tab:IsShown() then
+					local regions = {tab:GetRegions()}
+		
+					-- Region 1: background — hide it
+					-- Region 2: spec icon — skin this
+					-- Region 4: highlight — replace
+					-- Region 5: glow — hide (or keep, see note below)
+					-- Regions 7+: ElvUI textures, leave alone
+		
+					if regions[1] then regions[1]:SetAlpha(0) end -- Background
+					if regions[4] then regions[4]:SetAlpha(0) end -- CheckButtonHilight
+					if regions[5] then regions[5]:SetAlpha(0) end -- SkillLineTab-Glow
+		
+					tab:SetTemplate("Transparent")
+					-- (Re-fetch regions; SetTemplate may have reordered them)
+					regions = {tab:GetRegions()}
+		
+					local icon = regions[2]
+					if icon then
+						icon:SetAlpha(1)
+						icon:SetTexCoord(unpack(E.TexCoords))
+						icon:SetInside(tab, 3, 3, -3, -3)
+						icon:SetDrawLayer("ARTWORK")
+					end
+		
+					-- Optional: custom highlight
+					local highlight = tab:GetHighlightTexture()
+					if highlight and highlight ~= icon then
+						highlight:SetTexture(E.media.blank)
+						highlight:SetVertexColor(1, 1, 1, 0.25)
+						highlight:SetInside(tab, 3, 3, -3, -3)
+						highlight:SetDrawLayer("OVERLAY")
+					end
+				end
+			end
+		end
+	
+		-- Initial skin attempt
+		SkinTriumvirateSpecTabs()
+	
+		-- Re-skin every time the frame is toggled (tabs may be recreated)
+		hooksecurefunc("ToggleTalentFrame", function()
+			E:Delay(0, SkinTriumvirateSpecTabs)
+		end)
+	
+		-- Also hook the standard update function in case Triumvirate routes through it
+		if PlayerTalentFrame_UpdateSpecs then
+			hooksecurefunc("PlayerTalentFrame_UpdateSpecs", SkinTriumvirateSpecTabs)
+		end
+	end
 end)
