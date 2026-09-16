@@ -233,8 +233,12 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		E.db.nameplates.filters.nme.triggers.notTarget = false
 		E.db.nameplates.filters.nme.triggers.nameplateType.enemyNPC = false
 		E.db.nameplates.filters.nme.triggers.healthThreshold = false
-			
-			E.db.nameplates.filters.nme.actions.nameOnly = true
+		
+		local PZLoaded = IsAddOnLoaded("ElvUI_ProjectZidras")
+		if PZLoaded then
+			E.db.pz.wratharmory.enable = false
+		end
+		E.db.nameplates.filters.nme.actions.nameOnly = true
 		
 		E.db.actionbar.microbar.enabled = true
 		E.db.movers.MicrobarMover = "TOPLEFT,ElvUIParent,TOPLEFT,4,-4"
