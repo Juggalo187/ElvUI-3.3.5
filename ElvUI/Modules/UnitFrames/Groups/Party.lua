@@ -226,7 +226,67 @@ function UF:Update_PartyFrames(frame, db)
 		--Health
 		UF:Configure_HealthBar(frame)
 
-		UF:Configure_RaidIcon(frame)
+		--UF:Configure_RaidIcon(frame)
+		if frame.childType == "target" then
+			if frame.RaidTargetIndicator then
+				frame.RaidTargetIndicator:Hide()
+				if not frame.RaidTargetIndicator.hookedForCustom then
+					hooksecurefunc(frame.RaidTargetIndicator, "Show", function(self) self:Hide() end)
+					frame.RaidTargetIndicator.hookedForCustom = true
+				end
+			end
+		
+			local customDB = db.targetsGroup.customRaidIcon
+		
+			if not frame.CustomRaidIcon then
+				local holder = CreateFrame("Frame", nil, frame.RaisedElementParent)
+				holder:SetFrameLevel(frame.RaisedElementParent:GetFrameLevel() + 5)
+			
+				local tex = holder:CreateTexture(nil, "OVERLAY")
+				tex:SetAllPoints(holder)
+				tex:SetTexture(E.Media.Textures.RaidIcons)
+				tex.SetTexture = E.noop
+			
+				holder.texture = tex
+				holder.owner = frame
+			
+				holder:RegisterEvent("RAID_TARGET_UPDATE")
+				holder:RegisterEvent("PLAYER_TARGET_CHANGED")
+				holder:RegisterEvent("GROUP_ROSTER_UPDATE")
+				holder:RegisterEvent("UNIT_TARGET")
+			
+				local function UpdateIcon(self)
+					local unit = self.owner.unit
+					if not unit then self:Hide() return end
+					local index = GetRaidTargetIndex(unit)
+					if index then
+						SetRaidTargetIconTexture(self.texture, index)
+						self:Show()
+					else
+						self:Hide()
+					end
+				end
+			
+				holder:SetScript("OnEvent", UpdateIcon)
+				holder.UpdateIcon = UpdateIcon
+			
+				frame.CustomRaidIcon = holder
+			end
+		
+			local icon = frame.CustomRaidIcon
+			if customDB and customDB.enable then
+				icon:ClearAllPoints()
+				icon:Size(customDB.size, customDB.size)
+				icon:Point(customDB.position or "TOP", frame, customDB.position or "TOP", customDB.xOffset or 0, customDB.yOffset or 0)
+				icon:UpdateIcon(icon)
+			else
+				icon:Hide()
+			end
+		else
+			UF:Configure_RaidIcon(frame)
+		end
+	
+	
 
 		--Name
 		UF:UpdateNameSettings(frame, frame.childType)

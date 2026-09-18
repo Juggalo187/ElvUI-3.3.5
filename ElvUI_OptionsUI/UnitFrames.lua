@@ -6327,7 +6327,25 @@ E.Options.args.unitframe.args.party = {
 							width = "full"
 						}
 					}
-				}
+				},
+				customRaidIcon = {
+						order = 9,
+						type = "group",
+						name = L["Raid Icon"],
+						guiInline = true,
+						get = function(info) return E.db.unitframe.units.party.targetsGroup.customRaidIcon[info[#info]] end,
+						set = function(info, value)
+							E.db.unitframe.units.party.targetsGroup.customRaidIcon[info[#info]] = value
+							UF:CreateAndUpdateHeaderGroup("party")
+						end,
+						args = {
+							enable = { order = 1, type = "toggle", name = L["Enable"] },
+							size = { order = 2, type = "range", name = L["Size"], min = 8, max = 60, step = 1 },
+							position = { order = 3, type = "select", name = L["Position"], values = positionValues },
+							xOffset = { order = 4, type = "range", name = L["X-Offset"], min = -300, max = 300, step = 1 },
+							yOffset = { order = 5, type = "range", name = L["Y-Offset"], min = -300, max = 300, step = 1 },
+						}
+					}
 			}
 		},
 		raidicon = GetOptionsTable_RaidIcon(UF.CreateAndUpdateHeaderGroup, "party"),

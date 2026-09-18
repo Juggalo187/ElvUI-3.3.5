@@ -3210,7 +3210,14 @@ P.unitframe = {
 					attachToObject = "Frame",
 					xOffset = 0,
 					yOffset = 8
-				}
+				},
+				customRaidIcon = {
+					enable = true,
+					size = 16,
+					position = "TOP",
+					xOffset = 0,
+					yOffset = 0
+				},
 			},
 			raidicon = {
 				enable = true,
