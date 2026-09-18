@@ -248,16 +248,17 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		E.db.actionbar.bar1.buttons = 8
 		E.db.actionbar.bar1.buttonsize = 50
 		E.db.actionbar.bar1.buttonspacing = 1
+		E.db.actionbar.bar1.visibility = ""
 		E.db.actionbar.bar2.buttons = 9
 		E.db.actionbar.bar2.buttonsize = 38
 		E.db.actionbar.bar2.buttonspacing = 1
 		E.db.actionbar.bar2.enabled = true
-		E.db.actionbar.bar2.visibility = "[vehicleui] hide; show"
+		E.db.actionbar.bar2.visibility = ""
 		E.db.actionbar.bar3.buttons = 8
 		E.db.actionbar.bar3.buttonsize = 50
 		E.db.actionbar.bar3.buttonspacing = 1
 		E.db.actionbar.bar3.buttonsPerRow = 10
-		E.db.actionbar.bar3.visibility = "[vehicleui] hide; show"
+		E.db.actionbar.bar3.visibility = ""
 		E.db.actionbar.bar4.enabled = false
 		E.db.actionbar.bar4.visibility = "[vehicleui] hide; show"
 		E.db.actionbar.bar5.enabled = false
@@ -701,49 +702,48 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			if raidmarkersbarBarsLoaded then 
 				E.db.actionbar.raidmarkersbar.visible = "HIDE"
 			end
-			E.db.actionbar.bar3.buttons = 12
-			E.db.actionbar.bar3.buttonspacing = -1
-			E.db.actionbar.bar3.buttonsPerRow = 12
-			E.db.actionbar.bar3.buttonsize = 25
-			E.db.actionbar.bar3.visibility = "[vehicleui] hide; show"
-			E.db.actionbar.bar4.enabled = true
-			E.db.actionbar.bar4.buttonspacing = -1
-			E.db.actionbar.bar4.buttonsize = 25
-			E.db.actionbar.bar4.visibility = "[vehicleui] hide; show"
-			E.db.actionbar.bar5.enabled = true
-			E.db.actionbar.bar5.buttonspacing = -1
-			E.db.actionbar.bar5.buttonsize = 25
-			E.db.actionbar.bar5.visibility = "[vehicleui] hide; show"
-			E.db.actionbar.bar6.enabled = true
-			E.db.actionbar.bar6.buttonspacing = -1
-			E.db.actionbar.bar6.buttonsize = 25
-			E.db.actionbar.bar6.visibility = "[vehicleui] hide; show"
-
-			
-			E.db.actionbar.bar2.enabled = true
-			E.db.actionbar.bar2.buttons = 12
-			E.db.actionbar.bar2.buttonspacing = -1
-			E.db.actionbar.bar2.buttonsize = 25
-			E.db.actionbar.bar2.visibility = "[vehicleui] hide; show"
-			
-			E.db.actionbar.bar1.buttons = 12
+			E.db.actionbar.bar1.enabled = true	
 			E.db.actionbar.bar1.backdropSpacing = 0
+			E.db.actionbar.bar1.buttons = 12
+			E.db.actionbar.bar1.point = "BOTTOMLEFT"
+			E.db.actionbar.bar1.buttonsPerRow = 12
 			E.db.actionbar.bar1.buttonspacing = -1
-			E.db.actionbar.bar1.visibility = "[vehicleui] hide; show"
+			E.db.actionbar.bar1.visibility = ""
 			E.db.actionbar.bar1.buttonsize = 25
-			E.db.actionbar.bar5.enabled = true
-			E.db.actionbar.bar5.buttons = 12
-			E.db.actionbar.bar5.buttonspacing = -1
-			E.db.actionbar.bar5.buttonsPerRow = 12
-			E.db.actionbar.bar5.buttonsize = 25
-			E.db.actionbar.bar5.visibility = "[vehicleui] hide; show"
-			E.db.actionbar.bar4.enabled = true
-			E.db.actionbar.bar4.backdrop = false
-			E.db.actionbar.bar4.point = "BOTTOMLEFT"
-			E.db.actionbar.bar4.buttonspacing = -1
-			E.db.actionbar.bar4.buttonsPerRow = 12
-			E.db.actionbar.bar4.visibility = "[vehicleui] hide; show"
-			E.db.actionbar.bar4.buttonsize = 25
+			
+			for i = 2, 6 do
+				local bar = E.db.actionbar["bar"..i]
+				bar.enabled = true
+				bar.backdropSpacing = 0
+				bar.buttons = 12
+				bar.point = "BOTTOMLEFT"
+				bar.buttonsize = 25
+				bar.buttonspacing = -1
+				bar.buttonsPerRow = 12
+				bar.visibility = "[vehicleui] hide; show"
+			end
+			
+			local ExtraActionBarsLoaded = IsAddOnLoaded("ElvUI_ExtraActionBars")
+			
+			if ExtraActionBarsLoaded then
+			for i = 7, 10 do
+				local bar = E.db.actionbar["bar"..i]
+				bar.enabled = true
+				bar.backdropSpacing = 0
+				bar.buttons = 12
+				bar.point = "BOTTOMLEFT"
+				bar.buttonsize = 25
+				bar.buttonspacing = -1
+				bar.buttonsPerRow = 12
+				bar.visibility = "[vehicleui] hide; show"
+			end
+			
+			
+			E.db.movers.ElvAB_7 = "BOTTOM,ElvUIParent,BOTTOM,0,76"
+			E.db.movers.ElvAB_8 = "BOTTOM,ElvUIParent,BOTTOM,0,52"
+			E.db.movers.ElvAB_9 = "BOTTOM,ElvUIParent,BOTTOM,0,28"
+			E.db.movers.ElvAB_10 = "BOTTOM,ElvUIParent,BOTTOM,0,4"	
+			end
 			
 			E.db.actionbar.barTotem.buttonsize = 26
 			E.db.actionbar.backdropSpacingConverted = true
@@ -796,38 +796,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.movers.ElvUF_TargetTargetMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-410,444"
 			E.db.movers.ElvUF_TargetCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,424"
 			E.db.movers.ShiftAB = "TOPLEFT,ElvUIParent,BOTTOMLEFT,11,1015"
-			
-			local ExtraActionBarsLoaded = IsAddOnLoaded("ElvUI_ExtraActionBars")
-			if ExtraActionBarsLoaded then
-				E.db.actionbar.bar7.enabled = true
-				E.db.actionbar.bar7.backdrop = false
-				E.db.actionbar.bar7.buttonspacing = -1
-				E.db.actionbar.bar7.buttonsize = 25
-				E.db.actionbar.bar7.visibility = "[vehicleui] hide;show"
-				E.db.movers.ElvAB_7 = "BOTTOM,ElvUIParent,BOTTOM,0,76"
-				
-				E.db.actionbar.bar8.enabled = true
-				E.db.actionbar.bar8.backdrop = false
-				E.db.actionbar.bar8.buttonspacing = -1
-				E.db.actionbar.bar8.buttonsize = 25
-				E.db.actionbar.bar8.visibility = "[vehicleui] hide;show"
-				E.db.movers.ElvAB_8 = "BOTTOM,ElvUIParent,BOTTOM,0,52"
-				
-				E.db.actionbar.bar9.enabled = true
-				E.db.actionbar.bar9.backdrop = false
-				E.db.actionbar.bar9.buttonspacing = -1
-				E.db.actionbar.bar9.buttonsize = 25
-				E.db.actionbar.bar9.visibility = "[vehicleui] hide;show"
-				E.db.movers.ElvAB_9 = "BOTTOM,ElvUIParent,BOTTOM,0,28"
-				
-				E.db.actionbar.bar10.enabled = true
-				E.db.actionbar.bar10.backdrop = false
-				E.db.actionbar.bar10.buttonspacing = -1
-				E.db.actionbar.bar10.buttonsize = 25
-				E.db.actionbar.bar10.visibility = "[vehicleui] hide;show"
-				E.db.movers.ElvAB_10 = "BOTTOM,ElvUIParent,BOTTOM,0,4"	
-			end
-			
+
 			local NP = E:GetModule("NamePlates")
 			if NP and NP.StyleFilterConfigure then
 				NP:StyleFilterConfigure()
