@@ -620,3 +620,37 @@ G.unitframe.specialFilters = {
 	blockDispellable = true,
 	blockNotDispellable = true,
 }
+
+
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_LOGIN")
+frame:SetScript("OnEvent", function()
+    -- Triumvirate: force Polarity debuffs to always show on group/raid frames
+	do
+		if string.find(string.lower(E.myrealm), "triumvirate", 1, true) then
+			if not G.unitframe.aurafilters.Polarity then
+				G.unitframe.aurafilters.Polarity = {
+					type = "Whitelist",
+					spells = {
+						[510043] = { enable = true, priority = 0, stackThreshold = 0 },
+						[510046] = { enable = true, priority = 0, stackThreshold = 0 },
+					},
+				}
+			end
+	
+			local targets = { "party", "raid", "raid40", "raidpet" }
+			local units = E.db and E.db.unitframe and E.db.unitframe.units
+			if units then
+				for _, name in ipairs(targets) do
+					local unit = units[name]
+					if type(unit) == "table"
+						and type(unit.debuffs) == "table"
+						and type(unit.debuffs.priority) == "string"
+						and not unit.debuffs.priority:find("Polarity", 1, true) then
+						unit.debuffs.priority = "Polarity," .. unit.debuffs.priority
+					end
+				end
+			end
+		end
+	end
+end)
