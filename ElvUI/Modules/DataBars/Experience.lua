@@ -216,13 +216,14 @@ end
 function mod:ExperienceBar_QuestXPUpdate(event)
     if event == "ZONE_CHANGED_NEW_AREA" and not self.db.experience.questXP.questCurrentZoneOnly then return end
 
+    -- Triumvirate disables RAF at level 56+
+    if UnitLevel("player") >= 56 then
+        rafEnabled = false
+    end
+
     local rawQuestXP = getQuestXP(self.db.experience.questXP.questCompletedOnly, self.db.experience.questXP.questCurrentZoneOnly)
 
-    -- Quest log value already reflects the server XP rate on Triumvirate.
-    -- RAF adds +2x the quest log value when active.
-    -- Total = rawQuestXP * (1 + rafMultiplier)
     local rafMultiplier = rafEnabled and 2 or 0
-
     self.questTotalXP = rawQuestXP * (1 + rafMultiplier)
 
     if self.questTotalXP > 0 then
@@ -400,21 +401,25 @@ function mod:CreateExperienceBarDropdown()
 			end
 		end
 		
-		info = UIDropDownMenu_CreateInfo()
-		info.text = rafEnabled and "|cff00ff00RAF: ENABLED|r" or "|cffff5555RAF: DISABLED|r"
-		info.notCheckable = true
-		info.func = function()
-			rafEnabled = not rafEnabled
-			if rafEnabled then
-				AddChatMessage("|cff00ff00[XP]|r RAF bonus: ENABLED (quest XP will include +2x RAF)", 1, 1, 1)
-			else
-				AddChatMessage("|cffff8800[XP]|r RAF bonus: DISABLED", 1, 1, 1)
+		-- Only show RAF toggle below level 56 (Triumvirate disables RAF at 56+)
+		local playerLevel = UnitLevel("player")
+		if playerLevel < 56 then
+			info = UIDropDownMenu_CreateInfo()
+			info.text = rafEnabled and "|cff00ff00RAF: ENABLED|r" or "|cffff5555RAF: DISABLED|r"
+			info.notCheckable = true
+			info.func = function()
+				rafEnabled = not rafEnabled
+				if rafEnabled then
+					AddChatMessage("|cff00ff00[XP]|r RAF bonus: ENABLED (quest XP will include +2x RAF)", 1, 1, 1)
+				else
+					AddChatMessage("|cffff8800[XP]|r RAF bonus: DISABLED", 1, 1, 1)
+				end
+				if mod.questXPEnabled and mod.db.experience.questXP.enable then
+					mod:ExperienceBar_QuestXPUpdate()
+				end
 			end
-			if mod.questXPEnabled and mod.db.experience.questXP.enable then
-				mod:ExperienceBar_QuestXPUpdate()
-			end
+			UIDropDownMenu_AddButton(info)
 		end
-		UIDropDownMenu_AddButton(info)
 	
         -- Separator
         info = UIDropDownMenu_CreateInfo()
