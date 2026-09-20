@@ -68,13 +68,6 @@ local function OnEnter(self)
 	-- Line 2 (grey): hit description matching Blizzard layout
 	DT.tooltip:AddLine(format("Increases your %s chance to hit a target of level 83 by %.2f%%.", hitType, hitBonus), nil, nil, nil, 1)
 
-	-- Line 3 (grey): penetration info (matches Blizzard layout)
-	if penRatingID == CR_SPELL_PENETRATION then
-		DT.tooltip:AddLine(format("%s %d (Reduces enemy resistances by %d)", penLabel, penRating, penBonus), nil, nil, nil, 1)
-	else
-		DT.tooltip:AddLine(format("%s rating %d (Enemy armor reduced by up to %.2f%%).", penLabel, penRating, penBonus), nil, nil, nil, 1)
-	end
-
 	DT.tooltip:Show()
 end
 
