@@ -1,0 +1,21 @@
+## Interface: 30300
+## Title: |cff1784d1E|r|cffe5e3e3lvUI|r QuestTracker
+## Notes: QuestGuru Tracker ported to ElvUI - 1:1 copy of functionality
+## Author: MrOBrian (original), converted to ElvUI plugin
+## Version: 1.4.4
+## RequiredDeps: ElvUI
+
+Locales\enUS.lua
+Locales\deDE.lua
+Locales\frFR.lua
+Locales\ruRU.lua
+Locales\zhTW.lua
+
+Bindings.xml
+Templates.xml
+Core.lua
+Plugin.lua
+Quests.lua
+Achievements.lua
+Options.lua
+Mover.lua

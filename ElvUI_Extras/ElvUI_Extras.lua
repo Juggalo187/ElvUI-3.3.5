@@ -1891,7 +1891,7 @@ function core:GetOptions()
 	end
 
 	E.Options.args.Extras = {
-		order = 55,
+		order = 56,
 		type = "group",
 		childGroups = "tab",
 		name = core.pluginColor.."Extras",

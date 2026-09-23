@@ -381,7 +381,7 @@ function PZ:InsertOptions()
 
 	--Main options group
 	E.Options.args.PZ = {
-		order = 54,
+		order = 55,
 		type = "group",
 		childGroups = "tab",
 		name = PZ.Title,
