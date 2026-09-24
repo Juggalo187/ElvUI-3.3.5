@@ -26,6 +26,11 @@ bar:SetFrameStrata("LOW")
 function AB:UpdatePet(event, unit)
 	if (event == "UNIT_FLAGS" or event == "UNIT_AURA") and unit ~= "pet" then return end
 	if event == "UNIT_PET" and unit ~= "player" then return end
+	
+	-- Schedule a delayed update for DK ghouls where PetHasActionBar() isn't ready on frame 0
+	if event == "UNIT_PET" and not PetHasActionBar() then
+		E:ScheduleTimer(function() AB:UpdatePet("PET_BAR_UPDATE") end, 0.2)
+	end
 
 	for i = 1, NUM_PET_ACTION_SLOTS, 1 do
 		local buttonName = "PetActionButton"..i
@@ -277,6 +282,8 @@ function AB:CreateBarPet()
 		end
 	]])
 
+	PetActionBarFrame:UnregisterAllEvents()
+	PetActionBarFrame:Hide()
 	PetActionBarFrame.showgrid = 1
 	PetActionBar_ShowGrid()
 
@@ -288,6 +295,8 @@ function AB:CreateBarPet()
 	self:RegisterEvent("PLAYER_ENTERING_WORLD", "UpdatePet")
 	self:RegisterEvent("PLAYER_CONTROL_LOST", "UpdatePet")
 	self:RegisterEvent("PET_BAR_UPDATE", "UpdatePet")
+	self:RegisterEvent("PET_BAR_UPDATE_USABLE", "UpdatePet")
+	self:RegisterEvent("PLAYER_TALENT_UPDATE", "UpdatePet")
 	self:RegisterEvent("UNIT_PET", "UpdatePet")
 	self:RegisterEvent("UNIT_FLAGS", "UpdatePet")
 	self:RegisterEvent("UNIT_AURA", "UpdatePet")
