@@ -7,8 +7,9 @@ I used [ElvUI-WotLK](https://github.com/ElvUI-WotLK/ElvUI) and its plugins.
 So I added the plugins [ElvUI_Extras](https://github.com/noname08662/ElvUI_Extras) and [ElvUI_ProjectZidras](https://github.com/Zidras/ElvUI_ProjectZidras)
 which take advantage of the Awesomewotlk new API.
 
+I also converted the Addons QuestGuru_Tracker and ActionBarSaver into plugins.
 
-I've tested on these servers so far.
+I've done limited testing on these servers so far.
 
 [Project-Astral](https://playastral.io/)<br>
 [Project-Ebonhold](https://project-ebonhold.com/)<br>
