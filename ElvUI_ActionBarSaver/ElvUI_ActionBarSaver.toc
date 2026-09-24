@@ -1,0 +1,10 @@
+## Interface: 30300
+## Title: |cff1784d1E|r|cffe5e3e3lvUI|r Action Bar Saver
+## Notes: Saves and restores your action bar layouts within ElvUI.
+## Author: Shadowed (Refactored for ElvUI)
+## Version: 1.0.0
+## RequiredDeps: ElvUI
+
+Locales.lua
+Core.lua
+Options.lua
