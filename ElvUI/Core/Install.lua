@@ -1016,7 +1016,7 @@ local function SetPage(PageNum)
 		InstallOption3Button:SetText(L["Caster DPS"])
 		InstallOption4Button:Show()
 		InstallOption4Button:SetScript("OnClick", function() E.db.layoutSet = nil E:SetupLayout("skulytheme") end)
-		InstallOption4Button:SetText("Skuly Theme")
+		InstallOption4Button:SetText("Skuly Layout")
 	elseif PageNum == 7 then
 		f.SubTitle:SetText(L["Auras"])
 		f.Desc1:SetText(L["Select the type of aura system you want to use with ElvUI's unitframes. Set to Aura Bar & Icons to use both aura bars and icons, set to icons only to only see icons."])
