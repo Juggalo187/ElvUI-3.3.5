@@ -1,5 +1,5 @@
-local E = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local L = E.Libs.ACL:NewLocale("ElvUI", "enUS", true)
+﻿local E = unpack(ElvUI_); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local L = E.Libs.ACL:NewLocale("ElvUI_", "enUS", true)
 
 L["Hits the 'Confirm' button automatically."] = true
 L["Picks up items and money automatically."] = true
@@ -24,7 +24,7 @@ L["Text to display upon leaving combat."] = true
 L["REQUIRES RELOAD."] = true
 L["Icon to the left or right of the item link."] = true
 L["The size of the icon in the chat frame."] = true
-L["Adds shadows to all of the frames.\nDoes nothing unless you replace your ElvUI/Core/Toolkit.lua with the relevant file from the Optionals folder of this plugin."] = true
+L["Adds shadows to all of the frames.\nDoes nothing unless you replace your ElvUI_/Core/Toolkit.lua with the relevant file from the Optionals folder of this plugin."] = true
 L["Combat state notification alerts."] = true
 L["Custom editbox position and size."] = true
 L["Usage:"..
@@ -596,7 +596,7 @@ L["Hunter"] = true
 L["Shaman"] = true
 L["Deathknight"] = true
 L["Aura Bars"] = true
-L["Adds extra configuration options for aura bars.\n\n For options like size and detachment, use ElvUI Aura Bars Movers!"] = true
+L["Adds extra configuration options for aura bars.\n\n For options like size and detachment, use ElvUI_ Aura Bars Movers!"] = true
 L["Hide"] = true
 L["Spell Name"] = true
 L["Spell Time"] = true
@@ -944,5 +944,5 @@ L["Mouseover: Copy Button"] = true
 L["Copy button visibility."] = true
 L["Plugin version mismatch! Please, download appropriate plugin version at"] = true
 L["Questie Coherence"] = true
-L["Makes, once again, itemID tooltip line added by ElvUI to get positioned last on unit and item tooltips."] = true
-L["Attempts to extend font outline options across all of ElvUI."] = true
+L["Makes, once again, itemID tooltip line added by ElvUI_ to get positioned last on unit and item tooltips."] = true
+L["Attempts to extend font outline options across all of ElvUI_."] = true

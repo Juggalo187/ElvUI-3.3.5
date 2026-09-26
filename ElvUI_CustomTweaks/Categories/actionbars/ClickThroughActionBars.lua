@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local AB = E:GetModule("ActionBars")
 local CT = E:GetModule("CustomTweaks")
 local isEnabled = E.private["actionbar"].enable and E.private["CustomTweaks"] and E.private["CustomTweaks"]["ClickThroughActionBars"] and true or false

@@ -1,4 +1,4 @@
-local E, L, _, P = unpack(ElvUI)
+﻿local E, L, _, P = unpack(ElvUI_)
 local AB = E:GetModule("ActionBars")
 local core = E:GetModule("Extras")
 local mod = core:NewModule("Quest Bar", "AceHook-3.0", "AceEvent-3.0")
@@ -71,7 +71,7 @@ function mod:LoadConfig(db)
 					enabled = {
 						type = "toggle",
 						name = core.pluginColor..L["Enable"],
-						desc = L["A new action bar that collects usable quest items from your bag.\n\nDue to state actions limit, this module overrides bar10 created by ElvUI Extra Action Bars."],
+						desc = L["A new action bar that collects usable quest items from your bag.\n\nDue to state actions limit, this module overrides bar10 created by ElvUI_ Extra Action Bars."],
 						set = function(info, value) db[info[#info]] = value self:Toggle(db) end,
 					},
 				},

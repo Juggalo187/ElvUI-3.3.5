@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local CH = E:GetModule("Chat")
 local CT = E:GetModule("CustomTweaks")
 local isEnabled = E.private["chat"].enable and E.private["CustomTweaks"] and E.private["CustomTweaks"]["ChatMaxLines"] and true or false

@@ -1,4 +1,4 @@
-local E, L, _, P = unpack(ElvUI)
+﻿local E, L, _, P = unpack(ElvUI_)
 local core = E:GetModule("Extras")
 local mod = core:NewModule("CooldownsUF2", "AceHook-3.0", "AceEvent-3.0")
 local LSM = E.Libs.LSM
@@ -7,7 +7,7 @@ local LAI = E.Libs.LAI
 local modName = mod:GetName()
 local activeCooldowns, framelist, testing = {}, {}, false
 local thinBorders = E:GetModule("UnitFrames").thinBorders
-local edgeFile = LSM:Fetch("border", "ElvUI GlowBorder")
+local edgeFile = LSM:Fetch("border", "ElvUI_ GlowBorder")
 
 local allSpells = {}
 local highlightedSpells = {

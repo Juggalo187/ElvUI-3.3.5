@@ -1,5 +1,5 @@
--- Spanish localization file for esES and esMX.
-local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "esMX")
+﻿-- Spanish localization file for esES and esMX.
+local L = ElvUI_[1].Libs.ACL:NewLocale("ElvUI_", "esMX")
 if not L then return end
 
 L["Player SwingBar"] = true

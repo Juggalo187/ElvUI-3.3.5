@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local S = E:GetModule("Skins")
 local AS = E:GetModule("AddOnSkins")
 
@@ -21,7 +21,7 @@ S:AddCallbackForAddon("WIM", "WIM", function()
 	end
 
 	local WIM_Elvui = {
-		title = "WIM ElvUI",
+		title = "WIM ElvUI_",
 		version = "1.0.0",
 		author = "Divico",
 		website = "",
@@ -294,7 +294,7 @@ S:AddCallbackForAddon("WIM", "WIM", function()
 	}
 
 	local function ApplySkin(self)
-		self.db.skin.selected = "WIM ElvUI"
+		self.db.skin.selected = "WIM ElvUI_"
 		self.RegisterSkin(WIM_Elvui)
 	end
 

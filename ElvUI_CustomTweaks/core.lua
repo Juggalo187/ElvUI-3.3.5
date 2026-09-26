@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI);
+﻿local E, L, V, P, G = unpack(ElvUI_);
 local CT = E:NewModule("CustomTweaks", "AceHook-3.0", "AceEvent-3.0", "AceTimer-3.0");
 local EP = LibStub("LibElvUIPlugin-1.0")
 local addon, ns = ...
@@ -34,7 +34,7 @@ local Tweaks = {
 	},
 	["Misc"] = {
 		{"RaidControl", L["Allows you to change template of the Raid Control button or hide it altogether."]},
-		{"NoBorders", L["Attempts to remove borders on all ElvUI elements. This doesn't work on all statusbars, so some borders will be kept intact."]},
+		{"NoBorders", L["Attempts to remove borders on all ElvUI_ elements. This doesn't work on all statusbars, so some borders will be kept intact."]},
 	},
 	["Unitframe"] = {
 		{"AuraIconSpacing", L["Allows you to set a spacing between individual aura icons for the units you choose."]},
@@ -82,7 +82,7 @@ local function GetTweaksAsString(tweaks)
 	return tweaksString
 end
 
---Copied from ElvUI
+--Copied from ElvUI_
 local function RGBToHex(r, g, b)
 	r = r <= 1 and r >= 0 and r or 0
 	g = g <= 1 and g >= 0 and g or 0
@@ -157,7 +157,7 @@ function CT:ConfigTable()
 			description1 = {
 				order = 2,
 				type = "description",
-				name = format(L["%s is a collection of various tweaks for ElvUI. New features or changes have been requested by regular users and then fulfilled by members of the Tukui community."], CT.Title),
+				name = format(L["%s is a collection of various tweaks for ElvUI_. New features or changes have been requested by regular users and then fulfilled by members of the Tukui community."], CT.Title),
 			},
 			spacer1 = {
 				order = 3,
@@ -187,8 +187,8 @@ function CT:ConfigTable()
 				type = "input",
 				width = "full",
 				name = L["Report Bugs / Request Tweaks"],
-				get = function(info) return "http://git.tukui.org/Blazeflack/elvui-customtweaks/issues" end,
-				set = function(info) return "http://git.tukui.org/Blazeflack/elvui-customtweaks/issues" end,
+				get = function(info) return "http://git.tukui.org/Blazeflack/ElvUI_-customtweaks/issues" end,
+				set = function(info) return "http://git.tukui.org/Blazeflack/ElvUI_-customtweaks/issues" end,
 			},
 			credit = {
 				order = -1,

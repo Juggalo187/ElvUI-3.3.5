@@ -1,5 +1,5 @@
-local E = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local L = E.Libs.ACL:NewLocale("ElvUI", "frFR")
+﻿local E = unpack(ElvUI_); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local L = E.Libs.ACL:NewLocale("ElvUI_", "frFR")
 
 L["Hits the 'Confirm' button automatically."] = "Appuie automatiquement sur le bouton 'Confirmer'."
 L["Picks up items and money automatically."] = "Ramasse automatiquement les objets et l'argent."
@@ -23,7 +23,7 @@ L["Text to display upon leaving combat."] = "Texte à afficher lors de la sortie
 L["REQUIRES RELOAD."] = "NÉCESSITE UN RECHARGEMENT."
 L["Icon to the left or right of the item link."] = "Icône à gauche ou à droite du lien de l'objet."
 L["The size of the icon in the chat frame."] = "La taille de l'icône dans la fenêtre de discussion."
-L["Adds shadows to all of the frames.\nDoes nothing unless you replace your ElvUI/Core/Toolkit.lua with the relevant file from the Optionals folder of this plugin."] = "Ajoute des ombres à tous les cadres.\nNe fait rien à moins de remplacer votre ElvUI/Core/Toolkit.lua par le fichier pertinent du dossier Optionnels de ce plugin."
+L["Adds shadows to all of the frames.\nDoes nothing unless you replace your ElvUI_/Core/Toolkit.lua with the relevant file from the Optionals folder of this plugin."] = "Ajoute des ombres à tous les cadres.\nNe fait rien à moins de remplacer votre ElvUI_/Core/Toolkit.lua par le fichier pertinent du dossier Optionnels de ce plugin."
 L["Combat state notification alerts."] = "Alertes de notification d'état de combat."
 L["Custom editbox position and size."] = "Position et taille personnalisées de la zone de saisie."
 L["Usage:"..
@@ -67,7 +67,7 @@ L["Usage:"..
 			"\n  ..UnitHealth('mouseover'), "..
 			"\n  (1-percentage)*255, percentage*255)"
 L["Adds an icon next to chat hyperlinks."] = "Ajoute une icône à côté des hyperliens du chat."
-L["A new action bar that collects usable quest items from your bag.\n\nDue to state actions limit, this module overrides bar10 created by ElvUI Extra Action Bars."] = "Une nouvelle barre d'action qui collecte les objets de quête utilisables de votre sac.\n\nEn raison de la limite d'actions d'état, ce module remplace la barre 10 créée par ElvUI Extra Action Bars."
+L["A new action bar that collects usable quest items from your bag.\n\nDue to state actions limit, this module overrides bar10 created by ElvUI_ Extra Action Bars."] = "Une nouvelle barre d'action qui collecte les objets de quête utilisables de votre sac.\n\nEn raison de la limite d'actions d'état, ce module remplace la barre 10 créée par ElvUI_ Extra Action Bars."
 L["Toggles the display of the actionbar's backdrop."] = "Active/désactive l'affichage de l'arrière-plan des barres d'action."
 L["The frame will not be displayed unless hovered over."] = "Le cadre ne s'affichera que lorsque vous passez la souris dessus."
 L["Inherit the global fade; mousing over, targetting, setting focus, losing health, entering combat will set the remove transparency. Otherwise it will use the transparency level in the general actionbar settings for global fade alpha."] = "Hérite du fondu global, passer la souris dessus, cibler, définir le focus, perdre de la santé, entrer en combat supprimera la transparence. Sinon, il utilisera le niveau de transparence dans les paramètres généraux de la barre d'action pour le fondu global alpha."
@@ -707,7 +707,7 @@ L["Hunter"] = "Chasseur"
 L["Shaman"] = "Chaman"
 L["Deathknight"] = "Chevalier de la mort"
 L["Aura Bars"] = "Barres d'Aura"
-L["Adds extra configuration options for aura bars.\n\n For options like size and detachment, use ElvUI Aura Bars Movers!"] = "Ajoute des options de configuration supplémentaires pour les barres d'aura.\n\n Pour les options comme la taille et le détachement, utilisez les Déplaceurs de Barres d'Aura d'ElvUI !"
+L["Adds extra configuration options for aura bars.\n\n For options like size and detachment, use ElvUI_ Aura Bars Movers!"] = "Ajoute des options de configuration supplémentaires pour les barres d'aura.\n\n Pour les options comme la taille et le détachement, utilisez les Déplaceurs de Barres d'Aura d'ElvUI_ !"
 L["Hide"] = "Cacher"
 L["Spell Name"] = "Nom du Sort"
 L["Spell Time"] = "Temps du Sort"
@@ -1168,7 +1168,7 @@ L["Mouseover: Copy Button"] = "Survol: Bouton de Copie"
 L["Plugin version mismatch! Please, download appropriate plugin version at"] =
 	"Incompatibilité de version du plugin ! Veuillez télécharger la bonne version à"
 L["Questie Coherence"] = "Cohérence avec Questie"
-L["Makes, once again, itemID tooltip line added by ElvUI to get positioned last on unit and item tooltips."] =
-	"Permet à nouveau à la ligne itemID ajoutée par ElvUI d’apparaître en dernier dans les infobulles (unités et objets)."
-L["Attempts to extend font outline options across all of ElvUI."] =
-	"Tente d'étendre les options de contour de police dans tout ElvUI."
+L["Makes, once again, itemID tooltip line added by ElvUI_ to get positioned last on unit and item tooltips."] =
+	"Permet à nouveau à la ligne itemID ajoutée par ElvUI_ d’apparaître en dernier dans les infobulles (unités et objets)."
+L["Attempts to extend font outline options across all of ElvUI_."] =
+	"Tente d'étendre les options de contour de police dans tout ElvUI_."

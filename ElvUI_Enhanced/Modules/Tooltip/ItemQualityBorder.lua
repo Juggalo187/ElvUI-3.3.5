@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local IBC = E:NewModule("Enhanced_ItemBorderColor", "AceHook-3.0")
 local TT = E:GetModule("Tooltip")
 

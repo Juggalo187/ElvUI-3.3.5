@@ -1,4 +1,4 @@
-local E, L, _, P = unpack(ElvUI)
+﻿local E, L, _, P = unpack(ElvUI_)
 local core = E:GetModule("Extras")
 local mod = core:NewModule("GeneralMisc.", "AceHook-3.0")
 local S = E:GetModule("Skins")
@@ -139,7 +139,7 @@ P["Extras"]["general"][modName] = {
 	["GlobalShadow"] = {
 		["enabled"] = false,
 		["desc"] = L["Adds shadows to all of the frames."..
-		"\nDoes nothing unless you replace your ElvUI/Core/Toolkit.lua with the relevant file from the Optionals folder of this plugin."],
+		"\nDoes nothing unless you replace your ElvUI_/Core/Toolkit.lua with the relevant file from the Optionals folder of this plugin."],
 		["size"] = 2,
 		["color"] = {0,0,0,0.8},
 	},

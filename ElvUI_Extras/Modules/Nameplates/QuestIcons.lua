@@ -1,4 +1,4 @@
-local E, L, _, P = unpack(ElvUI)
+﻿local E, L, _, P = unpack(ElvUI_)
 local core = E:GetModule("Extras")
 local mod = core:NewModule("QuestIcons", "AceHook-3.0", "AceEvent-3.0")
 local NP = E:GetModule("NamePlates")

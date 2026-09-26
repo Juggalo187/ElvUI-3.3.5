@@ -1,5 +1,5 @@
-local E = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local L = E.Libs.ACL:NewLocale("ElvUI", "deDE")
+﻿local E = unpack(ElvUI_); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local L = E.Libs.ACL:NewLocale("ElvUI_", "deDE")
 
 -- DESC locales
 L["ENH_LOGIN_MSG"] = "Sie verwenden |cff1784d1ElvUI|r |cff1784d1Enhanced|r |cffff8000(WotLK)|r Version %s%s|r."

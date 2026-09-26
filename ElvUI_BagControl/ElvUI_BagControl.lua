@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI);
+﻿local E, L, V, P, G = unpack(ElvUI_);
 local BC = E:NewModule("BagControl", "AceHook-3.0", "AceEvent-3.0", "AceTimer-3.0");
 local B = E:GetModule("Bags")
 

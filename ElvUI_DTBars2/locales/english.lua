@@ -1,5 +1,5 @@
--- English localization file for enUS and enGB.
-local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "enUS", true, true)
+﻿-- English localization file for enUS and enGB.
+local L = ElvUI_[1].Libs.ACL:NewLocale("ElvUI_", "enUS", true, true)
 if not L then return; end
 
 L["DTBars2_DESC"] = "This plugin allows you to create and customize additional datatext panels"

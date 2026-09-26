@@ -1,5 +1,5 @@
-local E = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local L = E.Libs.ACL:NewLocale("ElvUI", "koKR")
+﻿local E = unpack(ElvUI_); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local L = E.Libs.ACL:NewLocale("ElvUI_", "koKR")
 
 L["Hits the 'Confirm' button automatically."] = "'확인' 버튼을 자동으로 클릭합니다."
 L["Picks up items and money automatically."] = "아이템과 돈을 자동으로 줍습니다."
@@ -23,7 +23,7 @@ L["Text to display upon leaving combat."] = "전투를 종료할 때 표시할 �
 L["REQUIRES RELOAD."] = "재시작 필요."
 L["Icon to the left or right of the item link."] = "아이템 링크의 왼쪽 또는 오른쪽에 아이콘을 표시합니다."
 L["The size of the icon in the chat frame."] = "채팅 창에 표시할 아이콘의 크기입니다."
-L["Adds shadows to all of the frames.\nDoes nothing unless you replace your ElvUI/Core/Toolkit.lua with the relevant file from the Optionals folder of this plugin."] = "모든 프레임에 그림자를 추가합니다.\n이 플러그인의 선택적 폴더에서 관련 파일로 ElvUI/Core/Toolkit.lua를 교체하지 않으면 아무것도 하지 않습니다."
+L["Adds shadows to all of the frames.\nDoes nothing unless you replace your ElvUI_/Core/Toolkit.lua with the relevant file from the Optionals folder of this plugin."] = "모든 프레임에 그림자를 추가합니다.\n이 플러그인의 선택적 폴더에서 관련 파일로 ElvUI_/Core/Toolkit.lua를 교체하지 않으면 아무것도 하지 않습니다."
 L["Combat state notification alerts."] = "전투 상태 알림 경고."
 L["Custom editbox position and size."] = "사용자 정의 편집 상자 위치 및 크기."
 L["Usage:"..
@@ -67,7 +67,7 @@ L["Usage:"..
 			"\n  ..UnitHealth('mouseover'), "..
 			"\n  (1-percentage)*255, percentage*255)"
 L["Adds an icon next to chat hyperlinks."] = "채팅 하이퍼링크 옆에 아이콘을 추가합니다."
-L["A new action bar that collects usable quest items from your bag.\n\nDue to state actions limit, this module overrides bar10 created by ElvUI Extra Action Bars."] = "가방에서 사용 가능한 퀘스트 아이템을 수집하는 새로운 액션 바입니다.\n\n상태 액션 제한으로 인해 이 모듈은 ElvUI Extra Action Bars에서 생성한 bar10을 덮어씁니다."
+L["A new action bar that collects usable quest items from your bag.\n\nDue to state actions limit, this module overrides bar10 created by ElvUI_ Extra Action Bars."] = "가방에서 사용 가능한 퀘스트 아이템을 수집하는 새로운 액션 바입니다.\n\n상태 액션 제한으로 인해 이 모듈은 ElvUI_ Extra Action Bars에서 생성한 bar10을 덮어씁니다."
 L["Toggles the display of the actionbar's backdrop."] = "액션 바 배경 표시를 전환합니다."
 L["The frame will not be displayed unless hovered over."] = "마우스를 올리지 않으면 프레임이 표시되지 않습니다."
 L["Inherit the global fade; mousing over, targetting, setting focus, losing health, entering combat will set the remove transparency. Otherwise it will use the transparency level in the general actionbar settings for global fade alpha."] = "전역 페이드를 상속받아 마우스 오버, 대상 지정, 주시 설정, 체력 손실, 전투 진입 시 투명도를 제거합니다. 그렇지 않으면 전역 페이드 알파에 대한 일반 액션 바 설정의 투명도 레벨을 사용합니다."
@@ -707,7 +707,7 @@ L["Hunter"] = "사냥꾼"
 L["Shaman"] = "주술사"
 L["Deathknight"] = "죽음의 기사"
 L["Aura Bars"] = "오라 바"
-L["Adds extra configuration options for aura bars.\n\n For options like size and detachment, use ElvUI Aura Bars Movers!"] = "오라 바에 대한 추가 구성 옵션을 추가합니다.\n\n 크기 및 분리와 같은 옵션은 ElvUI 오라 바 이동기를 사용하세요!"
+L["Adds extra configuration options for aura bars.\n\n For options like size and detachment, use ElvUI_ Aura Bars Movers!"] = "오라 바에 대한 추가 구성 옵션을 추가합니다.\n\n 크기 및 분리와 같은 옵션은 ElvUI_ 오라 바 이동기를 사용하세요!"
 L["Hide"] = "숨기기"
 L["Spell Name"] = "주문 이름"
 L["Spell Time"] = "주문 시간"
@@ -1165,7 +1165,7 @@ L["Mouseover: Channel Button"] = "마우스오버: 채널 버튼"
 L["Mouseover: Copy Button"] = "마우스오버: 복사 버튼"
 L["Plugin version mismatch! Please, download appropriate plugin version at"] = "플러그인 버전 불일치! 아래에서 올바른 버전을 다운로드하세요:"
 L["Questie Coherence"] = "Questie 연동"
-L["Makes, once again, itemID tooltip line added by ElvUI to get positioned last on unit and item tooltips."] =
+L["Makes, once again, itemID tooltip line added by ElvUI_ to get positioned last on unit and item tooltips."] =
 	"ElvUI가 추가한 itemID 줄이 다시 유닛 및 아이템 툴팁의 마지막에 표시되도록 합니다."
-L["Attempts to extend font outline options across all of ElvUI."] =
-	"ElvUI 전반에 걸쳐 글꼴 외곽선 옵션을 확장하려고 시도합니다."
+L["Attempts to extend font outline options across all of ElvUI_."] =
+	"ElvUI_ 전반에 걸쳐 글꼴 외곽선 옵션을 확장하려고 시도합니다."

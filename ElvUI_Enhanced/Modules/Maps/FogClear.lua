@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local FC = E:NewModule("Enhanced_FogClear", "AceHook-3.0")
 
 local _G = _G

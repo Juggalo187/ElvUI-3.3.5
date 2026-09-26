@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local EE = E:GetModule("ElvUI_Enhanced")
 
 local function GeneralOptions()

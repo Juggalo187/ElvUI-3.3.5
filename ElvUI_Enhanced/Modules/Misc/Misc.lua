@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local M = E:NewModule("Enhanced_Misc", "AceHook-3.0", "AceEvent-3.0")
 
 local CancelDuel = CancelDuel

@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local DT = E:GetModule("DataTexts")
 local EE = E:GetModule("ElvUI_Enhanced")
 local LRC = LibStub("LibRangeCheck-2.0")

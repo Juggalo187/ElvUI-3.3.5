@@ -1,10 +1,10 @@
---[[
+﻿--[[
 DT Text Colors, by Benik (Emerald Dream EU)
 
-a plugin for ElvUI, that changes the DT text color to class color, value color or any user defined
+a plugin for ElvUI_, that changes the DT text color to class color, value color or any user defined
 ]]--
 
-local E, L, V, P, G, _ = unpack(ElvUI);
+local E, L, V, P, G, _ = unpack(ElvUI_);
 local DTC = E:NewModule('DataTextColors', 'AceEvent-3.0');
 local DT = E:GetModule('DataTexts');
 local EP = LibStub("LibElvUIPlugin-1.0")

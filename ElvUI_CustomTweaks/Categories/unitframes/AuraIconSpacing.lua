@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local UF = E:GetModule("UnitFrames")
 local CT = E:GetModule("CustomTweaks")
 local isEnabled = E.private["unitframe"].enable and E.private["CustomTweaks"] and E.private["CustomTweaks"]["AuraIconSpacing"] and true or false

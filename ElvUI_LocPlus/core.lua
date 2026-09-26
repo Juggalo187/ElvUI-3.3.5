@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local LPB = E:NewModule("LocationPlus", "AceTimer-3.0")
 local DT = E:GetModule("DataTexts")
 local LSM = LibStub("LibSharedMedia-3.0")

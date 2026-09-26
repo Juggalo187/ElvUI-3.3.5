@@ -1,5 +1,5 @@
-﻿local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI")
-local L = AceLocale:NewLocale("ElvUI", "zhTW")
+﻿local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_")
+local L = AceLocale:NewLocale("ElvUI_", "zhTW")
 if not L then return end
 -- Credits: zhouf616, xjjxfpyyyf
 L["Adds 2 digits in the coords"] = "坐標增加2位數字"
@@ -41,7 +41,7 @@ L["Hide Blizzard Zone Text"] = true
 L["Hide capped"] = "Hide capped" -- Requires localization
 L["Hide PvP"] = "PVP區域內隱藏"
 L["Hide Raid"] = "副本區域內隱藏"
-L["Hides all panels background so you can place them on ElvUI's top or bottom panel."] = "隱藏所有的面板背景, 你現在可以把它們放置在 ElvUI 的頂部或底部面板中."
+L["Hides all panels background so you can place them on ElvUI_'s top or bottom panel."] = "隱藏所有的面板背景, 你現在可以把它們放置在 ElvUI_ 的頂部或底部面板中."
 L["Hides a profession when the player reaches its highest level."] = "Hides a profession when the player reaches its highest level." -- Requires localization
 L[" is loaded. Thank you for using it."] = " 加載成功. 感謝您的使用."
 L["Larger Location Panel"] = "較大的主要框架"

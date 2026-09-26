@@ -1,4 +1,4 @@
-local PZ, T, E, L, V, P, G = unpack(select(2, ...))
+﻿local PZ, T, E, L, V, P, G = unpack(select(2, ...))
 local ZNP = PZ.NamePlates
 local NP = E.NamePlates
 
@@ -80,7 +80,7 @@ function ZNP:Update_CastBarOnValueChanged(value)
 	if not frame.UnitType then return end
 
 	if frame.oldCastBar and frame.oldCastBar.Icon:IsShown() then -- Instead of SetParent to E.HiddenFrame, workaround it by hiding it here. This is necessary because SetParent will change Region count and thus break Weakauras findNewPlate.
-		frame.oldCastBar.Icon:Hide() -- Keep this before db checks, since NameOnly doesn't have a ElvUI castbar but still needs to hide Blizzard NP castbar icon.
+		frame.oldCastBar.Icon:Hide() -- Keep this before db checks, since NameOnly doesn't have a ElvUI_ castbar but still needs to hide Blizzard NP castbar icon.
 	end
 
 	local db = NP.db.units[frame.UnitType]

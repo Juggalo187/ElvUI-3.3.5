@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local TAM = E:NewModule("Enhanced_TakeAllMail", "AceEvent-3.0")
 
 local select = select

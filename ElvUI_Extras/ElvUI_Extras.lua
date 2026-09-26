@@ -1,4 +1,4 @@
-﻿local E, L, _, P = unpack(ElvUI)
+﻿local E, L, _, P = unpack(ElvUI_)
 local core = E:NewModule("Extras", "AceHook-3.0", "AceEvent-3.0")
 local UF = E:GetModule("UnitFrames")
 local NP = E:GetModule("NamePlates")
@@ -565,9 +565,9 @@ function core:getSelected(cat, modName, path, fallback)
             printing = true
             E:Delay(0.1, function()
                 printing = false
-                print(format(self.customColorAlpha.."ElvUI "..self.pluginColor.."Extras"..self.customColorAlpha..","..
+                print(format(self.customColorAlpha.."ElvUI_ "..self.pluginColor.."Extras"..self.customColorAlpha..","..
                             self.customColorBeta.." %s"..self.customColorAlpha..":|r %s", modName, self.customColorBad..ERROR_CAPS))
-                print(format(self.customColorAlpha.."ElvUI "..self.pluginColor.."Extras"..self.customColorAlpha..","..
+                print(format(self.customColorAlpha.."ElvUI_ "..self.pluginColor.."Extras"..self.customColorAlpha..","..
                             self.customColorBeta.." %s"..self.customColorAlpha..":|r ??? -> %s.%s.%s", modName, cat, modName, path))
             end)
         end
@@ -581,9 +581,9 @@ function core:getSelected(cat, modName, path, fallback)
 			printing = true
 			E:Delay(0.1, function()
 				printing = false
-				print(format(self.customColorAlpha.."ElvUI "..self.pluginColor.."Extras"..self.customColorAlpha..","..
+				print(format(self.customColorAlpha.."ElvUI_ "..self.pluginColor.."Extras"..self.customColorAlpha..","..
 							self.customColorBeta.." %s"..self.customColorAlpha..":|r %s", modName, self.customColorBad..ERROR_CAPS))
-				print(format(self.customColorAlpha.."ElvUI "..self.pluginColor.."Extras"..self.customColorAlpha..","..
+				print(format(self.customColorAlpha.."ElvUI_ "..self.pluginColor.."Extras"..self.customColorAlpha..","..
 							self.customColorBeta.." %s"..self.customColorAlpha..":|r ??? -> %s.%s.%s", modName, cat, modName, path))
 			end)
 		end
@@ -596,13 +596,13 @@ end
 
 function core:print(type, ...)
 	if type == 'LUA' then
-		print(format(self.customColorAlpha.."ElvUI "..self.pluginColor.."Extras"..self.customColorAlpha..","..
+		print(format(self.customColorAlpha.."ElvUI_ "..self.pluginColor.."Extras"..self.customColorAlpha..","..
 					self.customColorBeta.." %s "..self.customColorBad..LUA_ERROR..self.customColorAlpha..":|r %s", ...))
 	elseif type == 'FORMATTING' then
-		print(format(self.customColorAlpha.."ElvUI "..self.pluginColor.."Extras"..self.customColorAlpha..","..
+		print(format(self.customColorAlpha.."ElvUI_ "..self.pluginColor.."Extras"..self.customColorAlpha..","..
 					self.customColorBeta.." %s"..self.customColorAlpha..":|r "..self.customColorBad..FORMATTING.." "..ERROR_CAPS, ...))
 	elseif type == 'FAIL' then
-		print(format(self.customColorAlpha.."ElvUI "..self.pluginColor.."Extras"..self.customColorAlpha..","..
+		print(format(self.customColorAlpha.."ElvUI_ "..self.pluginColor.."Extras"..self.customColorAlpha..","..
 					self.customColorBeta.." %s"..self.customColorAlpha..":|r %s", ...))
 	elseif type == 'ADDED' then
 		print(format(self.customColorAlpha.."%s"..self.customColorBeta..(select(2,...) and "%s" or L[" added."]), ...))
@@ -1907,7 +1907,7 @@ function core:GetOptions()
 					colors = {
 						order = 1,
 						type = "group",
-						name = L["Version: "].."1.10 (ElvUI 6.09)",
+						name = L["Version: "].."1.10 (ElvUI_ 6.09)",
 						guiInline = true,
 						get = function(info) return colorConvert(E.db.Extras[info[#info]]) end,
 						set = function(info, r, g, b)
@@ -2012,13 +2012,13 @@ function core:GetOptions()
 							extraFontFlags = {
 								type = "toggle",
 								name = L["Font Flags"],
-								desc = L["Attempts to extend font outline options across all of ElvUI."],
+								desc = L["Attempts to extend font outline options across all of ElvUI_."],
 
 							},
 							questieTips = {
 								type = "toggle",
 								name = L["Questie Coherence"],
-								desc = L["Makes, once again, itemID tooltip line added by ElvUI to get positioned last on unit and item tooltips."],
+								desc = L["Makes, once again, itemID tooltip line added by ElvUI_ to get positioned last on unit and item tooltips."],
 								disabled = function() return not _G.Questie end,
 							},
 							restoreRaidControls = {
@@ -2065,7 +2065,7 @@ function core:Initialize()
 
 	if E.version ~= '6.09' then
 		local CH = E:GetModule('Chat')
-		local msg = format(self.customColorAlpha.."ElvUI "..self.pluginColor.."Extras"..self.customColorAlpha..": |r"..self.customColorBad..
+		local msg = format(self.customColorAlpha.."ElvUI_ "..self.pluginColor.."Extras"..self.customColorAlpha..": |r"..self.customColorBad..
 					L["Plugin version mismatch! Please, download appropriate plugin version at"].." https://github.com/noname08662/ElvUI_Extras.")
 		if CH.Initialized then msg = select(2, CH:FindURL('CHAT_MSG_DUMMY', msg)) end
 		print(msg)

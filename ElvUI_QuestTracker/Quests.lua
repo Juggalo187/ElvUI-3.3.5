@@ -1,4 +1,4 @@
--- ElvUI_QuestTracker - Quests.lua
+﻿-- ElvUI_QuestTracker - Quests.lua
 -- Ported from QGT_Quests.lua by MrOBrian
 --
 -- NOTE: The frame-creation block and all button/helper functions that used to
@@ -6,7 +6,7 @@
 -- before Quests.lua's cross-references). This file now only contains the
 -- quest-watching logic itself.
 
-local E, L, V, P, G = unpack(ElvUI)
+local E, L, V, P, G = unpack(ElvUI_)
 local QGT = E:GetModule("ElvUI_QuestTracker")
 
 -- ============================================================

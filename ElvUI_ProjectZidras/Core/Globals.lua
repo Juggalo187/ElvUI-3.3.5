@@ -1,8 +1,8 @@
-local PZ, T, E, L, V, P, G = unpack(select(2, ...))
+﻿local PZ, T, E, L, V, P, G = unpack(select(2, ...))
 
 --Role icons
 PZ.rolePaths = {
-	["ElvUI"] = {
+	["ElvUI_"] = {
 		TANK = E.Media.Textures.Tank,
 		HEALER = E.Media.Textures.Healer,
 		DAMAGER = E.Media.Textures.DPS

@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local TA = E:NewModule("Enhanced_TrainAll", "AceHook-3.0", "AceEvent-3.0")
 
 local select = select

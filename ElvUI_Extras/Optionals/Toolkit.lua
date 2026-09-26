@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+﻿local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local LSM = E.Libs.LSM
 
 --Lua functions
@@ -183,7 +183,7 @@ local function CreateShadow(frame, size)
 	shadow:SetFrameLevel(1)
 	shadow:SetFrameStrata(frame:GetFrameStrata())
 	shadow:SetOutside(frame, size or 3, size or 3)
-	shadow:SetBackdrop({edgeFile = LSM:Fetch("border", "ElvUI GlowBorder"), edgeSize = E:Scale(size or 3)})
+	shadow:SetBackdrop({edgeFile = LSM:Fetch("border", "ElvUI_ GlowBorder"), edgeSize = E:Scale(size or 3)})
 	shadow:SetBackdropColor(backdropr, backdropg, backdropb, 0)
 	shadow:SetBackdropBorderColor(borderr, borderg, borderb, 0.9)
 	frame.shadow = shadow
@@ -198,7 +198,7 @@ local function CreateGlobalShadow(frame, size, r, g, b, a)
 
 	shadow:SetFrameLevel(1)
 	shadow:SetOutside(frame, size, size)
-	shadow:SetBackdrop({edgeFile = LSM:Fetch("border", "ElvUI GlowBorder"), edgeSize = E:Scale(size)})
+	shadow:SetBackdrop({edgeFile = LSM:Fetch("border", "ElvUI_ GlowBorder"), edgeSize = E:Scale(size)})
 	shadow:SetBackdropColor(0, 0, 0, 0)
 	shadow:SetBackdropBorderColor(r, g, b, a)
 

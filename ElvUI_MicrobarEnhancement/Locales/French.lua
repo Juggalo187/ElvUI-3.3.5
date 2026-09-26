@@ -1,6 +1,6 @@
--- French localization file for frFR.
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI")
-local L = AceLocale:NewLocale("ElvUI", "frFR")
+﻿-- French localization file for frFR.
+local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_")
+local L = AceLocale:NewLocale("ElvUI_", "frFR")
 if not L then return; end
 
 -- Config

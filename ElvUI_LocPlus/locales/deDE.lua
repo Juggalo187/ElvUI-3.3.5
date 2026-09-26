@@ -1,5 +1,5 @@
-﻿local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI")
-local L = AceLocale:NewLocale("ElvUI", "deDE")
+﻿local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_")
+local L = AceLocale:NewLocale("ElvUI_", "deDE")
 if not L then return end
 --Credits: Neophir, gOOvER, SpeedsharkX, Hoembi, Jrojimo, Merathilis
 L["Adds 2 digits in the coords"] = "Fügt 2 Nachkommastellen hinzu"
@@ -43,7 +43,7 @@ L["Hide capped"] = "Verstecke Volle" --need to review this.
 L["Hide Coords"] = "Verstecke Koordinaten"
 L["Hide PvP"] = "Verstecke PvP"
 L["Hide Raid"] = "Verstecke Schlachtzug"
-L["Hides all panels background so you can place them on ElvUI's top or bottom panel."] = "Verstecke alle Hintergründe von den Leisten, so dass du sie auf den oberen oder unteren ElvUI Leisten platzieren kannst."
+L["Hides all panels background so you can place them on ElvUI_'s top or bottom panel."] = "Verstecke alle Hintergründe von den Leisten, so dass du sie auf den oberen oder unteren ElvUI_ Leisten platzieren kannst."
 L["Hides a profession when the player reaches its highest level."] = "Verstecke den Beruf wenn ein Spieler das maximale Level erreicht hat."
 L[" is loaded. Thank you for using it."] = " ist geladen. Danke, dass Du es benutzt."
 L["Larger Location Panel"] = "Grösseres Location Panel"

@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local CT = E:GetModule("CustomTweaks")
 if not E.private["CustomTweaks"] or not E.private["CustomTweaks"]["NoBorders"] then return end;
 
@@ -7,7 +7,7 @@ local unpack, getmetatable = unpack, getmetatable
 local hooksecurefunc = hooksecurefunc
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
---Code taken from ElvUI
+--Code taken from ElvUI_
 local backdropr, backdropg, backdropb, backdropa, borderr, borderg, borderb = 0, 0, 0, 1, 0, 0, 0
 local function GetTemplate(t)
 	backdropa = 1
@@ -27,7 +27,7 @@ local function GetTemplate(t)
 	end
 end
 
---Code taken from ElvUI and modified to remove borders
+--Code taken from ElvUI_ and modified to remove borders
 local function SetTemplate(f, t, glossTex, ignoreUpdates)
 	GetTemplate(t)
 
@@ -55,7 +55,7 @@ local function SetTemplate(f, t, glossTex, ignoreUpdates)
 	f:SetBackdropBorderColor(0, 0, 0, 0)
 end
 
---Code taken from ElvUI
+--Code taken from ElvUI_
 local function addapi(object)
 	if not object.isCTHooked then
 		local mt = getmetatable(object).__index

@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local TI = E:NewModule("Enhanced_TooltipIcon", "AceHook-3.0")
 
 local _G = _G

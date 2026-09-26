@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local S = E:GetModule("Skins")
 local AS = E:GetModule("AddOnSkins")
 

@@ -1,4 +1,4 @@
-local E, L, _, P = unpack(ElvUI)
+﻿local E, L, _, P = unpack(ElvUI_)
 local core = E:GetModule("Extras")
 local mod = core:NewModule("AurasNP", "AceHook-3.0")
 local NP = E:GetModule("NamePlates")
@@ -1074,7 +1074,7 @@ function mod:ApplyHighlight(db, button)
 			button.shadow = shadow
 		end
 		button.shadow:SetOutside(button, db.size, db.size)
-		button.shadow:SetBackdrop({edgeFile = LSM:Fetch("border", "ElvUI GlowBorder"), edgeSize = E:Scale(db.size)})
+		button.shadow:SetBackdrop({edgeFile = LSM:Fetch("border", "ElvUI_ GlowBorder"), edgeSize = E:Scale(db.size)})
 		button.shadow:SetBackdropBorderColor(unpack(db.shadowColor))
 		button.shadow:Show()
 	elseif button.shadow then

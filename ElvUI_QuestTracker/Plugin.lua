@@ -1,6 +1,6 @@
--- ElvUI_QuestTracker - Plugin.lua
+﻿-- ElvUI_QuestTracker - Plugin.lua
 -- Ported from QuestGuru_Tracker.lua by MrOBrian
-local E, L, V, P, G = unpack(ElvUI)
+local E, L, V, P, G = unpack(ElvUI_)
 local QGT = E:GetModule("ElvUI_QuestTracker")
 
 -- Ensure QGT_Settings exists as an empty table at file-load time so the
@@ -742,7 +742,7 @@ end
 
 -- Kept as a no-op stub for compatibility (was used to refresh the options gradient)
 function QGT_UpdateOptionsTrackerObjFade()
-	-- nothing to do; ElvUI options panel updates itself
+	-- nothing to do; ElvUI_ options panel updates itself
 end
 
 -- ============================================================
@@ -835,7 +835,7 @@ function WatchFrame_GetRemainingSpace()
 end
 
 -- ============================================================
---  LOAD SETTINGS FROM ELVUI DB
+--  LOAD SETTINGS FROM ElvUI_ DB
 -- ============================================================
 function QGT_QuestWatchLoadSettings()
 	if (QGT_WatchHeaders == nil) then QGT_WatchHeaders = {} end

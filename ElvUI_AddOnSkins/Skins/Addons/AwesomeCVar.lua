@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local S = E:GetModule("Skins")
 local AS = E:GetModule("AddOnSkins")
 
@@ -217,9 +217,9 @@ S:AddCallbackForAddon("AwesomeCVar", "Skin_AwesomeCVar", function()
 	-- Escape menu button.
 	--
 	-- Two issues with the MPQ version's placement:
-	--   1. Nothing skins it (the MPQ .toc has no Skins\ElvUI.lua).
+	--   1. Nothing skins it (the MPQ .toc has no Skins\ElvUI_.lua).
 	--   2. It anchors to GameMenuButtonMacros, which conflicts with
-	--      ElvUI's reordered escape menu.
+	--      ElvUI_'s reordered escape menu.
 	--
 	-- Anchor to Continue (what the newer addon version does) and
 	-- grow the frame to fit. Guard the height change so we only do
@@ -286,7 +286,7 @@ S:AddCallbackForAddon("AwesomeCVar", "Skin_AwesomeCVar", function()
 	--
 	-- AddCallbackForAddon fires on ADDON_LOADED("AwesomeCVar"), which
 	-- is after the addon's own OnLoad has run, so all of the frames
-	-- created there already exist. A one-tick defer gives ElvUI's
+	-- created there already exist. A one-tick defer gives ElvUI_'s
 	-- own Skin_Misc / GameMenu layout a chance to finish first.
 	-- ============================================================
 	local runner = CreateFrame("Frame")

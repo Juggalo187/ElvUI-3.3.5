@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local EFL = E:NewModule("EnhancedFriendsList", "AceHook-3.0")
 local EP = LibStub("LibElvUIPlugin-1.0")
 local LSM = LibStub("LibSharedMedia-3.0", true)

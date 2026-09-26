@@ -1,4 +1,4 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/">
+﻿<Ui xmlns="http://www.blizzard.com/wow/ui/">
 	<Frame name="CharacterStatFrameTemplate" virtual="true">
 		<Size x="187" y="15"/>
 		<Layers>
@@ -163,7 +163,7 @@
 					<OnEnter>
 						self.texture:SetAlpha(1.0)
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-						GameTooltip:SetText(ElvUI[2]["Change Name/Icon"])
+						GameTooltip:SetText(ElvUI_[2]["Change Name/Icon"])
 					</OnEnter>
 					<OnLeave>
 						self.texture:SetAlpha(0.5)
@@ -198,14 +198,14 @@
 					PaperDollEquipmentManagerPane.selectedSetName = self.name
 					PaperDollFrame_ClearIgnoredSlots()
 					PaperDollFrame_IgnoreSlotsForSet(self.name)
-					ElvUI[1]:GetModule('Enhanced_CharacterFrame'):PaperDollEquipmentManagerPane_Update()
+					ElvUI_[1]:GetModule('Enhanced_CharacterFrame'):PaperDollEquipmentManagerPane_Update()
 					GearManagerDialogPopup:Hide()
 				else
 					GearManagerDialogPopup:Show()
 					PaperDollEquipmentManagerPane.selectedSetName = nil
 					GearManagerDialogPopup.selectedSetName = nil
 					PaperDollFrame_ClearIgnoredSlots()
-					ElvUI[1]:GetModule('Enhanced_CharacterFrame'):PaperDollEquipmentManagerPane_Update()
+					ElvUI_[1]:GetModule('Enhanced_CharacterFrame'):PaperDollEquipmentManagerPane_Update()
 				end
 				StaticPopup_Hide("CONFIRM_SAVE_EQUIPMENT_SET")
 				StaticPopup_Hide("CONFIRM_OVERWRITE_EQUIPMENT_SET")
@@ -329,7 +329,7 @@
 						end
 					end
 
-					ElvUI[1]:GetModule("Enhanced_CharacterFrame"):PetPaperDollCompanionPane_Update()
+					ElvUI_[1]:GetModule("Enhanced_CharacterFrame"):PetPaperDollCompanionPane_Update()
 				end
 				PlaySound("igMainMenuOptionCheckBoxOn")
 			</OnClick>

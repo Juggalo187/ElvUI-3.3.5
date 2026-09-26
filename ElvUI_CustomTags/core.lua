@@ -1,7 +1,7 @@
---Add access to ElvUI engine and unitframe framework
-local E = unpack(ElvUI);
-local ElvUF = ElvUI.oUF
-assert(ElvUF, "ElvUI was unable to locate oUF.")
+﻿--Add access to ElvUI_ engine and unitframe framework
+local E = unpack(ElvUI_);
+local ElvUF = ElvUI_.oUF
+assert(ElvUF, "ElvUI_ was unable to locate oUF.")
 
 local AddOnName = ...
 LibStub("LibElvUIPlugin-1.0"):RegisterPlugin(AddOnName)

@@ -1,7 +1,7 @@
 ﻿--Файл локализации для ruRU
 --Credits: Darth Predator
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI")
-local L = AceLocale:NewLocale("ElvUI", "ruRU")
+local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_")
+local L = AceLocale:NewLocale("ElvUI_", "ruRU")
 if not L then return end
 
 L["Adds 2 digits in the coords"] = "Добавляет сотые доли координат"
@@ -43,7 +43,7 @@ L["Hide Blizzard Zone Text"] = true
 L["Hide capped"] = "Hide capped" -- Requires localization
 L["Hide PvP"] = "Прятать PvP"
 L["Hide Raid"] = "Прятать рейды"
-L["Hides all panels background so you can place them on ElvUI's top or bottom panel."] = "Hides all panels background so you can place them on ElvUI's top or bottom panel." -- Requires localization
+L["Hides all panels background so you can place them on ElvUI_'s top or bottom panel."] = "Hides all panels background so you can place them on ElvUI_'s top or bottom panel." -- Requires localization
 L["Hides a profession when the player reaches its highest level."] = "Hides a profession when the player reaches its highest level." -- Requires localization
 L[" is loaded. Thank you for using it."] = " загружен. Спасибо за использование."
 L["Larger Location Panel"] = "Высокая панель зоны"

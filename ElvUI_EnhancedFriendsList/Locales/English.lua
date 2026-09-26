@@ -1,6 +1,6 @@
--- English localization file for enUS and enGB.
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI");
-local L = AceLocale:NewLocale("ElvUI", "enUS", true, true);
+﻿-- English localization file for enUS and enGB.
+local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_");
+local L = AceLocale:NewLocale("ElvUI_", "enUS", true, true);
 if not L then return; end
 
 L["LEVEL_TEMPLATE"] = "Level %s";

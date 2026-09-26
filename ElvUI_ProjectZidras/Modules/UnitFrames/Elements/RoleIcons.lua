@@ -1,4 +1,4 @@
-local PZ, T, E, L, V, P, G = unpack(select(2, ...))
+﻿local PZ, T, E, L, V, P, G = unpack(select(2, ...))
 local ZUF = PZ.UnitFrames
 local UF = E.UnitFrames
 
@@ -95,7 +95,7 @@ UF.Construct_RoleIcon = ZUF.Construct_RoleIcon
 UF.UpdateRoleIcon = ZUF.UpdateRoleIcon
 UF.Configure_RoleIcon = ZUF.Configure_RoleIcon
 
--- Since ElvUI does not have Role Icons in all unit frames, we need to hook into their update functions to add our own
+-- Since ElvUI_ does not have Role Icons in all unit frames, we need to hook into their update functions to add our own
 local function roleUpdaterHook(_, frame)
 	dbUpdater(frame)
 	if frame and not frame.GroupRoleIndicator then
@@ -114,5 +114,5 @@ local frameUpdateFunctions = {
 }
 
 for _, funcName in ipairs(frameUpdateFunctions) do
-	hooksecurefunc(UF, funcName, roleUpdaterHook) -- passes (UF, frame) as arguments from ElvUI's original function
+	hooksecurefunc(UF, funcName, roleUpdaterHook) -- passes (UF, frame) as arguments from ElvUI_'s original function
 end

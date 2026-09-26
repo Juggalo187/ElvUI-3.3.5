@@ -1,9 +1,9 @@
--- English localization file for enUS and enGB.
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI");
-local L = AceLocale:NewLocale("ElvUI", "enUS", true);
+﻿-- English localization file for enUS and enGB.
+local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_");
+local L = AceLocale:NewLocale("ElvUI_", "enUS", true);
 if not L then return; end
 
-L["%s is a collection of various tweaks for ElvUI. New features or changes have been requested by regular users and then fulfilled by members of the Tukui community."] = true;
+L["%s is a collection of various tweaks for ElvUI_. New features or changes have been requested by regular users and then fulfilled by members of the Tukui community."] = true;
 L["%s is the author of the following tweaks:"] = true;
 L["%s version %s by Blazeflack of tukui.org"] = true;
 L["Actionbar Tweaks"] = true;
@@ -19,7 +19,7 @@ L["Allows you to position and change color and alpha of castbar text."] = true;
 L["Allows you to set a spacing between individual aura icons for the units you choose."] = true;
 L["Allows you to use a separate texture for unitframe power bars."] = true;
 L["Assist"] = true;
-L["Attempts to remove borders on all ElvUI elements. This doesn't work on all statusbars, so some borders will be kept intact."] = true
+L["Attempts to remove borders on all ElvUI_ elements. This doesn't work on all statusbars, so some borders will be kept intact."] = true
 L["Aura Spacing"] = true;
 L["Bags Text Format"] = true;
 L["Bags Tweaks"] = true;
@@ -81,51 +81,51 @@ L["Used/Total"] = true;
 if GetLocale() == "enUS" then return end
 
 --German Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "deDE")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "deDE")
 if L then
 	--Add translations here
 end
 
 --Spanish (Spain) Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "esES")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "esES")
 if L then
 	--Add translations here
 end
 
 --Spanish (Mexico) Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "esMX")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "esMX")
 if L then
 	--Add translations here
 end
 
 --French Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "frFR")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "frFR")
 if L then
 	--Add translations here
 end
 
 --Italian Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "itIT")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "itIT")
 if L then
 	--Add translations here
 end
 
 --Korean Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "koKR")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "koKR")
 if L then
 	--Add translations here
 end
 
 --Portuguese Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "ptBR")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "ptBR")
 if L then
 	--Add translations here
 end
 
 --Russian Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "ruRU")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "ruRU")
 if L then
-	L["%s is a collection of various tweaks for ElvUI. New features or changes have been requested by regular users and then fulfilled by members of the Tukui community."] = "%s представляет собой набор различных настроек для ElvUI. Новые возможности или изменения были запрошены обычными пользователями, а затем реализованы членами сообщества TukUI.";
+	L["%s is a collection of various tweaks for ElvUI_. New features or changes have been requested by regular users and then fulfilled by members of the Tukui community."] = "%s представляет собой набор различных настроек для ElvUI_. Новые возможности или изменения были запрошены обычными пользователями, а затем реализованы членами сообщества TukUI.";
 	L["%s is the author of the following tweaks:"] = "%s является автором следующих твиков:";
 	L["%s version %s by Blazeflack of tukui.org"] = "%s версия %s от Blazeflack с tukui.org";
 	L["Actionbar Tweaks"] = "Твики панелей команд";
@@ -141,7 +141,7 @@ if L then
 	L["Allows you to set a spacing between individual aura icons for the units you choose."] = "Позволяет устанавливать отступ между аурами на выбранных рамках юнитов.";
 	L["Allows you to use a separate texture for unitframe power bars."] = "Позволяет использовать отдельную текстуру ресурса для рамок юнитов";
 	L["Assist"] = "Помощник";
-	L["Attempts to remove borders on all ElvUI elements. This doesn't work on all statusbars, so some borders will be kept intact."] = "Удаляет границы на всех элементах ElvUI. Это работает не на всех статусбарах, поэтому некоторые границы останутся.";
+	L["Attempts to remove borders on all ElvUI_ elements. This doesn't work on all statusbars, so some borders will be kept intact."] = "Удаляет границы на всех элементах ElvUI_. Это работает не на всех статусбарах, поэтому некоторые границы останутся.";
 	L["Aura Spacing"] = "Отступ аур";
 	L["Bags Text Format"] = "Формат текста сумок";
 	L["Bags Tweaks"] = "Твики сумок";
@@ -201,13 +201,13 @@ if L then
 end
 
 --Chinese (China, simplified) Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "zhCN")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "zhCN")
 if L then
 	--Add translations here
 end
 
 --Chinese (Taiwan, traditional) Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "zhTW")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "zhTW")
 if L then
 	--Add translations here
 end

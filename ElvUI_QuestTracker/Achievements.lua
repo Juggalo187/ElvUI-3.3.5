@@ -1,6 +1,6 @@
--- ElvUI_QuestTracker - Achievements.lua
+﻿-- ElvUI_QuestTracker - Achievements.lua
 -- Ported from QGT_Achievements.lua by MrOBrian
-local E, L, V, P, G = unpack(ElvUI)
+local E, L, V, P, G = unpack(ElvUI_)
 local QGT = E:GetModule("ElvUI_QuestTracker")
 
 QG_TRACKER_Q           = QG_TRACKER_Q           or L["Q"]

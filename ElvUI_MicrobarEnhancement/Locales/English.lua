@@ -1,6 +1,6 @@
 ﻿-- English localization file for enGB.
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI")
-local L = AceLocale:NewLocale("ElvUI", "enUS", true)
+local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_")
+local L = AceLocale:NewLocale("ElvUI_", "enUS", true)
 if not L then return end
 
 -- Config

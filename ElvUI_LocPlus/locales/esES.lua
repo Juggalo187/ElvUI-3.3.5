@@ -1,5 +1,5 @@
-﻿local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI")
-local L = AceLocale:NewLocale("ElvUI", "esES") or AceLocale:NewLocale("ElvUI", "esES")
+﻿local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_")
+local L = AceLocale:NewLocale("ElvUI_", "esES") or AceLocale:NewLocale("ElvUI_", "esES")
 if not L then return end
 
 -- Credit: ISBILIANS
@@ -42,7 +42,7 @@ L["Hide Blizzard Zone Text"] = true
 L["Hide capped"] = "Ocultar completadas"
 L["Hide PvP"] = "Ocultar PvP"
 L["Hide Raid"] = "Ocultar bandas"
-L["Hides all panels background so you can place them on ElvUI's top or bottom panel."] = "Esconder todos los paneles de fondo para poder colocarlos en el panel superior o inferior de ElvUI."
+L["Hides all panels background so you can place them on ElvUI_'s top or bottom panel."] = "Esconder todos los paneles de fondo para poder colocarlos en el panel superior o inferior de ElvUI_."
 L["Hides a profession when the player reaches its highest level."] = "Oculta profesiones que estén al máximo nivel."
 L[" is loaded. Thank you for using it."] = "está cargado. Gracias por su utilización."
 L["Larger Location Panel"] = "Panel de ubicación amplio"

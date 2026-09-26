@@ -1,4 +1,4 @@
-local E, L, V, P, G, _ = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+﻿local E, L, V, P, G, _ = unpack(ElvUI_); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local CBO = E:GetModule("CastBarOverlay")
 local UF = E:GetModule("UnitFrames");
 local EP = LibStub("LibElvUIPlugin-1.0")
@@ -187,7 +187,7 @@ function CBO:Initialize()
 	-- Register callback with LibElvUIPlugin
 	EP:RegisterPlugin(addon, CBO.InsertOptions)
 
-	--ElvUI UnitFrames are not enabled, stop right here!
+	--ElvUI_ UnitFrames are not enabled, stop right here!
 	if E.private.unitframe.enable ~= true then return end
 
 	--Profile changed, update castbar overlay settings

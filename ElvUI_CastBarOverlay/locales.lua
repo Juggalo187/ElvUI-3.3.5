@@ -1,5 +1,5 @@
--- English localization file for enUS and enGB.
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "enUS", true);
+﻿-- English localization file for enUS and enGB.
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "enUS", true);
 
 if not L then return end
 L["CBO_CBPOWARNING"] = "You still have the outdated addon 'CastBarPowerOverlay' enabled. It will now be disabled. You should uninstall it when possible."
@@ -30,61 +30,61 @@ L["Time yOffset"] = true
 if GetLocale() == "enUS" then return end
 
 --German Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "deDE")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "deDE")
 if L then
 	--Add translations here
 end
 
 --Spanish (Spain) Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "esES")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "esES")
 if L then
 	--Add translations here
 end
 
 --Spanish (Mexico) Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "esMX")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "esMX")
 if L then
 	--Add translations here
 end
 
 --French Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "frFR")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "frFR")
 if L then
 	--Add translations here
 end
 
 --Italian Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "itIT")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "itIT")
 if L then
 	--Add translations here
 end
 
 --Korean Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "koKR")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "koKR")
 if L then
 	--Add translations here
 end
 
 --Portuguese Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "ptBR")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "ptBR")
 if L then
 	--Add translations here
 end
 
 --Russian Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "ruRU")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "ruRU")
 if L then
 	--Add translations here
 end
 
 --Chinese (China, simplified) Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "zhCN")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "zhCN")
 if L then
 	--Add translations here
 end
 
 --Chinese (Taiwan, traditional) Localizations
-local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "zhTW")
+local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "zhTW")
 if L then
 	--Add translations here
 end

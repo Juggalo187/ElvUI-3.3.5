@@ -4,7 +4,7 @@
 ## Version: 8.1.5.0015
 ## Notes: The plugin to create and manage additional datatext panels.
 ## Notes-ruRU: Плагин для создания и управления дополнительными панелями инфо-текстов.
-## RequiredDeps: ElvUI
+## RequiredDeps: ElvUI_
 ## DefaultState: Enabled
 
 locales\load_locales.xml

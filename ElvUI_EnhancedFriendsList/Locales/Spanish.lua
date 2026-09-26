@@ -1,6 +1,6 @@
--- Spanish localization file for esES and esMX.
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI")
-local L = AceLocale:NewLocale("ElvUI", "esES") or AceLocale:NewLocale("ElvUI", "esMX")
+﻿-- Spanish localization file for esES and esMX.
+local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_")
+local L = AceLocale:NewLocale("ElvUI_", "esES") or AceLocale:NewLocale("ElvUI_", "esMX")
 if not L then return end
 
 L["LEVEL_TEMPLATE"] = "Level %s";

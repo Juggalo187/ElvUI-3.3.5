@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local S = E:GetModule("Skins")
 local AS = E:GetModule("AddOnSkins")
 
@@ -28,7 +28,7 @@ S:AddCallbackForAddon("QDKP2_GUI", "QDKP2_GUI", function()
 		local child = select(i, QDKP2_Frame2:GetChildren())
 		if child:IsObjectType("Button") then
 			child:StripTextures()
-			child:SetHighlightTexture("Interface\\AddOns\\ElvUI\\Media\\Textures\\Highlight.tga", "Add")
+			child:SetHighlightTexture("Interface\\AddOns\\ElvUI_\\Media\\Textures\\Highlight.tga", "Add")
 			S:HandleButtonHighlight(child, 1, 0.8, 0.1)
 		end
 	end
@@ -90,7 +90,7 @@ S:AddCallbackForAddon("QDKP2_GUI", "QDKP2_GUI", function()
 		local child = select(i, QDKP2_Frame5:GetChildren())
 		if child:IsObjectType("Button") then
 			child:StripTextures()
-			child:SetHighlightTexture("Interface\\AddOns\\ElvUI\\Media\\Textures\\Highlight.tga", "Add")
+			child:SetHighlightTexture("Interface\\AddOns\\ElvUI_\\Media\\Textures\\Highlight.tga", "Add")
 			S:HandleButtonHighlight(child, 1, 0.8, 0.1)
 		end
 	end

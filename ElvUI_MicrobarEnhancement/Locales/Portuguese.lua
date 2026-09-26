@@ -1,6 +1,6 @@
--- Portuguese localization file for ptBR.
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI")
-local L = AceLocale:NewLocale("ElvUI", "ptBR")
+﻿-- Portuguese localization file for ptBR.
+local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_")
+local L = AceLocale:NewLocale("ElvUI_", "ptBR")
 if not L then return end
 
 -- Config

@@ -1,4 +1,4 @@
-local PZ, T, E, L, V, P, G = unpack(select(2, ...))
+﻿local PZ, T, E, L, V, P, G = unpack(select(2, ...))
 local ZNP = PZ.NamePlates
 local NP = E.NamePlates
 local LAI = E.Libs.LAI
@@ -19,8 +19,8 @@ local hasTarget = false
 
 -- GLOBALS: hooksecurefunc
 
--- ElvUI Bugfixes -- (Doesn't need db check as they're intended to fix ElvUI core bugs or bad behaviour)
--- Replace ElvUI Nameplate cache functions with proper GUID caching. .
+-- ElvUI_ Bugfixes -- (Doesn't need db check as they're intended to fix ElvUI_ core bugs or bad behaviour)
+-- Replace ElvUI_ Nameplate cache functions with proper GUID caching. .
 function NP:CacheArenaUnits()
 	twipe(self.ENEMY_PLAYER)
 	twipe(self.ENEMY_NPC)
@@ -167,7 +167,7 @@ function ZNP:CacheBossUnits()
 		end
 	end
 end
--- End ElvUI Bugfixes --
+-- End ElvUI_ Bugfixes --
 
 -- For HD nameplates castbar spellName completion. Could also be used to generate castbars for non-HD clients if nameplateGUID is cached, but I won't develop it since HD nameplates are the better option
 function ZNP:COMBAT_LOG_EVENT_UNFILTERED(_, _, event, sourceGUID, sourceName, _, _, _, _, _, spellName)
@@ -333,7 +333,7 @@ function ZNP:PLAYER_TARGET_CHANGED()
 			if frame.unit == "target" then
 				frame.unit = frame.nameplateUnit or nil -- restore nameplate%d
 				if frame.unit == frame.nameplateUnit then
-					E:Delay(0.01, function() -- Delay needed since frame.unit is wiped on ElvUI NP module with no target
+					E:Delay(0.01, function() -- Delay needed since frame.unit is wiped on ElvUI_ NP module with no target
 						frame.unit = frame.nameplateUnit -- restore nameplate%d
 					end)
 				end
@@ -380,7 +380,7 @@ end
 local function OnShowHook(self)
 	local frame = self.UnitFrame
 	if not frame.tagGUID then
-		frame.tagGUID = ZNP:Construct_tagGUID(frame) -- this is running here and not OnCreated due to a bug on ElvUI funtion runtime: UpdateElement_All finishes before OnShow, which finishes before OnCreated, so hooking them both is not possible unless I'd full replace OnCreated
+		frame.tagGUID = ZNP:Construct_tagGUID(frame) -- this is running here and not OnCreated due to a bug on ElvUI_ funtion runtime: UpdateElement_All finishes before OnShow, which finishes before OnCreated, so hooking them both is not possible unless I'd full replace OnCreated
 	end
 	if not frame.tagUnit then
 		frame.tagUnit = ZNP:Construct_tagUnit(frame)
@@ -396,7 +396,7 @@ end
 
 local function OnHideHook(self)
 	local frame = self.UnitFrame
-	if not frame then return end --	OnShowHook(plate) sometimes does not have ElvUI UnitFrame created yet, so prevent nil index
+	if not frame then return end --	OnShowHook(plate) sometimes does not have ElvUI_ UnitFrame created yet, so prevent nil index
 
 	if frame.tagGUID then
 		frame.tagGUID:SetText()
@@ -481,7 +481,7 @@ function ZNP:NAME_PLATE_UNIT_ADDED(_, unit)
 		-- Style Filter Update
 		NP:StyleFilterUpdate(frame, "NAME_PLATE_UNIT_ADDED")
 		NP:ForEachVisiblePlate("ResetNameplateFrameLevel") --keep this after `StyleFilterUpdate`
-	end) -- Delay needed since ElvUI plate (plate.UnitFrame) is created a few frames after this event
+	end) -- Delay needed since ElvUI_ plate (plate.UnitFrame) is created a few frames after this event
 end
 
 function ZNP:NAME_PLATE_UNIT_REMOVED(_, unit)
@@ -505,7 +505,7 @@ function ZNP:Initialize()
 		UpdateCVarsHook(NP) -- update once since we cannot hook it in time on NP:Initialize.
 	end
 
-	hooksecurefunc(NP, "SetMouseoverFrame", restoreNameplateUnitAfterMouseover) -- this is needed to hotfix ElvUI behaviour that clears frame.unit on all mouseover losses, so always hook it
+	hooksecurefunc(NP, "SetMouseoverFrame", restoreNameplateUnitAfterMouseover) -- this is needed to hotfix ElvUI_ behaviour that clears frame.unit on all mouseover losses, so always hook it
 
 	self:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
 	self:RegisterEvent("PLAYER_TARGET_CHANGED")

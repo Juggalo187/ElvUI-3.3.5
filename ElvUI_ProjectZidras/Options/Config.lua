@@ -1,4 +1,4 @@
-local PZ, T, E, L, V, P, G = unpack(select(2, ...))
+﻿local PZ, T, E, L, V, P, G = unpack(select(2, ...))
 local ZA = PZ.WrathArmory
 local ZCH = PZ.Chat
 local ZNP = PZ.NamePlates
@@ -117,10 +117,10 @@ local function GetOptionsTable_AbsorbPrediction(updateFunc, groupName, numGroup,
 	local config = ACH:Group(L["Absorbs Prediction"], L["Show a prediction bar with all absorbs on the unitframe. Also displays a slightly different colored bar for heal absorbing shields"], nil, nil, function(info) return E.db.pz.unitframe.units[groupName].absorbPrediction[info[#info]] end, function(info, value) E.db.pz.unitframe.units[groupName].absorbPrediction[info[#info]] = value updateFunc(UF, groupName, numGroup) end)
 	config.args.enable = ACH:Toggle(L["Enable"], nil, 1)
 	config.args.height = ACH:Range(L["Height"], nil, 2, { min = -1, max = 500, step = 1 })
-	config.args.colorsButton = ACH:Execute(L["COLORS"], nil, 3, function() E.Libs.AceConfigDialog:SelectGroup("ElvUI", "PZ", "modules", "unitFramesGroup", "colors", "absorbPrediction") end)
+	config.args.colorsButton = ACH:Execute(L["COLORS"], nil, 3, function() E.Libs.AceConfigDialog:SelectGroup("ElvUI_", "PZ", "modules", "unitFramesGroup", "colors", "absorbPrediction") end)
 	config.args.anchorPoint = ACH:Select(L["Anchor Point"], nil, 4, { TOP = "TOP", BOTTOM = "BOTTOM", CENTER = "CENTER" })
 	config.args.absorbStyle = ACH:Select(L["Absorb Style"], nil, 5, { NONE = L["NONE"], NORMAL = L["Normal"], REVERSED = L["Reversed"], WRAPPED = L["Wrapped"], OVERFLOW = L["Overflow"], STACKED = L["Stacked"] })
-	config.args.overflowButton = ACH:Execute(L["Max Overflow"], nil, 6, function() E.Libs.AceConfigDialog:SelectGroup("ElvUI", "unitframe", "generalOptionsGroup", "allColorsGroup", "healPrediction") end)
+	config.args.overflowButton = ACH:Execute(L["Max Overflow"], nil, 6, function() E.Libs.AceConfigDialog:SelectGroup("ElvUI_", "unitframe", "generalOptionsGroup", "allColorsGroup", "healPrediction") end)
 	config.args.absorbTexture = ACH:SharedMediaStatusbar(L["Absorb StatusBar Texture"], nil, 7)
 	config.args.absorbOverlay = ACH:SharedMediaBackground(L["Absorb StatusBar Overlay"], nil, 8)
 	config.args.overAbsorb = ACH:Toggle(L["Blizzard Over Absorb Glow"], L["Add a glow in the end of health bars to indicate the over absorb."], 9)
@@ -164,7 +164,7 @@ end
 
 local function UnitFramesOptions()
 	local config = ACH:Group(L["UnitFrames"], nil, 3, "tab", function(info) return E.db.pz.unitframe[info[#info]] end, function(info, value) E.db.pz.unitframe[info[#info]] = value end, function() return not E.private.unitframe.enable end)
-	config.args.desc = ACH:Description(L["Options for customizing unit frames. Please don't change these setting when ElvUI's testing frames for bosses and arena teams are shown. That will make them invisible until retoggling."], 1)
+	config.args.desc = ACH:Description(L["Options for customizing unit frames. Please don't change these setting when ElvUI_'s testing frames for bosses and arena teams are shown. That will make them invisible until retoggling."], 1)
 
 	config.args.general = ACH:Group(L["General"], nil, 1, "tab")
 	config.args.general.args.roleIcons = ACH:Group(L["Role Icon"], nil, 1, nil, function(info) return E.db.pz.unitframe.general[info[#info-1]][info[#info]] end, function(info, value) E.db.pz.unitframe.general[info[#info-1]][info[#info]] = value UF:Update_AllFrames() end)
@@ -444,8 +444,8 @@ function PZ:InsertOptions()
 								name = L["FAQ_DESC"],
 								fontSize = "medium"
 							},
-							elvui = {
-								type = "group", order = 10, name = "ElvUI",
+							ElvUI_ = {
+								type = "group", order = 10, name = "ElvUI_",
 								args = {
 									q1 = CreateQuestion(1, L["FAQ_Elv_1"]),
 									q2 = CreateQuestion(2, L["FAQ_Elv_2"]),

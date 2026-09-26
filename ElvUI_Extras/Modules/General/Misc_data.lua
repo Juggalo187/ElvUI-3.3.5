@@ -1,4 +1,4 @@
-local strings = {
+﻿local strings = {
     ["enUS"] = {
         ["dungeon1"] = "Dungeon Set 1",
         ["dungeon2"] = "Dungeon Set 2",
@@ -380,7 +380,7 @@ local strings = {
 }
 local L = strings[GetLocale()] or strings["enUS"]
 
-ElvUI[1]:GetModule("Extras").Misc_data = {
+ElvUI_[1]:GetModule("Extras").Misc_data = {
 	["tierSets"] = {
 		-- DEATHKNIGHT --
 		-- Tier 7

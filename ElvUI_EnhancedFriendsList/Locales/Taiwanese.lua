@@ -1,6 +1,6 @@
--- Taiwanese localization file for zhTW.
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI")
-local L = AceLocale:NewLocale("ElvUI", "zhTW")
+﻿-- Taiwanese localization file for zhTW.
+local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_")
+local L = AceLocale:NewLocale("ElvUI_", "zhTW")
 if not L then return end
 
 L["LEVEL_TEMPLATE"] = "Level %s";

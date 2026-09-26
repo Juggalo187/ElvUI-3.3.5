@@ -1,4 +1,4 @@
---[[
+﻿--[[
 # Element: Health Prediction Bars
 
 Handles the visibility and updating of incoming heals and heal/damage absorbs.
@@ -80,7 +80,7 @@ A default texture will be applied to the Texture widgets if they don't have a te
 	}
 --]]
 
-local E = unpack(ElvUI)
+local E = unpack(ElvUI_)
 local oUF = E.oUF
 
 local select = select

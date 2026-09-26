@@ -1,5 +1,5 @@
-local E = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local L = E.Libs.ACL:NewLocale("ElvUI", "zhTW")
+﻿local E = unpack(ElvUI_); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local L = E.Libs.ACL:NewLocale("ElvUI_", "zhTW")
 
 L["Hits the 'Confirm' button automatically."] = "自動點擊'確認'按鈕。"
 L["Picks up items and money automatically."] = "自動拾取物品和金錢。"
@@ -24,7 +24,7 @@ L["Text to display upon leaving combat."] = "離開戰鬥時顯示的文字。"
 L["REQUIRES RELOAD."] = "需要重新加載。"
 L["Icon to the left or right of the item link."] = "物品鏈接的左側或右側的圖標。"
 L["The size of the icon in the chat frame."] = "聊天框中的圖標大小。"
-L["Adds shadows to all of the frames.\nDoes nothing unless you replace your ElvUI/Core/Toolkit.lua with the relevant file from the Optionals folder of this plugin."] = "為所有框架添加陰影。\n除非您用此插件的Optionals文件夾中的相關文件替換您的ElvUI/Core/Toolkit.lua，否則無效。"
+L["Adds shadows to all of the frames.\nDoes nothing unless you replace your ElvUI_/Core/Toolkit.lua with the relevant file from the Optionals folder of this plugin."] = "為所有框架添加陰影。\n除非您用此插件的Optionals文件夾中的相關文件替換您的ElvUI/Core/Toolkit.lua，否則無效。"
 L["Combat state notification alerts."] = "戰鬥狀態通知警報。"
 L["Custom editbox position and size."] = "自訂編輯框位置和大小。"
 L["Usage:"..
@@ -68,7 +68,7 @@ L["Usage:"..
 			"\n  ..UnitHealth('mouseover'), "..
 			"\n  (1-percentage)*255, percentage*255)"
 L["Adds an icon next to chat hyperlinks."] = "在聊天超連結旁添加一個圖標。"
-L["A new action bar that collects usable quest items from your bag.\n\nDue to state actions limit, this module overrides bar10 created by ElvUI Extra Action Bars."] = "一個新的動作條，用於收集背包中可用的任務物品。\n\n由於狀態動作限制，該模組會覆蓋ElvUI額外動作條創建的bar10。"
+L["A new action bar that collects usable quest items from your bag.\n\nDue to state actions limit, this module overrides bar10 created by ElvUI_ Extra Action Bars."] = "一個新的動作條，用於收集背包中可用的任務物品。\n\n由於狀態動作限制，該模組會覆蓋ElvUI額外動作條創建的bar10。"
 L["Toggles the display of the actionbar's backdrop."] = "切換動作條背景的顯示。"
 L["The frame will not be displayed unless hovered over."] = "除非滑鼠懸停，否則框架不會顯示。"
 L["Inherit the global fade; mousing over, targetting, setting focus, losing health, entering combat will set the remove transparency. Otherwise it will use the transparency level in the general actionbar settings for global fade alpha."] = "繼承全局淡出效果，滑鼠懸停、選擇目標、設置焦點、失去生命值、進入戰鬥將移除透明度。否則，它將使用一般動作條設置中的透明度級別作為全局淡出的透明度。"
@@ -715,7 +715,7 @@ L["Hunter"] = "獵人"
 L["Shaman"] = "薩滿"
 L["Deathknight"] = "死亡騎士"
 L["Aura Bars"] = "光環條"
-L["Adds extra configuration options for aura bars.\n\n For options like size and detachment, use ElvUI Aura Bars Movers!"] = "為光環條添加額外的配置選項。\n\n 對於大小和分離等選項，請使用ElvUI光環條移動器！"
+L["Adds extra configuration options for aura bars.\n\n For options like size and detachment, use ElvUI_ Aura Bars Movers!"] = "為光環條添加額外的配置選項。\n\n 對於大小和分離等選項，請使用ElvUI光環條移動器！"
 L["Hide"] = "隱藏"
 L["Spell Name"] = "法術名稱"
 L["Spell Time"] = "法術時間"
@@ -1169,6 +1169,6 @@ L["Mouseover: Channel Button"] = "滑鼠懸停: 頻道按鈕"
 L["Mouseover: Copy Button"] = "滑鼠懸停: 複製按鈕"
 L["Plugin version mismatch! Please, download appropriate plugin version at"] = "插件版本不符！請至以下位置下載對應版本："
 L["Questie Coherence"] = "Questie 相容性"
-L["Makes, once again, itemID tooltip line added by ElvUI to get positioned last on unit and item tooltips."] =
-	"讓 ElvUI 所加的 itemID 再次顯示於單位和物品提示的最後一行。"
-L["Attempts to extend font outline options across all of ElvUI."] = "嘗試在整個 ElvUI 中擴展字體外框選項。"
+L["Makes, once again, itemID tooltip line added by ElvUI_ to get positioned last on unit and item tooltips."] =
+	"讓 ElvUI_ 所加的 itemID 再次顯示於單位和物品提示的最後一行。"
+L["Attempts to extend font outline options across all of ElvUI_."] = "嘗試在整個 ElvUI_ 中擴展字體外框選項。"

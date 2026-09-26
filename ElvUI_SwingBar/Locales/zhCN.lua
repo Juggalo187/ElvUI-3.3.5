@@ -1,5 +1,5 @@
--- Chinese localization file for zhCN.
-local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "zhCN")
+﻿-- Chinese localization file for zhCN.
+local L = ElvUI_[1].Libs.ACL:NewLocale("ElvUI_", "zhCN")
 if not L then return end
 
 L["Player SwingBar"] = true

@@ -1,8 +1,8 @@
-local PZ, T, E, L, V, P, G = unpack(select(2, ...))
+﻿local PZ, T, E, L, V, P, G = unpack(select(2, ...))
 local LSM = E.Libs.LSM
 local EnchantLib = LibStub("LibGetEnchant-1.0-WrathArmory")
 
--- backported from WrathArmory (ElvUI Plugin for WotLK Classic): https://github.com/Repooc/ElvUI_WrathArmory
+-- backported from WrathArmory (ElvUI_ Plugin for WotLK Classic): https://github.com/Repooc/ElvUI_WrathArmory
 local module = PZ.WrathArmory
 
 function module:UpdateOptions(unit, updateGems)

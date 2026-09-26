@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI);
+﻿local E, L, V, P, G = unpack(ElvUI_);
 local AddOnName, Engine = ...
 
 local DT = E:GetModule('DataTexts')
@@ -112,7 +112,7 @@ local function Button_OnLeave(self)
 	end
 end
 
---overwrite of ElvUI's functions since I can't really hook to them
+--overwrite of ElvUI_'s functions since I can't really hook to them
 function DT:RegisterPanel(panel, numPoints, anchor, xOff, yOff)
 	DT.RegisteredPanels[panel:GetName()] = panel
 	panel.dataPanels = {}

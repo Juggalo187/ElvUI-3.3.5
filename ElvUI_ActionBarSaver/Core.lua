@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local ABS = E:NewModule("ActionBarSaver", "AceConsole-3.0")
 
 local restoreErrors, spellCache, macroCache, macroNameCache = {}, {}, {}, {}
@@ -11,7 +11,7 @@ local MAX_ACTION_BUTTONS = 144
 local POSSESSION_START = 121
 local POSSESSION_END = 132
 
--- Register default settings in ElvUI profile
+-- Register default settings in ElvUI_ profile
 P["actionBarSaver"] = {
 	macro = false,
 	checkCount = false,
@@ -33,7 +33,7 @@ function ABS:Initialize()
 	self:RegisterChatCommand("abs", "SlashHandler")
 	self:RegisterChatCommand("actionbarsaver", "SlashHandler")
 
-	-- Register options with ElvUI Plugin Library
+	-- Register options with ElvUI_ Plugin Library
 	local EP = LibStub("LibElvUIPlugin-1.0")
 	EP:RegisterPlugin("ElvUI_ActionBarSaver", ABS.GetOptions)
 end

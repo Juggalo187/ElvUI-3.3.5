@@ -1,5 +1,5 @@
--- ElvUI_QuestTracker - Core.lua
-local E, L, V, P, G = unpack(ElvUI)
+﻿-- ElvUI_QuestTracker - Core.lua
+local E, L, V, P, G = unpack(ElvUI_)
 local QGT = E:NewModule("ElvUI_QuestTracker", "AceEvent-3.0", "AceHook-3.0")
 _G.ElvUI_QuestTracker = QGT
 _G.L = L

@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local ML = E:NewModule("Enhanced_MinimapLocation", "AceHook-3.0")
 local M = E:GetModule("Minimap")
 

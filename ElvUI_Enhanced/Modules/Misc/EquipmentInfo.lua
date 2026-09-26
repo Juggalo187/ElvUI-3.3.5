@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local EI = E:NewModule("Enhanced_EquipmentInfo", "AceHook-3.0", "AceEvent-3.0")
 
 local _G = _G

@@ -1,5 +1,5 @@
--- modified version of this -> https://www.curseforge.com/wow/addons/drtracker-elvuitukuiwod
-local E, L, _, P = unpack(ElvUI)
+﻿-- modified version of this -> https://www.curseforge.com/wow/addons/drtracker-elvuitukuiwod
+local E, L, _, P = unpack(ElvUI_)
 local core = E:GetModule("Extras")
 local mod = core:NewModule("DRTracker", "AceEvent-3.0")
 local UF = E:GetModule("UnitFrames")

@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local UF = E:GetModule("UnitFrames")
 local LSM = LibStub("LibSharedMedia-3.0")
 local EP = LibStub("LibElvUIPlugin-1.0")
@@ -42,7 +42,7 @@ local function GetSetting(key)
     return defaults[key]
 end
 
--- Default profile settings injected into ElvUI
+-- Default profile settings injected into ElvUI_
 P["partyDamage"] = {}
 for k, v in pairs(defaults) do
     P["partyDamage"][k] = v
@@ -396,7 +396,7 @@ local function UpdateGroupGUIDs()
         end
     end
 
-    -- Raid members (in case ElvUI party frames use raid unit IDs)
+    -- Raid members (in case ElvUI_ party frames use raid unit IDs)
     local numRaid = GetNumRaidMembers()
     for i = 1, numRaid do
         local unit = "raid" .. i
@@ -508,8 +508,8 @@ function mod:AttachOverlay(frame)
     end
 end
 
--- Iterate active children of the ElvUI party header and configure overlays
--- Iterate active children of the ElvUI party header and configure overlays
+-- Iterate active children of the ElvUI_ party header and configure overlays
+-- Iterate active children of the ElvUI_ party header and configure overlays
 local function FindPartyFrames()
     local header = UF["party"]
     if not header then
@@ -726,7 +726,7 @@ function mod:InsertOptions()
             header = {
                 order = 1,
                 type = "header",
-                name = "ElvUI Party Damage Options",
+                name = "ElvUI_ Party Damage Options",
             },
             enabled = {
                 order = 2,
@@ -1029,7 +1029,7 @@ function mod:Initialize()
     
     UpdateGroupGUIDs()
     
-    -- Slight delay to let ElvUI frames load
+    -- Slight delay to let ElvUI_ frames load
     E:Delay(0.5, function()
         if debugMode then print("PartyDamage: Finding party frames initially...") end
         FindPartyFrames()

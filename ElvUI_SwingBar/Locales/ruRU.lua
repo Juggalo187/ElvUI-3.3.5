@@ -1,5 +1,5 @@
---Файл локализации для ruRU
-local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "ruRU")
+﻿--Файл локализации для ruRU
+local L = ElvUI_[1].Libs.ACL:NewLocale("ElvUI_", "ruRU")
 if not L then return end
 
 L["Player SwingBar"] = true

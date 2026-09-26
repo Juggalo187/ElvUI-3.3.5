@@ -1,10 +1,10 @@
-## Interface: 30300
+﻿## Interface: 30300
 ## Author: Blazeflack
 ## Credit: Azilroka, Benik
 ## Version: 1.30
 ## Title: |cff1784d1E|r|cffe5e3e3lvUI|r |cff1784d1C|r|cffe5e3e3ustom|r |cff1784d1T|r|cffe5e3e3weaks|r
-## Notes: A collection of various tweaks to ElvUI, requested by the users.
-## RequiredDeps: ElvUI
+## Notes: A collection of various tweaks to ElvUI_, requested by the users.
+## RequiredDeps: ElvUI_
 ## DefaultState: enabled
 
 locales.lua

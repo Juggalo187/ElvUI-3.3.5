@@ -1,4 +1,4 @@
-local E, L, V, P, G, _ = unpack(ElvUI)
+﻿local E, L, V, P, G, _ = unpack(ElvUI_)
 local EAB = E:NewModule("ExtraActionBars", "AceEvent-3.0")
 local AB = E:GetModule("ActionBars")
 

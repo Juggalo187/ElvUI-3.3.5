@@ -1,4 +1,4 @@
-ElvUI[1]:GetModule("Extras").NPCOccupations_data = {
+﻿ElvUI_[1]:GetModule("Extras").NPCOccupations_data = {
 	[MINIMAP_TRACKING_AUCTIONEER] = {
 	    [35594] = true, -- Brassbolt Mechawrench
 	    [35607] = true, -- Reginald Arcfire

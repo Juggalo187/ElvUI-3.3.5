@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local MBG = E:NewModule("Enhanced_MinimapButtonGrabber", "AceHook-3.0", "AceTimer-3.0")
 
 local pairs, ipairs = pairs, ipairs

@@ -1,4 +1,4 @@
---[[
+﻿--[[
 # Element: Group Role Indicator
 
 Toggles the visibility of an indicator based on the unit's current group role (tank, healer or damager).
@@ -22,7 +22,7 @@ A default texture will be applied if the widget is a Texture and doesn't have a 
 	self.GroupRoleIndicator = GroupRoleIndicator
 --]]
 
-local oUF = ElvUI[1].oUF
+local oUF = ElvUI_[1].oUF
 local LGT = LibStub("LibGroupTalents-1.0")
 
 local function GetTexCoordsForRoleSmallCircle(role)

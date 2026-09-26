@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI);
+﻿local E, L, V, P, G = unpack(ElvUI_);
 local UF = E:GetModule('UnitFrames');
 local ABM = E:GetModule('AuraMover')
 

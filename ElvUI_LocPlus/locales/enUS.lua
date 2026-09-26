@@ -1,6 +1,6 @@
 ﻿-- English localization file for enUS
-local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI")
-local L = AceLocale:NewLocale("ElvUI", "enUS")
+local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_")
+local L = AceLocale:NewLocale("ElvUI_", "enUS")
 if not L then return end
 
 L["Adds 2 digits in the coords"] = true
@@ -43,7 +43,7 @@ L["Hide Blizzard Zone Text"] = true
 L["Hide capped"] = true
 L["Hide PvP"] = true
 L["Hide Raid"] = true
-L["Hides all panels background so you can place them on ElvUI's top or bottom panel."] = true
+L["Hides all panels background so you can place them on ElvUI_'s top or bottom panel."] = true
 L["Hides a profession when the player reaches its highest level."] = true
 L[" is loaded. Thank you for using it."] = true
 L["Larger Location Panel"] = true

@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local S = E:GetModule("Skins")
 local AS = E:GetModule("AddOnSkins")
 
@@ -43,7 +43,7 @@ S:AddCallbackForAddon("Carbonite", "Carbonite", function()
 		}
 	end
 
-	Nx.Ski1["ElvUI"] = {
+	Nx.Ski1["ElvUI_"] = {
 		["Folder"] = "",
 		["WinBrH"] = "WinBrH",
 		["WinBrV"] = "WinBrV",
@@ -56,7 +56,7 @@ S:AddCallbackForAddon("Carbonite", "Carbonite", function()
 
 	for i, v in ipairs(Nx.OpD) do
 		if v.N == "Skin" then
-			table.insert(Nx.OpD[i], {N = "ElvUI", F = "NXCmdSkin", Dat = "ElvUI"})
+			table.insert(Nx.OpD[i], {N = "ElvUI_", F = "NXCmdSkin", Dat = "ElvUI_"})
 			break
 		end
 	end
@@ -87,5 +87,5 @@ S:AddCallbackForAddon("Carbonite", "Carbonite", function()
 		return E.media.backdropfadecolor
 	end, true)
 
-	Nx.Ski:Set("ElvUI")
+	Nx.Ski:Set("ElvUI_")
 end)

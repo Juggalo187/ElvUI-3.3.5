@@ -1,4 +1,4 @@
-local E, L, _, P = unpack(ElvUI)
+﻿local E, L, _, P = unpack(ElvUI_)
 local core = E:GetModule("Extras")
 local mod = core:NewModule("AuraBars", "AceHook-3.0")
 local UF = E:GetModule("UnitFrames")
@@ -56,7 +56,7 @@ function mod:LoadConfig(db)
 						order = 1,
 						type = "toggle",
 						name = core.pluginColor..L["Enable"],
-						desc = L["Adds extra configuration options for aura bars.\n\n For options like size and detachment, use ElvUI Aura Bars Movers!"],
+						desc = L["Adds extra configuration options for aura bars.\n\n For options like size and detachment, use ElvUI_ Aura Bars Movers!"],
 					},
 					unitDropdown = {
 						order = 2,

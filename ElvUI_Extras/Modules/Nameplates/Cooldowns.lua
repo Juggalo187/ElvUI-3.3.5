@@ -1,4 +1,4 @@
-local E, L, _, P = unpack(ElvUI)
+﻿local E, L, _, P = unpack(ElvUI_)
 local core = E:GetModule("Extras")
 local mod = core:NewModule("CooldownsNP2", "AceHook-3.0", "AceEvent-3.0")
 local NP = E:GetModule("NamePlates")
@@ -8,7 +8,7 @@ local LAI = E.Libs.LAI
 local modName = mod:GetName()
 local activeCooldowns, testing = {}, false
 local highlightedSpells = {["ENEMY_PLAYER"] = {}, ["FRIENDLY_PLAYER"] = {}}
-local edgeFile = LSM:Fetch("border", "ElvUI GlowBorder")
+local edgeFile = LSM:Fetch("border", "ElvUI_ GlowBorder")
 local isAwesome = C_NamePlate
 
 local band = bit.band

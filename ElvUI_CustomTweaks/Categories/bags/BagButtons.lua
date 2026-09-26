@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local B = E:GetModule("Bags")
 local CT = E:GetModule("CustomTweaks")
 local isEnabled = E.private["bags"].enable and E.private["CustomTweaks"] and E.private["CustomTweaks"]["BagButtons"] and true or false

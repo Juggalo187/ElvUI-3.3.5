@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local WMB = E:NewModule("Enhanced_WorldMapBlips")
 
 local _G = _G

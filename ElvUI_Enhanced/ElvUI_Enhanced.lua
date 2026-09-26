@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local addon = E:NewModule("ElvUI_Enhanced")
 local EP = E.Libs.EP
 

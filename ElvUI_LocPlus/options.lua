@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local LPB = E:GetModule("LocationPlus")
 
 local format = string.format
@@ -359,7 +359,7 @@ function LPB:AddOptions()
 							noback = {
 								order = 3,
 								name = L["Backdrop"],
-								desc = L["Hides all panels background so you can place them on ElvUI's top or bottom panel."],
+								desc = L["Hides all panels background so you can place them on ElvUI_'s top or bottom panel."],
 								type = "toggle",
 								get = function(info) return E.db.locplus[ info[#info] ] end,
 								set = function(info, value) E.db.locplus[ info[#info] ] = value LPB:TransparentPanels() LPB:ShadowPanels() end,

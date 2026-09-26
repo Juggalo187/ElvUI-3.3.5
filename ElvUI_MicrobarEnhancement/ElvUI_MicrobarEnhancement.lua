@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G =  unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+﻿local E, L, V, P, G =  unpack(ElvUI_); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local AB = E:GetModule("ActionBars");
 local EP = LibStub("LibElvUIPlugin-1.0");
 local S = E:GetModule("Skins");

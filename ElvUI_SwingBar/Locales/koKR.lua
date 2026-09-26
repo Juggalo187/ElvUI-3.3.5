@@ -1,5 +1,5 @@
--- Korean localization file for koKR.
-local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "koKR")
+﻿-- Korean localization file for koKR.
+local L = ElvUI_[1].Libs.ACL:NewLocale("ElvUI_", "koKR")
 if not L then return end
 
 L["Player SwingBar"] = true

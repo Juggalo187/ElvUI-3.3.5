@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 if not E.private["unitframe"].enable or not E.private["CustomTweaks"] or not E.private["CustomTweaks"]["UnitFrameSpacingLimits"] then return end;
 
 local CT = E:GetModule("CustomTweaks")

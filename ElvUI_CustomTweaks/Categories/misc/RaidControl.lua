@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local RU = E:GetModule("RaidUtility")
 local CT = E:GetModule("CustomTweaks")
 local isEnabled = E.private["CustomTweaks"] and E.private["CustomTweaks"]["RaidControl"] and true or false

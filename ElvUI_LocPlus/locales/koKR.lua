@@ -1,5 +1,5 @@
-﻿local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI")
-local L = AceLocale:NewLocale("ElvUI", "koKR")
+﻿local AceLocale = LibStub:GetLibrary("AceLocale-3.0-ElvUI_")
+local L = AceLocale:NewLocale("ElvUI_", "koKR")
 if not L then return end
 
 L["Adds 2 digits in the coords"] = "Adds 2 digits in the coords" -- Requires localization
@@ -41,7 +41,7 @@ L["Hide Blizzard Zone Text"] = true
 L["Hide capped"] = "Hide capped" -- Requires localization
 L["Hide PvP"] = "Hide PvP" -- Requires localization
 L["Hide Raid"] = "Hide Raid" -- Requires localization
-L["Hides all panels background so you can place them on ElvUI's top or bottom panel."] = "Hides all panels background so you can place them on ElvUI's top or bottom panel." -- Requires localization
+L["Hides all panels background so you can place them on ElvUI_'s top or bottom panel."] = "Hides all panels background so you can place them on ElvUI_'s top or bottom panel." -- Requires localization
 L["Hides a profession when the player reaches its highest level."] = "Hides a profession when the player reaches its highest level." -- Requires localization
 L[" is loaded. Thank you for using it."] = " is loaded. Thank you for using it." -- Requires localization
 L["Larger Location Panel"] = "Larger Location Panel" -- Requires localization

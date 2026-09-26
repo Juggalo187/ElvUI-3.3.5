@@ -1,4 +1,4 @@
-local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "ruRU")
+﻿local L = ElvUI_[1].Libs.ACL:NewLocale("ElvUI_", "ruRU")
 
 L["Unknown"]              = "Неизвестный"
 L["None"]                 = "Отсутствует"

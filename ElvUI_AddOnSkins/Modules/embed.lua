@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local EMB = E:NewModule("EmbedSystem")
 local AS = E:GetModule("AddOnSkins")
 
@@ -440,7 +440,7 @@ if AS:IsAddonLODorEnabled("Details") then
 	function listener:OnDetailsEvent(event, instance)
 		if event == "DETAILS_INSTANCE_CLOSE" then
 			if instance._ElvUIEmbed and _G.DetailsOptionsWindow and _G.DetailsOptionsWindow:IsShown() then
-				Details:Msg("You just closed a window Embed on ElvUI, if wasn't intended click on Reopen.") --> need localization
+				Details:Msg("You just closed a window Embed on ElvUI_, if wasn't intended click on Reopen.") --> need localization
 			end
 		elseif event == "DETAILS_INSTANCE_OPEN" then
 			if instance._ElvUIEmbed then

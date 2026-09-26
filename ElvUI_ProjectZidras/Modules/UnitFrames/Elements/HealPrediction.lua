@@ -1,4 +1,4 @@
-local PZ, T, E, L, V, P, G = unpack(select(2, ...))
+﻿local PZ, T, E, L, V, P, G = unpack(select(2, ...))
 local ZUF = PZ.UnitFrames
 local UF = E.UnitFrames
 local LSM = E.Libs.LSM
@@ -120,7 +120,7 @@ function ZUF:Configure_HealComm(frame)
 	end
 
 	if frame:IsElementEnabled("HealComm4") then
-		frame:DisableElement("HealComm4") -- disable stock ElvUI element since it was messing with the heal prediction (lookAhead, tags, statusbar). HealthPrediction is provided by PZ and is meant to be a full replacement.
+		frame:DisableElement("HealComm4") -- disable stock ElvUI_ element since it was messing with the heal prediction (lookAhead, tags, statusbar). HealthPrediction is provided by PZ and is meant to be a full replacement.
 	end
 
 	if db and db.enable then
@@ -381,7 +381,7 @@ UF.Construct_HealComm = ZUF.Construct_HealComm
 UF.Configure_HealComm = ZUF.Configure_HealComm
 UF.UpdateHealComm = ZUF.UpdateHealComm
 
--- Add Tags to ElvUI Options
+-- Add Tags to ElvUI_ Options
 E:AddTagInfo("incomingheals", PZ:Color("PZ"), L["Displays all incoming heals"])
 E:AddTagInfo("incomingheals:personal", PZ:Color("PZ"), L["Displays only personal incoming heals"])
 E:AddTagInfo("incomingheals:others", PZ:Color("PZ"), L["Displays only incoming heals from other units"])

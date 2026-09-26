@@ -1,5 +1,5 @@
-local E, L, V, P, G = unpack(ElvUI)
---local L = E.Libs.ACL:GetLocale("ElvUI", E.global.general.locale)
+﻿local E, L, V, P, G = unpack(ElvUI_)
+--local L = E.Libs.ACL:GetLocale("ElvUI_", E.global.general.locale)
 local SB = E:GetModule("SwingBar")
 local UF = E:GetModule("UnitFrames")
 

@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI_)
 local TT = E:NewModule("Enhanced_TimerTracker", "AceHook-3.0", "AceEvent-3.0")
 
 local ipairs = ipairs
@@ -443,7 +443,7 @@ function TT:SetGoTexture(timer)
 		local factionGroup = UnitFactionGroup("player")
 
 		if factionGroup and factionGroup ~= "Neutral" then
-			timer.GoTexture:SetTexture("Interface\\AddOns\\ElvUI\\media\\textures\\"..factionGroup.."-Logo")
+			timer.GoTexture:SetTexture("Interface\\AddOns\\ElvUI_\\media\\textures\\"..factionGroup.."-Logo")
 			timer.GoTextureGlow:SetTexture("Interface\\AddOns\\ElvUI_Enhanced\\media\\textures\\"..factionGroup.."Glow-Logo")
 		end
 	elseif timer.type == TIMER_TYPE_CHALLENGE_MODE then

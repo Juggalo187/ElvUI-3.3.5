@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI);
+﻿local E, L, V, P, G = unpack(ElvUI_);
 local tcopy = table.copy
 local DT = E:GetModule('DataTexts')
 local DB = E:GetModule('DTBars2')

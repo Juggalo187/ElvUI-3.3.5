@@ -1,5 +1,5 @@
--- English localization file for enGB.
-local L = ElvUI[1].Libs.ACL:NewLocale("ElvUI", "enUS", true, true)
+﻿-- English localization file for enGB.
+local L = ElvUI_[1].Libs.ACL:NewLocale("ElvUI_", "enUS", true, true)
 if not L then return end
 
 L["Player SwingBar"] = true
