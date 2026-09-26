@@ -798,16 +798,6 @@ do
 
 					E.shownUpdatedWhileRunningPopup = true
 				end
-			elseif message and (message > ver) then
-				if not E.recievedOutOfDateMessage then
-					E:Print(L["ElvUI_ is out of date. You can download the newest version from https://github.com/Juggalo187/ElvUI-3.3.5/ElvUI_"])
-
-					if message and ((message - ver) >= 0.01) and not InCombatLockdown() then
-						E:StaticPopup_Show("ELVUI_UPDATE_AVAILABLE")
-					end
-
-					E.recievedOutOfDateMessage = true
-				end
 			end
 		elseif event == "PARTY_MEMBERS_CHANGED" or event == "RAID_ROSTER_UPDATE" then
 			local numRaid = GetNumRaidMembers()

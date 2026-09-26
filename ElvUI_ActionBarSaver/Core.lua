@@ -29,6 +29,14 @@ function ABS:Initialize()
 	self.db = E.db.actionBarSaver
 	playerClass = select(2, UnitClass("player"))
 
+	-- Guarantee sets structure exists in runtime database
+	if not self.db.sets then
+		self.db.sets = {}
+	end
+	if not self.db.sets[playerClass] then
+		self.db.sets[playerClass] = {}
+	end
+
 	-- Register Slash Commands
 	self:RegisterChatCommand("abs", "SlashHandler")
 	self:RegisterChatCommand("actionbarsaver", "SlashHandler")
@@ -140,6 +148,7 @@ end
 
 function ABS:SaveProfile(name)
 	if not name or name == "" then return end
+	self.db.sets[playerClass] = self.db.sets[playerClass] or {}
 	self.db.sets[playerClass][name] = self.db.sets[playerClass][name] or {}
 	local set = self.db.sets[playerClass][name]
 
@@ -297,7 +306,13 @@ function ABS:RestoreActionsAndMacros(name, overrideClass, set)
 end
 
 function ABS:RestoreProfile(name, overrideClass)
-	local set = self.db.sets[overrideClass or playerClass][name]
+	local targetClass = overrideClass or playerClass
+	if not self.db.sets or not self.db.sets[targetClass] then
+		self:Print(string.format(L["No profile with the name \"%s\" exists."], name or ""))
+		return
+	end
+
+	local set = self.db.sets[targetClass][name]
 	if not set then
 		self:Print(string.format(L["No profile with the name \"%s\" exists."], name or ""))
 		return

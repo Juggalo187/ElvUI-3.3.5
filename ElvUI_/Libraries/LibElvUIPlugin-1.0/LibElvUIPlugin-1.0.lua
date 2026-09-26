@@ -213,20 +213,6 @@ function lib:VersionCheck(event, prefix, message, _, sender)
 	if (event == "CHAT_MSG_ADDON" and prefix == lib.prefix) and (sender and message and not match(message, "^%s-$")) then
 		if sender == E.myname then return end
 
-		if not E.pluginRecievedOutOfDateMessage then
-			for name, version in gmatch(message, "([^=]+)=([%d%p]+);") do
-				local plugin = (version and name) and lib.plugins[name]
-				if plugin and plugin.version then
-					local Pver, ver = lib:StripVersion(plugin.version), lib:StripVersion(version)
-					if (ver and Pver) and (ver > Pver) then
-						plugin.old, plugin.newversion = true, version
-						local title = GetAddOnMetadata(plugin.name, "Title") or plugin.name
-						E:Print(format(MSG_OUTDATED, title, plugin.version, plugin.newversion))
-						E.pluginRecievedOutOfDateMessage = true
-					end
-				end
-			end
-		end
 	elseif event == "PLAYER_ENTERING_WORLD" then
 		lib:DelayedSendVersionCheck()
 	else

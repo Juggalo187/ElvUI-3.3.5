@@ -8,6 +8,10 @@ local tremove, tinsert, tconcat = tremove, tinsert, table.concat
 local format, match, gsub, strsplit = string.format, string.match, string.gsub, strsplit
 
 local GetSpellInfo = GetSpellInfo
+local isfrostmourne = false
+if string.find(string.lower(E.myrealm), "project astral", 1, true) then
+isfrostmourne = true
+end
 
 local positionValues = {
 	BOTTOMLEFT = "BOTTOMLEFT",
@@ -3653,14 +3657,14 @@ E.Options.args.nameplate = {
 						customOffset = {
 							order = 10,
 							type = "range",
-							name = L["Nameplate Offset"],
+							name = L["Custom Nameplate Offset"],
 							desc = "Adjusts the offset for all unit nameplates. (Frostmourne Server only)",
 							min = -20,
 							max = 60,
 							step = 1,
 							disabled = function()
 								-- Disables slider if CVar doesn't exist or realm isn't Frostmourne
-								return GetCVar("nameplateOriginPos") == nil or GetRealmName() ~= "frostmourne"
+								return isfrostmourne
 							end,
 							get = function(info)
 								return E.db.nameplates.customOffset
