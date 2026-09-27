@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local S = E:GetModule("Skins")
 
 local function SearchBoxTemplate(frame)

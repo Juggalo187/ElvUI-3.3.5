@@ -1,5 +1,5 @@
-﻿-- English
-local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "enUS", true)
+-- English
+local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "enUS", true)
 
 if not L then return end
 
@@ -10,7 +10,7 @@ L["Open bags when the following windows open:"] = true
 if GetLocale() == "enUS" then return end
 
 -- German
-local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "deDE")
+local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "deDE")
 if L then
 	L["Bag Control"] = true
 	L["Close bags when the following windows close:"] = true
@@ -18,7 +18,7 @@ if L then
 end
 
 -- Spanish
-local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "esES")
+local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "esES")
 if L then
 	L["Bag Control"] = true
 	L["Close bags when the following windows close:"] = true
@@ -26,7 +26,7 @@ if L then
 end
 
 -- French
-local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "frFR")
+local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "frFR")
 if L then
 	L["Bag Control"] = true
 	L["Close bags when the following windows close:"] = true
@@ -34,7 +34,7 @@ if L then
 end
 
 -- Korean
-local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "koKR")
+local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "koKR")
 if L then
 	L["Bag Control"] = true
 	L["Close bags when the following windows close:"] = true
@@ -42,7 +42,7 @@ if L then
 end
 
 -- Portuguese
-local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "ptBR")
+local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "ptBR")
 if L then
 	L["Bag Control"] = true
 	L["Close bags when the following windows close:"] = true
@@ -50,7 +50,7 @@ if L then
 end
 
 -- Russian
-local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "ruRU")
+local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "ruRU")
 if L then
 	L["Bag Control"] = true
 	L["Close bags when the following windows close:"] = true
@@ -58,7 +58,7 @@ if L then
 end
 
 --Chinese (China, simplified)
-local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "zhCN")
+local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "zhCN")
 if L then
 	L["Bag Control"] = true
 	L["Close bags when the following windows close:"] = true
@@ -66,7 +66,7 @@ if L then
 end
 
 --Chinese (Taiwan, traditional)
-local L = LibStub("AceLocale-3.0-ElvUI_"):NewLocale("ElvUI_", "zhTW")
+local L = LibStub("AceLocale-3.0-ElvUI"):NewLocale("ElvUI", "zhTW")
 if L then
 	L["Bag Control"] = true
 	L["Close bags when the following windows close:"] = true

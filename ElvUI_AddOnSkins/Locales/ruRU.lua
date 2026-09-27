@@ -1,5 +1,5 @@
-﻿local E = unpack(ElvUI_); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
-local L = E.Libs.ACL:NewLocale("ElvUI_", "ruRU")
+local E = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local L = E.Libs.ACL:NewLocale("ElvUI", "ruRU")
 
 L["AddOn Skins"] = "Скины аддонов"
 L["AuraBar Backdrop"] = true

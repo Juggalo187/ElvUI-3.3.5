@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local module = E:NewModule("Enhanced_CharacterFrame", "AceHook-3.0", "AceEvent-3.0")
 local S = E:GetModule("Skins")
 

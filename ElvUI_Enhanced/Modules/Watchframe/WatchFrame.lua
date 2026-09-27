@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local WF = E:NewModule("Enhanced_WatchFrame", "AceHook-3.0", "AceEvent-3.0")
 
 local ipairs = ipairs

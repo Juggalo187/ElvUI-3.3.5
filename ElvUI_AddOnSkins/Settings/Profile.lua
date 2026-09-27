@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 
 P.addOnSkins = {
 	skadaTemplate = "Default",

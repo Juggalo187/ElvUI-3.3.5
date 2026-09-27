@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local KPA = E:NewModule("Enhanced_KeyPressAnimation")
 local LAB = E.Libs.LAB
 

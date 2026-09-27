@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 
 -- UI Options & Group Names
 L["Action Bar Saver"] = "Action Bar Saver"
@@ -14,7 +14,6 @@ L["Save Profile"] = "Save Profile"
 L["Select Profile"] = "Select Profile"
 L["Restore Profile"] = "Restore Profile"
 L["Delete Profile"] = "Delete Profile"
-L["Update Profile"] = "Update Profile"
 
 -- System Messages & Errors
 L["Saved profile %s!"] = "Saved profile %s!"

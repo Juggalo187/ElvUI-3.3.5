@@ -1,10 +1,10 @@
-﻿local PZ, T, E, L, V, P, G = unpack(select(2, ...))
+local PZ, T, E, L, V, P, G = unpack(select(2, ...))
 
 local ZUF_AbsorbPrediction = {
 	enable = true,
 	absorbStyle = "REVERSED",
 	anchorPoint = "BOTTOM",
-	absorbTexture = "ElvUI_ Norm",
+	absorbTexture = "ElvUI Norm",
 	absorbOverlay = "None",
 	height = -1,
 	overAbsorb = true,
@@ -100,7 +100,7 @@ P.pz = {
 	unitframe = {
 		general = {
 			roleIcons = {
-				icons = "ElvUI_",
+				icons = "ElvUI",
 			}
 		},
 		colors = {

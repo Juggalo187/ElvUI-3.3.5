@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local UFPM = E:NewModule("Enhanced_PortraitHDModelFix", "AceHook-3.0")
 local UF = E:GetModule("UnitFrames")
 

@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G, _ = unpack(ElvUI_)
+local E, L, V, P, G, _ = unpack(ElvUI)
 local EAB = E:GetModule("ExtraActionBars")
 local AB = E:GetModule("ActionBars")
 local EP = LibStub("LibElvUIPlugin-1.0")

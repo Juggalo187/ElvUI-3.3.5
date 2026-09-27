@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local QGT = E:GetModule("ElvUI_QuestTracker")
 local EP = LibStub("LibElvUIPlugin-1.0")
 local addonName = ...

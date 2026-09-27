@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local EFL = E:GetModule("EnhancedFriendsList")
 
 local function ColorizeSettingName(settingName)

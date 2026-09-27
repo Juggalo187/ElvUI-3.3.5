@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local LSM = LibStub("LibSharedMedia-3.0");
 local UF = E:GetModule("UnitFrames")
 local CT = E:GetModule("CustomTweaks")
@@ -10,7 +10,7 @@ local isEnabled = E.private["unitframe"].enable and E.private["CustomTweaks"] an
 ---
 
 P["CustomTweaks"]["PowerBarTexture"] = {
-	["powerstatusbar"] = "ElvUI_ Norm",
+	["powerstatusbar"] = "ElvUI Norm",
 }
 
 local function ConfigTable()

@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local LC = E:NewModule("Enhanced_LoseControl", "AceEvent-3.0")
 
 local GetSpellInfo = GetSpellInfo

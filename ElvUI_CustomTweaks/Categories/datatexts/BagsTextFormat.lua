@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local DT = E:GetModule("DataTexts")
 local CT = E:GetModule("CustomTweaks")
 local isEnabled = E.private["CustomTweaks"] and E.private["CustomTweaks"]["BagsTextFormat"] and true or false

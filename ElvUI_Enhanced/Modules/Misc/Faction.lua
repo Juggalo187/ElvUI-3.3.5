@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local M = E:GetModule("Enhanced_Misc")
 
 local find, gsub = string.find, string.gsub

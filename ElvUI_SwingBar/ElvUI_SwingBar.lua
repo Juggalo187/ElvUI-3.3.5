@@ -1,4 +1,4 @@
-﻿local E, L, V, P, G = unpack(ElvUI_)
+local E, L, V, P, G = unpack(ElvUI)
 local SB = E:NewModule("SwingBar")
 local UF = E:GetModule("UnitFrames")
 local EP = E.Libs.EP
