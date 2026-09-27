@@ -221,7 +221,7 @@ function lib:VersionCheck(event, prefix, message, _, sender)
 					if (ver and Pver) and (ver > Pver) then
 						plugin.old, plugin.newversion = true, version
 						local title = GetAddOnMetadata(plugin.name, "Title") or plugin.name
-						E:Print(format(MSG_OUTDATED, title, plugin.version, plugin.newversion))
+						--E:Print(format(MSG_OUTDATED, title, plugin.version, plugin.newversion))
 						E.pluginRecievedOutOfDateMessage = true
 					end
 				end

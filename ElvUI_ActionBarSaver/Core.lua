@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI)
 local ABS = E:NewModule("ActionBarSaver", "AceConsole-3.0")
 
 local restoreErrors, spellCache, macroCache, macroNameCache = {}, {}, {}, {}
@@ -28,6 +28,21 @@ end
 function ABS:Initialize()
 	self.db = E.db.actionBarSaver
 	playerClass = select(2, UnitClass("player"))
+
+	-- Guarantee sets structure exists in runtime database
+	if not self.db.sets then
+		self.db.sets = {}
+	end
+	if not self.db.sets[playerClass] then
+		self.db.sets[playerClass] = {}
+	end
+	
+	if not self.db.activeProfile then
+		self.db.activeProfile = {}
+	end
+	if not self.db.activeProfile[playerClass] then
+		self.db.activeProfile[playerClass] = {} -- Stores [specGroup] = "ProfileName"
+	end
 
 	-- Register Slash Commands
 	self:RegisterChatCommand("abs", "SlashHandler")
@@ -69,19 +84,44 @@ function ABS:SaveTalents(set)
 	end
 end
 
--- Restore Talent Build
-function ABS:RestoreTalents(set)
-	if not set.talents or not self.db.restoreTalents then return false end
-	local numTabs = GetNumTalentTabs()
-	if not numTabs or numTabs == 0 then return false end
-
-	-- Wipe staged uncommitted preview points
+-- Wipe staged uncommitted preview points
+function ABS:WipePreviewTalents()
 	local activeGroup = GetActiveTalentGroup and GetActiveTalentGroup() or 1
 	if ResetGroupPreviewTalentPoints then
 		ResetGroupPreviewTalentPoints(activeGroup)
 	elseif ResetPreviewTalentPoints then
 		ResetPreviewTalentPoints()
 	end
+end
+
+-- Check if player has any currently allocated talent points
+function ABS:HasSpentTalents()
+	local numTabs = GetNumTalentTabs()
+	if not numTabs or numTabs == 0 then return false end
+
+	for tab = 1, numTabs do
+		local _, _, pointsSpent = GetTalentTabInfo(tab)
+		if pointsSpent and pointsSpent > 0 then
+			return true
+		end
+		local numTalents = GetNumTalents(tab) or 0
+		for idx = 1, numTalents do
+			local cRank = select(5, GetTalentInfo(tab, idx)) or 0
+			if cRank > 0 then
+				return true
+			end
+		end
+	end
+	return false
+end
+
+-- Restore Talent Build
+function ABS:RestoreTalents(set)
+	if not set.talents or not self.db.restoreTalents then return false end
+	local numTabs = GetNumTalentTabs()
+	if not numTabs or numTabs == 0 then return false end
+
+	self:WipePreviewTalents()
 
 	local totalPointsSpent = 0
 	local passCount = 0
@@ -140,8 +180,12 @@ end
 
 function ABS:SaveProfile(name)
 	if not name or name == "" then return end
+	self.db.sets[playerClass] = self.db.sets[playerClass] or {}
 	self.db.sets[playerClass][name] = self.db.sets[playerClass][name] or {}
 	local set = self.db.sets[playerClass][name]
+	
+	local activeGroup = GetActiveTalentGroup and GetActiveTalentGroup() or 1
+	self.db.activeProfile[playerClass][activeGroup] = name
 
 	-- Save Action Bar Buttons
 	for actionID = 1, MAX_ACTION_BUTTONS do
@@ -296,17 +340,10 @@ function ABS:RestoreActionsAndMacros(name, overrideClass, set)
 	end
 end
 
-function ABS:RestoreProfile(name, overrideClass)
-	local set = self.db.sets[overrideClass or playerClass][name]
-	if not set then
-		self:Print(string.format(L["No profile with the name \"%s\" exists."], name or ""))
-		return
-	elseif InCombatLockdown() then
-		self:Print(string.format(L["Unable to restore profile \"%s\", you are in combat."], name))
-		return
-	end
-
+function ABS:ApplyProfile(name, overrideClass, set)
 	local talentsLearned = self:RestoreTalents(set)
+	local activeGroup = GetActiveTalentGroup and GetActiveTalentGroup() or 1
+	self.db.activeProfile[playerClass][activeGroup] = name
 
 	if talentsLearned then
 		local syncFrame = CreateFrame("Frame")
@@ -330,6 +367,78 @@ function ABS:RestoreProfile(name, overrideClass)
 	else
 		self:RestoreActionsAndMacros(name, overrideClass, set)
 	end
+end
+
+function ABS:WaitForResetAndRestore(name, overrideClass, set)
+	local waitFrame = CreateFrame("Frame")
+	local totalElapsed = 0
+
+	waitFrame:SetScript("OnUpdate", function(f, elapsed)
+		totalElapsed = totalElapsed + elapsed
+
+		-- Check every 0.1 seconds for reset confirmation
+		if totalElapsed >= 0.1 then
+			totalElapsed = 0
+			self:WipePreviewTalents()
+			if not self:HasSpentTalents() then
+				f:SetScript("OnUpdate", nil)
+				self:ApplyProfile(name, overrideClass, set)
+			end
+		end
+	end)
+end
+
+function ABS:PromptResetAndRestore(name, overrideClass, set)
+	local popup = StaticPopupDialogs["PA_RESET_TALENTS_CONFIRM"]
+	if popup then
+		local origOnAccept = popup.OnAccept
+
+		popup.OnAccept = function(dialog, data, data2)
+			popup.OnAccept = origOnAccept
+			if origOnAccept then
+				origOnAccept(dialog, data, data2)
+			end
+			self:WaitForResetAndRestore(name, overrideClass, set)
+		end
+
+		if _G.PAResetTalentsBtn and _G.PAResetTalentsBtn:IsShown() then
+			_G.PAResetTalentsBtn:Click()
+		else
+			StaticPopup_Show("PA_RESET_TALENTS_CONFIRM")
+		end
+	else
+		self:ApplyProfile(name, overrideClass, set)
+	end
+end
+
+function ABS:RestoreProfile(name, overrideClass)
+	local targetClass = overrideClass or playerClass
+	if not self.db.sets or not self.db.sets[targetClass] then
+		self:Print(string.format(L["No profile with the name \"%s\" exists."], name or ""))
+		return
+	end
+
+	local set = self.db.sets[targetClass][name]
+	if not set then
+		self:Print(string.format(L["No profile with the name \"%s\" exists."], name or ""))
+		return
+	elseif InCombatLockdown() then
+		self:Print(string.format(L["Unable to restore profile \"%s\", you are in combat."], name))
+		return
+	end
+
+	self:WipePreviewTalents()
+
+	if self.db.restoreTalents and set.talents then
+		if self:HasSpentTalents() then
+			if StaticPopupDialogs["PA_RESET_TALENTS_CONFIRM"] or _G.PAResetTalentsBtn then
+				self:PromptResetAndRestore(name, overrideClass, set)
+				return
+			end
+		end
+	end
+
+	self:ApplyProfile(name, overrideClass, set)
 end
 
 function ABS:RestoreAction(i, type, actionID, binding, ...)
@@ -433,38 +542,5 @@ function ABS:SlashHandler(msg)
 		E:ToggleOptionsUI("ActionBarSaver")
 	end
 end
-
--- =========================================================================
--- Chat Reset Listener for Automatic Talent Restoration
--- =========================================================================
-local ABS_ResetWatcher = CreateFrame("Frame")
-ABS_ResetWatcher:RegisterEvent("CHAT_MSG_SYSTEM")
-
-ABS_ResetWatcher:SetScript("OnEvent", function(self, event, msg)
-	if not msg then return end
-
-	local lowerMsg = string.lower(msg)
-	if lowerMsg:find("talents have been reset") or lowerMsg:find("talents reset") or lowerMsg:find("talent tree reset") then
-		if PlayerTalentFrame and PlayerTalentFrame:IsShown() then
-			TalentFrame_Update()
-		end
-
-		local delayFrame = CreateFrame("Frame")
-		local totalElapsed = 0
-
-		delayFrame:SetScript("OnUpdate", function(f, elapsed)
-			totalElapsed = totalElapsed + elapsed
-			if totalElapsed >= 0.4 then
-				f:SetScript("OnUpdate", nil)
-				if ABS and ABS.db and ABS.db.sets then
-					local pClass = select(2, UnitClass("player"))
-					if ABS.db.sets[pClass] and ABS.db.sets[pClass]["AutoSave"] then
-						ABS:RestoreProfile("AutoSave", pClass)
-					end
-				end
-			end
-		end)
-	end
-end)
 
 E:RegisterModule(ABS:GetName())

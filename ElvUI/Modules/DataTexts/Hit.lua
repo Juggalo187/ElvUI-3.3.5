@@ -6,13 +6,14 @@ local format, join = string.format, string.join
 --WoW API / Variables
 local GetCombatRating = GetCombatRating
 local GetCombatRatingBonus = GetCombatRatingBonus
+local UnitLevel = UnitLevel
 local CR_HIT_MELEE = CR_HIT_MELEE
 local CR_HIT_RANGED = CR_HIT_RANGED
 local CR_HIT_SPELL = CR_HIT_SPELL
-local CR_ARMOR_PENETRATION = CR_ARMOR_PENETRATION
-local CR_SPELL_PENETRATION = CR_SPELL_PENETRATION
+local CR_HIT_MELEE_TOOLTIP = CR_HIT_MELEE_TOOLTIP
+local CR_HIT_RANGED_TOOLTIP = CR_HIT_RANGED_TOOLTIP
+local CR_HIT_SPELL_TOOLTIP = CR_HIT_SPELL_TOOLTIP
 local PAPERDOLLFRAME_TOOLTIP_FORMAT = PAPERDOLLFRAME_TOOLTIP_FORMAT
-local STAT_HIT_CHANCE = STAT_HIT_CHANCE
 
 local hitRating
 local displayString = ""
@@ -39,34 +40,29 @@ end
 local function OnEnter(self)
 	DT:SetupTooltip(self)
 
-	local ratingID, hitType, penRatingID, penLabel
+	local ratingID, tooltipText
 	if E.Role == "Caster" then
 		ratingID = CR_HIT_SPELL
-		hitType = "spell"
-		penRatingID = CR_SPELL_PENETRATION
-		penLabel = L["Spell Penetration"]
+		tooltipText = CR_HIT_SPELL_TOOLTIP
 	elseif E.myclass == "HUNTER" then
 		ratingID = CR_HIT_RANGED
-		hitType = "ranged"
-		penRatingID = CR_ARMOR_PENETRATION
-		penLabel = L["Armor Penetration"]
+		tooltipText = CR_HIT_RANGED_TOOLTIP
 	else
 		ratingID = CR_HIT_MELEE
-		hitType = "melee"
-		penRatingID = CR_ARMOR_PENETRATION
-		penLabel = L["Armor Penetration"]
+		tooltipText = CR_HIT_MELEE_TOOLTIP
 	end
 
 	local hitBonus = GetCombatRatingBonus(ratingID)
-	local penRating = penRatingID and GetCombatRating(penRatingID) or 0
-	local penBonus  = penRatingID and GetCombatRatingBonus(penRatingID) or 0
 
 	-- Line 1 (white): the stat name and rating
 	local text = format("%s %d", format(PAPERDOLLFRAME_TOOLTIP_FORMAT, L["Hit"]), hitRating)
 	DT.tooltip:AddLine(text, 1, 1, 1)
 
-	-- Line 2 (grey): hit description matching Blizzard layout
-	DT.tooltip:AddLine(format("Increases your %s chance to hit a target of level 83 by %.2f%%.", hitType, hitBonus), nil, nil, nil, 1)
+	-- Line 2 (grey): localized hit description only (strips out armor/spell penetration)
+	local fullDesc = format(tooltipText, UnitLevel("player"), hitBonus, hitRating, hitBonus)
+	local hitDesc  = fullDesc:match("^[^\r\n]+") or fullDesc
+
+	DT.tooltip:AddLine(hitDesc, nil, nil, nil, 1)
 
 	DT.tooltip:Show()
 end

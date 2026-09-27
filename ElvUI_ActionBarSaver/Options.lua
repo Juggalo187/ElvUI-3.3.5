@@ -1,13 +1,13 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI)
 local ABS = E:GetModule("ActionBarSaver")
 
 local selectedProfile = ""
 local newProfileName = ""
 local restoretalents = nil
 if string.find(string.lower(E.myrealm or GetRealmName() or ""), "project astral", 1, true) then
-		restoretalents = true
-	else
-		restoretalents = false
+	restoretalents = true
+else
+	restoretalents = false
 end
 
 function ABS.GetOptions()
@@ -33,30 +33,30 @@ function ABS.GetOptions()
 						order = 1,
 						type = "toggle",
 						name = (type(L["Restore Highest Rank"]) == "string" and L["Restore Highest Rank"]) or "Restore Highest Rank",
-						get = function() return ABS.db.restoreRank end,
-						set = function(_, value) ABS.db.restoreRank = value end,
+						get = function() return ABS.db and ABS.db.restoreRank end,
+						set = function(_, value) if ABS.db then ABS.db.restoreRank = value end end,
 					},
 					macro = {
 						order = 2,
 						type = "toggle",
 						name = (type(L["Auto Restore Macros"]) == "string" and L["Auto Restore Macros"]) or "Auto Restore Macros",
-						get = function() return ABS.db.macro end,
-						set = function(_, value) ABS.db.macro = value end,
+						get = function() return ABS.db and ABS.db.macro end,
+						set = function(_, value) if ABS.db then ABS.db.macro = value end end,
 					},
 					restoreTalents = {
 						order = 3,
 						type = "toggle",
 						name = (type(L["Auto Restore Talents"]) == "string" and L["Auto Restore Talents"]) or "Auto Restore Talents",
-						get = function() return ABS.db.restoreTalents end,
-						set = function(_, value) ABS.db.restoreTalents = value end,
+						get = function() return ABS.db and ABS.db.restoreTalents end,
+						set = function(_, value) if ABS.db then ABS.db.restoreTalents = value end end,
 						disabled = function() return not restoretalents end
 					},
 					checkCount = {
 						order = 4,
 						type = "toggle",
 						name = (type(L["Check Item Count"]) == "string" and L["Check Item Count"]) or "Check Item Count",
-						get = function() return ABS.db.checkCount end,
-						set = function(_, value) ABS.db.checkCount = value end,
+						get = function() return ABS.db and ABS.db.checkCount end,
+						set = function(_, value) if ABS.db then ABS.db.checkCount = value end end,
 					},
 				},
 			},
@@ -97,7 +97,7 @@ function ABS.GetOptions()
 						set = function(_, val) selectedProfile = val end,
 						values = function()
 							local list = {}
-							if ABS.db.sets[playerClass] then
+							if ABS.db and ABS.db.sets and ABS.db.sets[playerClass] then
 								for name in pairs(ABS.db.sets[playerClass]) do
 									list[name] = name
 								end
@@ -115,13 +115,32 @@ function ABS.GetOptions()
 							end
 						end,
 					},
-					deleteButton = {
+					updateButton = {
 						order = 6,
+						type = "execute",
+						name = (type(L["Update Profile"]) == "string" and L["Update Profile"]) or "Update Profile",
+						func = function()
+							if selectedProfile ~= "" then
+								ABS:SaveProfile(selectedProfile)
+							end
+						end,
+					},
+					deleteButton = {
+						order = 7,
 						type = "execute",
 						name = (type(L["Delete Profile"]) == "string" and L["Delete Profile"]) or "Delete Profile",
 						func = function()
-							if selectedProfile ~= "" then
+							if selectedProfile ~= "" and ABS.db and ABS.db.sets and ABS.db.sets[playerClass] then
 								ABS.db.sets[playerClass][selectedProfile] = nil
+
+								if ABS.db.activeProfile and ABS.db.activeProfile[playerClass] then
+									for group, activeName in pairs(ABS.db.activeProfile[playerClass]) do
+										if activeName == selectedProfile then
+											ABS.db.activeProfile[playerClass][group] = nil
+										end
+									end
+								end
+
 								ABS:Print(string.format(L["Deleted saved profile %s."], selectedProfile))
 								selectedProfile = ""
 							end

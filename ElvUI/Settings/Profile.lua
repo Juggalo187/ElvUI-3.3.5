@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+﻿local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 
 P.gridSize = 64
 P.farmSize = 340
@@ -291,6 +291,7 @@ P.bags = {
 P.nameplates = {
 	statusbar = "ElvUI Norm",
 	smoothbars = false,
+	customOffset = -20,
 	clickThrough = {
 		friendly = false,
 		enemy = false,
@@ -4225,7 +4226,7 @@ P.actionbar = {
 	microbar = {
 		enabled = false,
 		mouseover = false,
-		buttonsPerRow = 11,
+		buttonsPerRow = 13,
 		buttonSize = 20,
 		buttonSpacing = 2,
 		alpha = 1,
