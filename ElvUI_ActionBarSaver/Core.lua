@@ -36,6 +36,13 @@ function ABS:Initialize()
 	if not self.db.sets[playerClass] then
 		self.db.sets[playerClass] = {}
 	end
+	
+	if not self.db.activeProfile then
+		self.db.activeProfile = {}
+	end
+	if not self.db.activeProfile[playerClass] then
+		self.db.activeProfile[playerClass] = {} -- Stores [specGroup] = "ProfileName"
+	end
 
 	-- Register Slash Commands
 	self:RegisterChatCommand("abs", "SlashHandler")
@@ -176,6 +183,9 @@ function ABS:SaveProfile(name)
 	self.db.sets[playerClass] = self.db.sets[playerClass] or {}
 	self.db.sets[playerClass][name] = self.db.sets[playerClass][name] or {}
 	local set = self.db.sets[playerClass][name]
+	
+	local activeGroup = GetActiveTalentGroup and GetActiveTalentGroup() or 1
+	self.db.activeProfile[playerClass][activeGroup] = name
 
 	-- Save Action Bar Buttons
 	for actionID = 1, MAX_ACTION_BUTTONS do
@@ -332,6 +342,8 @@ end
 
 function ABS:ApplyProfile(name, overrideClass, set)
 	local talentsLearned = self:RestoreTalents(set)
+	local activeGroup = GetActiveTalentGroup and GetActiveTalentGroup() or 1
+	self.db.activeProfile[playerClass][activeGroup] = name
 
 	if talentsLearned then
 		local syncFrame = CreateFrame("Frame")
@@ -530,6 +542,30 @@ function ABS:SlashHandler(msg)
 		E:ToggleOptionsUI("ActionBarSaver")
 	end
 end
+
+-- =========================================================================
+-- Automatic Talent Auto-Save Watcher
+-- =========================================================================
+local ABS_TalentAutoSave = CreateFrame("Frame")
+ABS_TalentAutoSave:RegisterEvent("PLAYER_TALENT_UPDATE")
+
+ABS_TalentAutoSave:SetScript("OnEvent", function(self, event)
+    if not ABS.db or not ABS.db.restoreTalents then return end
+
+    local pClass = select(2, UnitClass("player"))
+    local activeGroup = GetActiveTalentGroup and GetActiveTalentGroup() or 1
+
+    if ABS.db.activeProfile and ABS.db.activeProfile[pClass] then
+        local activeProfileName = ABS.db.activeProfile[pClass][activeGroup]
+        
+        if activeProfileName and ABS.db.sets[pClass] and ABS.db.sets[pClass][activeProfileName] then
+            local set = ABS.db.sets[pClass][activeProfileName]
+            
+            -- Quietly sync saved talent state with current talent points
+            ABS:SaveTalents(set)
+        end
+    end
+end)
 
 -- =========================================================================
 -- Chat Reset Listener for Automatic Talent Restoration

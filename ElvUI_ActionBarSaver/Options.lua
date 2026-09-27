@@ -115,13 +115,32 @@ function ABS.GetOptions()
 							end
 						end,
 					},
-					deleteButton = {
+					updateButton = {
 						order = 6,
+						type = "execute",
+						name = (type(L["Update Profile"]) == "string" and L["Update Profile"]) or "Update Profile",
+						func = function()
+							if selectedProfile ~= "" then
+								ABS:SaveProfile(selectedProfile)
+							end
+						end,
+					},
+					deleteButton = {
+						order = 7,
 						type = "execute",
 						name = (type(L["Delete Profile"]) == "string" and L["Delete Profile"]) or "Delete Profile",
 						func = function()
 							if selectedProfile ~= "" and ABS.db and ABS.db.sets and ABS.db.sets[playerClass] then
 								ABS.db.sets[playerClass][selectedProfile] = nil
+
+								if ABS.db.activeProfile and ABS.db.activeProfile[playerClass] then
+									for group, activeName in pairs(ABS.db.activeProfile[playerClass]) do
+										if activeName == selectedProfile then
+											ABS.db.activeProfile[playerClass][group] = nil
+										end
+									end
+								end
+
 								ABS:Print(string.format(L["Deleted saved profile %s."], selectedProfile))
 								selectedProfile = ""
 							end
