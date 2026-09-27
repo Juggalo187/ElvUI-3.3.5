@@ -1,4 +1,4 @@
-local E, _, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+﻿local E, _, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local C, L = unpack(select(2, ...))
 local NP = E:GetModule("NamePlates")
 local ACD = E.Libs.AceConfigDialog
@@ -8,6 +8,10 @@ local tremove, tinsert, tconcat = tremove, tinsert, table.concat
 local format, match, gsub, strsplit = string.format, string.match, string.gsub, strsplit
 
 local GetSpellInfo = GetSpellInfo
+local isfrostmourne = false
+if string.find(string.lower(E.myrealm), "project astral", 1, true) then
+isfrostmourne = true
+end
 
 local positionValues = {
 	BOTTOMLEFT = "BOTTOMLEFT",
@@ -3650,13 +3654,38 @@ E.Options.args.nameplate = {
 								NP:ConfigureAll()
 							end
 						},
-						highlight = {
+						customOffset = {
 							order = 10,
+							type = "range",
+							name = L["Custom Nameplate Offset"],
+							desc = "Adjusts the offset for all unit nameplates. (Frostmourne Server only)",
+							min = -20,
+							max = 60,
+							step = 1,
+							disabled = function()
+								-- Disables slider if CVar doesn't exist or realm isn't Frostmourne
+								return isfrostmourne
+							end,
+							get = function(info)
+								return E.db.nameplates.customOffset
+							end,
+							set = function(info, value)
+								E.db.nameplates.customOffset = value
+								NP:UpdateCVars()
+							
+								-- Wait 0.1s for the engine to clear native frames before turning them back on
+								E:Delay(0.1, function()
+									SetCVar("nameplateOriginPos", value)
+								end)
+							end,
+						},
+						highlight = {
+							order = 11,
 							type = "toggle",
 							name = L["Hover Highlight"]
 						},
 						nameColoredGlow = {
-							order = 11,
+							order = 12,
 							type = "toggle",
 							name = L["Name Colored Glow"],
 							desc = L["Use the Name Color of the unit for the Name Glow."],
