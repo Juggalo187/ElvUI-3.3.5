@@ -1,89 +1,67 @@
 local E, L, V, P, G = unpack(select(2, ...))
 local DT = E:GetModule("DataTexts")
 
-local format, join = string.format, string.join
-local PAPERDOLLFRAME_TOOLTIP_FORMAT = PAPERDOLLFRAME_TOOLTIP_FORMAT
+-- Lua functions
+local format, join, gmatch = string.format, string.join, string.gmatch
+local pcall = pcall
 
-local defenseRating = 0
-local defenseTooltipText, defenseTooltipText2
+-- WoW API / Variables
+local UnitDefense = UnitDefense
+local GetCombatRating = GetCombatRating
+local GetCombatRatingBonus = GetCombatRatingBonus
+local CR_DEFENSE_SKILL = CR_DEFENSE_SKILL or 2
+local PAPERDOLLFRAME_TOOLTIP_FORMAT = PAPERDOLLFRAME_TOOLTIP_FORMAT
+local STAT_DEFENSE = L["Defense"] or STAT_DEFENSE or DEFENSE or "Defense"
+
+local defenseSkill = 0
 local displayString = ""
 local lastPanel
 
-local function FindDefenseStatFrame()
-    local statsPane = _G["CharacterStatsPane"]
-    if not statsPane or not statsPane.Categories then return nil end
-
-    for i = 1, #statsPane.Categories do
-        local category = statsPane.Categories[i]
-        if category and category.Category == "DEFENSES" then
-            return category.Stats and category.Stats[2]
-        end
-    end
-    return nil
-end
-
-local function GetDefenseValue()
-    local statFrame = FindDefenseStatFrame()
-    if not statFrame then return nil end
-
-    local ok = pcall(PaperDollFrame_SetDefense, statFrame, "player")
-    if not ok then return nil end
-
-    local text = statFrame.Value and statFrame.Value:GetText()
-    if text then
-        text = text:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
-        local value = tonumber(text)
-        if value and value > 0 then
-            -- Capture Blizzard's tooltip lines while we're here
-            defenseTooltipText  = statFrame.tooltip
-            defenseTooltipText2 = statFrame.tooltip2
-            return value
-        end
-    end
-    return nil
-end
-
 local function OnEvent(self)
     lastPanel = self
-
-    local value = GetDefenseValue()
-    if value then
-        defenseRating = value
-    end
-
-    self.text:SetFormattedText(displayString, defenseRating)
+    local base, modifier = UnitDefense("player")
+    defenseSkill = (base or 0) + (modifier or 0)
+    self.text:SetFormattedText(displayString, defenseSkill)
 end
 
 local function OnEnter(self)
     DT:SetupTooltip(self)
 
-    -- Header line: use the standard highlighted tooltip color
-    DT.tooltip:AddLine(format("%s %d", format(PAPERDOLLFRAME_TOOLTIP_FORMAT, "Defense"), defenseRating), 1, 1, 1)
+    -- Refresh total defense skill
+    local base, modifier = UnitDefense("player")
+    defenseSkill = (base or 0) + (modifier or 0)
 
-    -- Detail line(s): preserve any embedded color codes from Blizzard
-    if defenseTooltipText2 then
-        for line in defenseTooltipText2:gmatch("[^\n]+") do
-            -- If the line already has a color code, don't override it
-            if line:find("|c%x%x%x%x%x%x%x%x") then
+    local rating      = GetCombatRating(CR_DEFENSE_SKILL) or 0
+    local ratingBonus = GetCombatRatingBonus(CR_DEFENSE_SKILL) or 0
+    local bonusPct    = ratingBonus * 0.04
+
+    -- Line 1 (white): "Defense 540"
+    DT.tooltip:AddLine(format("%s %d", format(PAPERDOLLFRAME_TOOLTIP_FORMAT or "%s", STAT_DEFENSE), defenseSkill), 1, 1, 1)
+
+    -- Localized WotLK Defense description
+    local rawTooltip = STAT_DEFENSE_TOOLTIP or CR_DEFENSE_TOOLTIP or DEFAULT_STATDEFENSE_TOOLTIP
+    if rawTooltip then
+        -- Safely try 4 arguments first, then fall back to 2 if needed
+        local ok, formattedText = pcall(format, rawTooltip, rating, ratingBonus, bonusPct, bonusPct)
+        if not ok then
+            ok, formattedText = pcall(format, rawTooltip, rating, ratingBonus)
+        end
+
+        -- Split multi-line string line-by-line so 3.3.5a tooltip frame renders properly
+        if ok and formattedText then
+            for line in gmatch(formattedText, "[^\r\n]+") do
                 DT.tooltip:AddLine(line, nil, nil, nil, 1)
-            else
-                -- No color code: use a soft gray so it reads as secondary info
-                DT.tooltip:AddLine(line, 0.8, 0.8, 0.8, 1)
             end
         end
-    end
-
-    if defenseRating == 0 then
-        DT.tooltip:AddLine("Open your character sheet once to populate this value.", 1, 0.8, 0, 1)
     end
 
     DT.tooltip:Show()
 end
 
 local function ValueColorUpdate(hex)
-    displayString = join("", "Defense", ": ", hex, "%d|r")
+    displayString = join("", STAT_DEFENSE, ": ", hex, "%d|r")
     if lastPanel ~= nil then OnEvent(lastPanel) end
 end
 E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
-DT:RegisterDatatext("Defense", {"PLAYER_ENTERING_WORLD", "COMBAT_RATING_UPDATE", "UNIT_DEFENSE", "PLAYER_EQUIPMENT_CHANGED"}, OnEvent, nil, nil, OnEnter, nil, "Defense")
+DT:RegisterDatatext("Defense", {"PLAYER_ENTERING_WORLD", "COMBAT_RATING_UPDATE", "UNIT_DEFENSE", "PLAYER_EQUIPMENT_CHANGED"}, OnEvent, nil, nil, OnEnter, nil, STAT_DEFENSE)

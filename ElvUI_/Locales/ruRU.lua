@@ -76,6 +76,7 @@ L["Data From: %s"] = "Данные от: %s"
 L["Data To: %s"] = true
 L["Dead"] = "Труп"
 L["Debuffs"] = "Дебаффы"
+L["Defense"] = "Оборона"
 L["Deficit:"] = "Убыток:"
 L["Delete gray items?"] = "Удалить серый предметы?"
 L["Detected that your ElvUI_ OptionsUI addon is out of date. This may be a result of your Tukui Client being out of date. Please visit our download page and update your Tukui Client, then reinstall ElvUI_. Not having your ElvUI_ OptionsUI addon up to date will result in missing options."] = "Мы обнаружили, что ElvUI_ OptionsUI устарел. Это может быть результатом устаревшей версии Tukui Client. Пожалуйста, посетите нашу страницу загрузок и обновите Tukui Client, а затем переустановите ElvUI_. Устаревший ElvUI_ OptionsUI может привести к отсутствию некоторых опций."
