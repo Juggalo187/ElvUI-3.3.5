@@ -8,7 +8,7 @@ local GetExpertise = GetExpertise
 local GetCombatRating = GetCombatRating
 local CR_EXPERTISE_TOOLTIP = CR_EXPERTISE_TOOLTIP
 local PAPERDOLLFRAME_TOOLTIP_FORMAT = PAPERDOLLFRAME_TOOLTIP_FORMAT
-local STAT_EXPERTISE = STAT_EXPERTISE
+local STAT_EXPERTISE = L["Expertise"] or STAT_EXPERTISE
 
 local expertise
 local displayString = ""
