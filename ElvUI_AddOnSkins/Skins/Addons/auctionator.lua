@@ -80,6 +80,10 @@ S:AddCallbackForAddon("Auctionator", "Auctionator", function()
 		Atr_Adv_Search_Dialog:StripTextures()
 		Atr_Adv_Search_Dialog:SetTemplate("Transparent")
 		Atr_Adv_Search_Dialog:Point("TOPLEFT", 215, -183)
+		
+		if Atr_AS_Searchtext_ClearBut then 
+			S:HandleCloseButton(Atr_AS_Searchtext_ClearBut) 
+		end
 
 		if Atr_AS_Searchtext then S:HandleEditBox(Atr_AS_Searchtext) end
 		if Atr_AS_Minlevel then S:HandleEditBox(Atr_AS_Minlevel) end
@@ -87,6 +91,9 @@ S:AddCallbackForAddon("Auctionator", "Auctionator", function()
 
 		if Atr_ASDD_Class then S:HandleDropDownBox(Atr_ASDD_Class, 180) end
 		if Atr_ASDD_Subclass then S:HandleDropDownBox(Atr_ASDD_Subclass, 180) end
+		if Atr_ASDD_Invtype then S:HandleDropDownBox(Atr_ASDD_Invtype, 180) end
+		if Atr_ASDD_Quality then S:HandleDropDownBox(Atr_ASDD_Quality, 180) end
+
 
 		if Atr_Adv_Search_ResetBut then S:HandleButton(Atr_Adv_Search_ResetBut) end
 		if Atr_Adv_Search_OKBut then S:HandleButton(Atr_Adv_Search_OKBut) end
@@ -503,6 +510,12 @@ S:AddCallbackForAddon("Auctionator", "Auctionator", function()
 		if Atr_Search_Box then S:HandleEditBox(Atr_Search_Box) end
 		if Atr_Search_Button then S:HandleButton(Atr_Search_Button) end
 		if Atr_Adv_Search_Button then S:HandleButton(Atr_Adv_Search_Button) end
+		if Atr_Adv_Search_CB then S:HandleCheckBox(Atr_Adv_Search_CB) end
+		if Atr_Exact_Search_Button then S:HandleButton(Atr_Exact_Search_Button) end
+		
+		if Atr_Search_ClearBut then 
+			S:HandleCloseButton(Atr_Search_ClearBut) 
+		end
 
 		if Atr_Search_Box then Atr_Search_Box:Point("TOPLEFT", 20, -32) end
 		if Atr_Search_Button and Atr_Search_Box then
