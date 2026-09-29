@@ -111,7 +111,7 @@ local addonList = {
 	"QDKP2_GUI",
 	"LootWonAlert",
 	"ProjectAstral",
-	"whispermessenger",
+	"WhisperMessenger",
 }
 local addonAlias = {
 	["DBM"] = "DBM-Core",

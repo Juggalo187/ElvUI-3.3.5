@@ -1,6 +1,9 @@
 local E, L, V, P, G = unpack(ElvUI)
 local S = E:GetModule('Skins')
 
+-- Set the relative WoW file path to your TGA icon here
+local CUSTOM_ICON_PATH = [[Interface\AddOns\ElvUI_AddOnSkins\Media\whispermessenger\icon.tga]]
+
 local function SkinWhisperMessengerToggleIcon()
     local toggleIcon = _G["WhisperMessengerToggleIcon"]
     if not toggleIcon then return end
@@ -30,7 +33,7 @@ local function SkinWhisperMessengerToggleIcon()
         end
     end
 
-    -- 2. Strip the circular textures and format the original icon
+    -- 2. Strip the circular textures and set the custom TGA icon
     for _, region in ipairs({ toggleIcon:GetRegions() }) do
         if region and region.IsObjectType and region:IsObjectType("Texture") then
             local drawLayer = region:GetDrawLayer()
@@ -41,9 +44,10 @@ local function SkinWhisperMessengerToggleIcon()
                 region:Hide()
                 region:SetAlpha(0)
             elseif drawLayer == "ARTWORK" then
-                -- Keep the original addon icon, trim it square, and fit it inside
+                -- Apply custom TGA texture and crop to fit ElvUI border
+                region:SetTexture(CUSTOM_ICON_PATH)
                 if region.SetTexCoord then
-                    region:SetTexCoord(unpack(E.TexCoords))
+                    region:SetTexCoord(0, 1, 0, 1) -- Set to (unpack(E.TexCoords)) if the icon needs ElvUI's zoom crop
                 end
                 region:ClearAllPoints()
                 region:SetInside(toggleIcon)
