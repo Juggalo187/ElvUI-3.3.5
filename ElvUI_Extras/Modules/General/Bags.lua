@@ -2743,7 +2743,7 @@ function mod:UpdateSlot(self, f, bagID, slotID)
 			end
 			mod:UpdateButtonPositions(button, bagMap, bagID, slotID, nil, targetSection)
 			local itemID = button.itemID or B_GetItemID(nil, button.bagID, button.slotID)
-			local rarity = button.rarity or itemID and select(3, GetItemInfo(itemID))) or 1
+			local rarity = button.rarity or (itemID and select(3, GetItemInfo(itemID))) or 1
 			if not rarity or layout.filter[min(6,rarity)] then
 				mod:UpdateSection(f, targetSection, layout.numColumns, layout.buttonSize, layout.buttonSpacing)
 			else
