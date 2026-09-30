@@ -20,7 +20,7 @@ local LOOT = LOOT
 local LOOTFRAME_NUMBUTTONS = LOOTFRAME_NUMBUTTONS
 
 S:AddCallback("Skin_Loot", function()
-	if E.private.general.loot then return end
+	if not E.private.general.loot then return end
 	if not E.private.skins.blizzard.enable or not E.private.skins.blizzard.loot then return end
 
 	local LootFrame = _G.LootFrame
@@ -141,7 +141,7 @@ S:AddCallback("Skin_Loot", function()
 end)
 
 S:AddCallback("Skin_LootRoll", function()
-	if E.private.general.lootRoll then return end
+	if not E.private.general.lootRoll then return end
 	if not E.private.skins.blizzard.enable or not E.private.skins.blizzard.lootRoll then return end
 
 	local function OnShow(self)

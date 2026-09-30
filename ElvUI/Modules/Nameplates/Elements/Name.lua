@@ -29,6 +29,9 @@ end
 
 function NP:Update_Name(frame, triggered)
 	if not triggered then
+		-- Prevent standard mouseover/frame updates from resetting name anchors if Name Only StyleFilter is active
+		if frame.NameOnlyChanged then return end
+
 		if not self.db.units[frame.UnitType].name.enable then return end
 	end
 
