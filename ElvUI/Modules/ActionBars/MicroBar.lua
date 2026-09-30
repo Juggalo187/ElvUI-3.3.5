@@ -205,17 +205,44 @@ function AB:SetupAstralMicroButton()
 	button:SetHighlightTexture(icon)
 
 	button:SetScript("OnClick", function()
-		if _G.ProjectAstral and ProjectAstral.ToggleMainMenu then
-			ProjectAstral:ToggleMainMenu()
+		local frame = _G.ProjectAstralDailyCallboardFrame or (ProjectAstral and ProjectAstral.DailyCallboard and ProjectAstral.DailyCallboard.Frame)
+		local DC = _G.ProjectAstral and ProjectAstral.DailyCallboard
+
+		if frame and frame:IsShown() then
+			if DC and DC.Close then
+				DC.Close()
+			else
+				frame:Hide()
+			end
+		else
+			if DC and DC.Open then
+				DC.Open()
+			end
 		end
 	end)
+
 	button:SetScript("OnEnter", function(self)
+		if AB.db.microbar.mouseover then
+			E:UIFrameFadeIn(ElvUI_MicroBar, 0.2, ElvUI_MicroBar:GetAlpha(), AB.db.microbar.alpha)
+		end
+		if self.backdrop then
+			self.backdrop:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
+		end
+
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-		GameTooltip:SetText("Project Astral", 1, 0.82, 0)
-		GameTooltip:AddLine("Open the Astral hub.", 1, 1, 1, true)
+		GameTooltip:SetText("Project Astral - CallBoard", 1, 0.82, 0)
+		GameTooltip:AddLine("Toggle Daily CallBoard.", 1, 1, 1, true)
 		GameTooltip:Show()
 	end)
-	button:SetScript("OnLeave", function()
+
+	button:SetScript("OnLeave", function(self)
+		if AB.db.microbar.mouseover then
+			E:UIFrameFadeOut(ElvUI_MicroBar, 0.2, ElvUI_MicroBar:GetAlpha(), 0)
+		end
+		if self.backdrop then
+			self.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
+		end
+
 		GameTooltip:Hide()
 	end)
 
