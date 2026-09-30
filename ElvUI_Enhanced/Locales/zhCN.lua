@@ -110,6 +110,8 @@ L["Where to show"] = "何处显示"
 L["Cache Unit Class"] = "缓存单位职业"
 L["Cache Unit Guilds / NPC Titles"] = "缓存单位公会/NPC头衔"
 L["Guild"] = "公会"
+L["Mouseover Only"] = "仅在悬停时"
+L["Only display the NPC title when hovering over the nameplate."] = "仅在鼠标悬停于姓名板上时显示 NPC 称号。"
 
 -- Minimap
 L["Above Minimap"] = "小地图之上"

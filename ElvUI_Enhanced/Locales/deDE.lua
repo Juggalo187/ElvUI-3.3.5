@@ -101,6 +101,8 @@ L["Interrupt Tracker"] = true
 
 -- Nameplates
 L["Cache Unit Class"] = true
+L["Mouseover Only"] = "Nur beim Drüberfahren"
+L["Only display the NPC title when hovering over the nameplate."] = "Zeigt den NPC-Titel nur beim Drüberfahren mit der Maus über der Namensplakette an."
 
 -- Minimap
 L["Above Minimap"] = "Oberhalb der Minimap"

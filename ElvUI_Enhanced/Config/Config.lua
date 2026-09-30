@@ -1318,21 +1318,34 @@ local function NamePlatesOptions()
 						end,
 						disabled = function() return not E.db.enhanced.nameplates.titleCache end,
 						args = {
-							font = {
+							enable = {
+								order = 0,
+								type = "toggle",
+								name = L["Enable"],
+								desc = L["Display titles on NPC nameplates."],
+							},
+							mouseoverOnly = {
 								order = 1,
+								type = "toggle",
+								name = L["Mouseover Only"],
+								desc = L["Only display the NPC title when hovering over the nameplate."],
+								disabled = function() return not E.db.enhanced.nameplates.npc.enable end,
+							},
+							font = {
+								order = 2,
 								type = "select",
 								dialogControl = "LSM30_Font",
 								name = L["Font"],
 								values = AceGUIWidgetLSMlists.font
 							},
 							fontSize = {
-								order = 2,
+								order = 3,
 								type = "range",
 								name = L["FONT_SIZE"],
 								min = 4, max = 33, step = 1
 							},
 							fontOutline = {
-								order = 3,
+								order = 4,
 								type = "select",
 								name = L["Font Outline"],
 								values = {
@@ -1343,13 +1356,13 @@ local function NamePlatesOptions()
 								}
 							},
 							reactionColor = {
-								order = 4,
+								order = 5,
 								type = "toggle",
 								name = L["Reaction Color"],
 								desc = L["Color based on reaction type."]
 							},
 							color = {
-								order = 5,
+								order = 6,
 								type = "color",
 								name = L["COLOR"],
 								get = function(info)
@@ -1365,7 +1378,7 @@ local function NamePlatesOptions()
 								disabled = function() return E.db.enhanced.nameplates.npc.reactionColor end
 							},
 							separator = {
-								order = 5,
+								order = 7,
 								type = "select",
 								name = L["Separator"],
 								values = {

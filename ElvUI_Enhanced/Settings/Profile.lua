@@ -122,6 +122,8 @@ P.enhanced = {
 			}
 		},
 		npc = {
+			enable = true,
+			mouseoverOnly = false,
 			font = "PT Sans Narrow",
 			fontSize = 11,
 			fontOutline = "OUTLINE",

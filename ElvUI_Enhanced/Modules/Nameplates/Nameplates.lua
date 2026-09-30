@@ -71,30 +71,32 @@ function ENP:UPDATE_MOUSEOVER_UNIT()
 				UpdateNameplateByName(name)
 			end
 		end
-	else
+	elseif UnitExists("mouseover") then
 		self.scanner:ClearLines()
 		self.scanner:SetUnit("mouseover")
 
 		local name = _G["Enhanced_ScanningTooltipTextLeft1"]:GetText()
-		if not name then return end
-		local description = _G["Enhanced_ScanningTooltipTextLeft2"]:GetText()
-		if not description then return end
+		if name then
+			local description = _G["Enhanced_ScanningTooltipTextLeft2"]:GetText()
+			if description and not match(description, UNIT_LEVEL_TEMPLATE) then
+				name = gsub(gsub(name, "|c........", "" ), "|r", "")
+				if name == UnitName("mouseover") and not UnitPlayerControlled("mouseover") then
+					if not npcTitleMap[description] then
+						tinsert(EnhancedDB.NPCList, description)
+						npcTitleMap[description] = #EnhancedDB.NPCList
+					end
 
-		if match(description, UNIT_LEVEL_TEMPLATE) then return end
-
-		name = gsub(gsub((name), "|c........", "" ), "|r", "")
-		if name ~= UnitName("mouseover") then return end
-		if UnitPlayerControlled("mouseover") then return end
-
-		if not npcTitleMap[description] then
-			tinsert(EnhancedDB.NPCList, description)
-			npcTitleMap[description] = #EnhancedDB.NPCList
+					if EnhancedDB.UnitTitle[name] ~= npcTitleMap[description] then
+						EnhancedDB.UnitTitle[name] = npcTitleMap[description]
+					end
+				end
+			end
 		end
+	end
 
-		if EnhancedDB.UnitTitle[name] ~= npcTitleMap[description] then
-			EnhancedDB.UnitTitle[name] = npcTitleMap[description]
-			UpdateNameplateByName(name)
-		end
+	-- Refresh all visible plates when mouseover changes so titles display/hide on hover enter and leave
+	for frame in pairs(NP.VisiblePlates) do
+		NP:Update_Name(frame)
 	end
 end
 
@@ -144,6 +146,40 @@ local separatorMap = {
 	["["] = "[%s]",
 	["{"] = "{%s}"
 }
+
+local function GetNPCTitle(frame)
+	-- Check cache first
+	local cachedIndex = EnhancedDB.UnitTitle[frame.UnitName]
+	if cachedIndex and EnhancedDB.NPCList[cachedIndex] then
+		return EnhancedDB.NPCList[cachedIndex]
+	end
+
+	-- Retrieve unit token assigned by AwesomeWotLK
+	local unit = frame.unit or (frame.UnitFrame and frame.UnitFrame.unit) or frame.unitToken or frame:GetAttribute("unit")
+	if not unit or not ENP.scanner or not UnitExists(unit) then return nil end
+
+	-- Programmatically scan the unit tooltip without requiring physical mouseover
+	ENP.scanner:ClearLines()
+	ENP.scanner:SetUnit(unit)
+
+	local name = _G["Enhanced_ScanningTooltipTextLeft1"]:GetText()
+	if not name then return nil end
+
+	local description = _G["Enhanced_ScanningTooltipTextLeft2"]:GetText()
+	if not description or match(description, UNIT_LEVEL_TEMPLATE) then return nil end
+
+	name = gsub(gsub(name, "|c........", ""), "|r", "")
+	if name ~= frame.UnitName or UnitPlayerControlled(unit) then return nil end
+
+	-- Cache title for future rendering
+	if not npcTitleMap[description] then
+		tinsert(EnhancedDB.NPCList, description)
+		npcTitleMap[description] = #EnhancedDB.NPCList
+	end
+
+	EnhancedDB.UnitTitle[frame.UnitName] = npcTitleMap[description]
+	return description
+end
 
 local function Update_NameHook(self, frame)
 	if not E.db.enhanced.nameplates.titleCache then return end
@@ -204,36 +240,68 @@ local function Update_NameHook(self, frame)
 		elseif frame.Title then
 			frame.Title:Hide()
 		end
-	elseif (frame.UnitType == "FRIENDLY_NPC" or frame.UnitType == "ENEMY_NPC") and EnhancedDB.NPCList[EnhancedDB.UnitTitle[frame.UnitName]] then
-		if not frame.Title then
-			frame.Title = frame:CreateFontString(nil, "OVERLAY")
-			frame.Title:SetWordWrap(false)
-		end
+	elseif (frame.UnitType == "FRIENDLY_NPC" or frame.UnitType == "ENEMY_NPC") then
+		local npcDB = E.db.enhanced.nameplates.npc
 
-		local db = E.db.enhanced.nameplates.npc
-		frame.Title:SetFont(E.LSM:Fetch("font", db.font), db.fontSize, db.fontOutline)
-
-		if E.db.enhanced.nameplates.npc.reactionColor then
-			local db = self.db.colors
-			if frame.UnitReaction == 5 then -- friendly
-				r, g, b = db.reactions.good.r, db.reactions.good.g, db.reactions.good.b
-			elseif frame.UnitReaction == 1 or frame.UnitReaction == 2 then -- hostile
-				r, g, b = db.reactions.bad.r, db.reactions.bad.g, db.reactions.bad.b
-			elseif frame.UnitReaction == 4  then -- neutral
-				r, g, b = db.reactions.neutral.r, db.reactions.neutral.g, db.reactions.neutral.b
-			else
-				r, g, b = 1, 1, 1
+		-- 1. If NPC titles are disabled entirely
+		if not npcDB.enable then
+			if frame.Title then
+				frame.Title:SetText("")
+				frame.Title:Hide()
 			end
-			frame.Title:SetTextColor(r, g, b)
-		else
-			frame.Title:SetTextColor(db.color.r, db.color.g, db.color.b)
+			return
 		end
 
-		frame.Title:SetPoint("TOP", frame.Name, "BOTTOM")
-		frame.Title:SetFormattedText(separatorMap[db.separator], EnhancedDB.NPCList[EnhancedDB.UnitTitle[frame.UnitName]])
-		frame.Title:Show()
+		-- 2. Evaluate mouseover state
+		local isMouseover = frame.isMouseover 
+			or (frame:GetParent() and frame:GetParent().isMouseover)
+			or (UnitExists("mouseover") and UnitName("mouseover") == frame.UnitName)
+
+		if npcDB.mouseoverOnly and not isMouseover then
+			if frame.Title then
+				frame.Title:SetText("")
+				frame.Title:Hide()
+			end
+			return
+		end
+
+		local npcTitle = GetNPCTitle(frame)
+
+		if npcTitle and npcTitle ~= "" then
+			if not frame.Title then
+				frame.Title = frame:CreateFontString(nil, "OVERLAY")
+				frame.Title:SetWordWrap(false)
+			end
+
+			frame.Title:SetFont(E.LSM:Fetch("font", npcDB.font), npcDB.fontSize, npcDB.fontOutline)
+
+			if npcDB.reactionColor then
+				local dbColors = self.db.colors
+				local r, g, b
+				if frame.UnitReaction == 5 then -- friendly
+					r, g, b = dbColors.reactions.good.r, dbColors.reactions.good.g, dbColors.reactions.good.b
+				elseif frame.UnitReaction == 1 or frame.UnitReaction == 2 then -- hostile
+					r, g, b = dbColors.reactions.bad.r, dbColors.reactions.bad.g, dbColors.reactions.bad.b
+				elseif frame.UnitReaction == 4  then -- neutral
+					r, g, b = dbColors.reactions.neutral.r, dbColors.reactions.neutral.g, dbColors.reactions.neutral.b
+				else
+					r, g, b = 1, 1, 1
+				end
+				frame.Title:SetTextColor(r, g, b)
+			else
+				frame.Title:SetTextColor(npcDB.color.r, npcDB.color.g, npcDB.color.b)
+			end
+
+			frame.Title:SetPoint("TOP", frame.Name, "BOTTOM")
+			frame.Title:SetFormattedText(separatorMap[npcDB.separator], npcTitle)
+			frame.Title:Show()
+		elseif frame.Title then
+			frame.Title:SetText("")
+			frame.Title:Hide()
+		end
 	elseif frame.Title then
 		frame.Title:SetText("")
+		frame.Title:Hide()
 	end
 end
 

@@ -118,24 +118,29 @@ do
 		9,	-- WristSlot
 	}
 
+	local function HasDamagedItems()
+		for slotID = 1, 19 do
+			local current, max = GetInventoryItemDurability(slotID)
+			if current and max and current < max then
+				return true
+			end
+		end
+		return false
+	end
+
 	local function RepairInventoryByPriority(playerMoney)
 		local money = playerMoney
 
 		ShowRepairCursor()
 
 		for _, slotID in ipairs(repairInventoryPriority) do
-			local hasItem, _, repairCost = GameTooltip:SetInventoryItem("player", slotID)
-
-			if hasItem and repairCost and repairCost > 0 and repairCost <= money then
+			local current, max = GetInventoryItemDurability(slotID)
+			if current and max and current < max then
 				PickupInventoryItem(slotID)
-				money = money - repairCost
 			end
 		end
 
 		HideRepairCursor()
-		GameTooltip:Hide()
-
-		return playerMoney - money
 	end
 
 	local function FullRepairMessage(repairAllCost)
@@ -143,63 +148,96 @@ do
 	end
 
 	function M:AutoRepair(repairMode, greyValue)
-		if not CanMerchantRepair() or IsShiftKeyDown() then return end
+		repairMode = repairMode or self.repairMode
+		greyValue = greyValue or self.greyValue
+
+		if not CanMerchantRepair() or IsShiftKeyDown() then
+			self:UnregisterRepairEvents()
+			return
+		end
+
+		if not HasDamagedItems() then
+			self:UnregisterRepairEvents()
+			return
+		end
 
 		local repairAllCost, canRepair = GetRepairAllCost()
-		if not canRepair or repairAllCost <= 0 then return end
 
-		if repairMode == "GUILD" then
-			if not CanGuildBankRepair() then
-				repairMode = "PLAYER"
+		if not canRepair then
+			self:UnregisterRepairEvents()
+			return
+		end
+
+		local canGuildBank = CanGuildBankRepair()
+
+		-- Strict Check: If set to GUILD mode, but guild bank repairs aren't available, fail gracefully.
+		if repairMode == "GUILD" and not canGuildBank then
+			E:Print(L["Guild repair is enabled, but guild bank funds are unavailable or limit has been reached."])
+			self:UnregisterRepairEvents()
+			return
+		end
+
+		-- Handle API cost delay (0 cost returned despite damaged gear)
+		if repairAllCost <= 0 then
+			self.repairRetries = (self.repairRetries or 0) + 1
+			if self.repairRetries <= 3 then
+				E:Delay(0.25, self.AutoRepair, self, repairMode, greyValue)
+				return
 			else
-				local guildWithdrawMoney = GetGuildBankWithdrawMoney()
-				local guildMoney = GetGuildBankMoney()
-				local availableGuildMoney
-
-				if guildWithdrawMoney == -1 or guildMoney < guildWithdrawMoney then
-					availableGuildMoney = guildMoney
-				else
-					availableGuildMoney = guildWithdrawMoney
+				-- Final fallback pass for API delays
+				if repairMode == "GUILD" and canGuildBank then
+					RepairAllItems(1)
+					E:Print(L["Your items have been repaired using guild bank funds."])
+				elseif repairMode == "PLAYER" then
+					RepairAllItems()
 				end
-
-				if repairAllCost > availableGuildMoney then
-					repairMode = "PLAYER"
-				end
+				self:UnregisterRepairEvents()
+				return
 			end
 		end
 
-		if repairMode == "GUILD" then
-			RepairAllItems(true)
+		self:UnregisterRepairEvents()
 
+		-- 1. GUILD REPAIR ONLY
+		if repairMode == "GUILD" then
+			RepairAllItems(1)
 			E:Print(format("%s%s", L["Your items have been repaired using guild bank funds for: "], E:FormatMoney(repairAllCost, "SMART", true)))
-		else
+			return
+		end
+
+		-- 2. PLAYER REPAIR ONLY (Only executes if repairMode == "PLAYER")
+		if repairMode == "PLAYER" then
 			local playerMoney = GetMoney()
 
 			if playerMoney >= repairAllCost then
 				RepairAllItems()
 				FullRepairMessage(repairAllCost)
-			elseif greyValue and playerMoney + greyValue >= repairAllCost then
+			elseif greyValue and (playerMoney + greyValue >= repairAllCost) then
 				self.playerMoney = playerMoney
 				self.repairAllCost = repairAllCost
 
 				self:RegisterEvent("MERCHANT_CLOSED")
-				E.RegisterCallback(M, "VendorGreys_ItemSold")
+				E.RegisterCallback(M, "VendorGreys_ItemSold", "VendorGreys_ItemSold")
 			elseif playerMoney > 0 then
-				local spent = RepairInventoryByPriority(playerMoney)
-
-				if spent > 0 then
-					E:Print(format("%s%s", L["Your items have been repaired for: "], E:FormatMoney(spent, "SMART", true)))
-					E:Print(L["You don't have enough money to repair all items."])
-				else
-					E:Print(L["You don't have enough money to repair."])
-				end
+				RepairAllItems() -- Partial player repair
 			else
 				E:Print(L["You don't have enough money to repair."])
 			end
 		end
 	end
 
+	function M:OnRepairEvent()
+		self:AutoRepair()
+	end
+
+	function M:UnregisterRepairEvents()
+		self:UnregisterEvent("UPDATE_INVENTORY_DURABILITY")
+		self:UnregisterEvent("MERCHANT_UPDATE")
+	end
+
 	function M:VendorGreys_ItemSold(_, moneyGained)
+		if not self.repairAllCost or not self.playerMoney then return end
+
 		self.playerMoney = self.playerMoney + moneyGained
 
 		if self.playerMoney >= self.repairAllCost then
@@ -209,12 +247,15 @@ do
 			else
 				RepairAllItems()
 				FullRepairMessage(self.repairAllCost)
+				self:MERCHANT_CLOSED()
 			end
 		end
 	end
 
 	function M:PLAYER_MONEY()
-		if self.playerMoney <= GetMoney() then
+		if not self.repairAllCost then return end
+
+		if GetMoney() >= self.repairAllCost then
 			RepairAllItems()
 			FullRepairMessage(self.repairAllCost)
 
@@ -225,7 +266,11 @@ do
 	function M:MERCHANT_CLOSED()
 		self.playerMoney = nil
 		self.repairAllCost = nil
+		self.repairMode = nil
+		self.greyValue = nil
+		self.repairRetries = nil
 
+		self:UnregisterRepairEvents()
 		self:UnregisterEvent("PLAYER_MONEY")
 		self:UnregisterEvent("MERCHANT_CLOSED")
 		E.UnregisterCallback(M, "VendorGreys_ItemSold")
@@ -245,8 +290,17 @@ function M:MERCHANT_SHOW()
 	end
 
 	local repairMode = E.db.general.autoRepair
+
 	if repairMode ~= "NONE" then
-		E:Delay(0.03, self.AutoRepair, self, repairMode, greyValue)
+		self.repairMode = repairMode
+		self.greyValue = greyValue
+		self.repairRetries = 0
+
+		self:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "OnRepairEvent")
+		self:RegisterEvent("MERCHANT_UPDATE", "OnRepairEvent")
+		self:RegisterEvent("MERCHANT_CLOSED")
+
+		E:Delay(0.1, self.AutoRepair, self, repairMode, greyValue)
 	end
 end
 

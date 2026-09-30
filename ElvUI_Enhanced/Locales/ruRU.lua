@@ -101,6 +101,9 @@ L["Interrupt Tracker"] = true
 
 -- Nameplates
 L["Cache Unit Class"] = true
+L["Mouseover Only"] = "Только при наведении"
+L["Only display the NPC title when hovering over the nameplate."] = "Отображать титул НИП только при наведении указателя мыши на индикатор здоровья."
+
 
 -- Minimap
 L["Above Minimap"] = "Над миникартой"
