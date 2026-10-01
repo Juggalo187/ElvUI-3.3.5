@@ -1,4 +1,4 @@
-local E, L, V, P, G = unpack(ElvUI)
+﻿local E, L, V, P, G = unpack(ElvUI)
 local module = E:NewModule("Enhanced_CharacterFrame", "AceHook-3.0", "AceEvent-3.0")
 local S = E:GetModule("Skins")
 
@@ -183,6 +183,9 @@ local PAPERDOLL_STATINFO = {
 	["ITEM_LEVEL"] = {
 		updateFunc = function(statFrame, unit) module:ItemLevel(statFrame, unit) end
 	},
+	["GEARSCORE"] = {
+		updateFunc = function(statFrame, unit) module:GearScore(statFrame, unit) end
+	},
 
 	["STRENGTH"] = {
 		updateFunc = function(statFrame, unit) module:SetStat(statFrame, unit, 1) end
@@ -304,6 +307,12 @@ local PAPERDOLL_STATCATEGORIES = {
 			"ITEM_LEVEL"
 		}
 	},
+	["GEARSCORE"] = {
+		id = 8,
+		stats = {
+			"GEARSCORE"
+		}
+	},
 	["BASE_STATS"] = {
 		id = 2,
 		stats = {
@@ -372,6 +381,7 @@ local PAPERDOLL_STATCATEGORIES = {
 
 local PAPERDOLL_STATCATEGORY_DEFAULTORDER = {
 	"ITEM_LEVEL",
+	"GEARSCORE",
 	"BASE_STATS",
 	"MELEE_COMBAT",
 	"RANGED_COMBAT",
@@ -595,46 +605,106 @@ end
 function module:ItemLevel(statFrame, unit)
 	if not self.Initialized then return end
 
-	-- if GearScore_GetScore then
-		-- if not self.gearScore or not GS_PlayerIsInCombat then
-			-- local gearScore = GearScore_GetScore(E.myname, "player")
-
-			-- if not gearScore then
-				-- if GS_Data and GS_Data[E.myrealm] then
-					-- gearScore = GS_Data[E.myrealm].Players[E.myname].GearScore
-				-- end
-			-- end
-
-			-- if gearScore then
-				-- local r, b, g = GearScore_GetQuality(gearScore)
-
-				-- self.gearScore = gearScore
-				-- self.gearScoreR = r
-				-- self.gearScoreG = g
-				-- self.gearScoreB = b
-
-				-- statFrame.Label:SetText(gearScore)
-				-- statFrame.Label:SetTextColor(r, g, b)
-
-				-- return
-			-- end
-		-- else
-			-- statFrame.Label:SetText(self.gearScore)
-			-- statFrame.Label:SetTextColor(self.gearScoreR, self.gearScoreG, self.gearScoreB)
-			-- return
-		-- end
-	-- end
-
---	local avgItemLevel, avgItemLevelEquipped = GetAverageItemLevel()
---	if avgItemLevelEquipped == avgItemLevel then
---		statFrame.Label:SetFormattedText("%.2f", avgItemLevelEquipped)
---	else
---		statFrame.Label:SetFormattedText("%.2f / %.2f", avgItemLevelEquipped, avgItemLevel)
---	end
---	statFrame.Label:SetTextColor(GetItemLevelColor())
-
 	local avgItemLevel, r, g, b = GetAverageItemLevel()
 	statFrame.Label:SetText(floor(avgItemLevel))
+	statFrame.Label:SetTextColor(r, g, b)
+end
+
+local GS_SlotWeights = {
+	["INVTYPE_HEAD"] = 1.0, ["INVTYPE_NECK"] = 0.5625, ["INVTYPE_SHOULDER"] = 0.75,
+	["INVTYPE_CHEST"] = 1.0, ["INVTYPE_ROBE"] = 1.0, ["INVTYPE_WAIST"] = 0.75,
+	["INVTYPE_LEGS"] = 1.0, ["INVTYPE_FEET"] = 0.75, ["INVTYPE_WRIST"] = 0.5625,
+	["INVTYPE_HAND"] = 0.75, ["INVTYPE_FINGER"] = 0.5625, ["INVTYPE_TRINKET"] = 0.5625,
+	["INVTYPE_CLOAK"] = 0.5625, ["INVTYPE_WEAPONMAINHAND"] = 1.0, ["INVTYPE_WEAPONOFFHAND"] = 1.0,
+	["INVTYPE_WEAPON"] = 1.0, ["INVTYPE_2HWEAPON"] = 2.0, ["INVTYPE_SHIELD"] = 1.0,
+	["INVTYPE_HOLDABLE"] = 1.0, ["INVTYPE_RANGED"] = 0.3164, ["INVTYPE_RANGEDRIGHT"] = 0.3164,
+	["INVTYPE_THROWN"] = 0.3164, ["INVTYPE_RELIC"] = 0.3164
+}
+
+function module:CalculateGearScore(unit)
+	unit = unit or "player"
+	local totalScore = 0
+	for slot = 1, 19 do
+		if slot ~= 4 then -- Skip shirt
+			local link = GetInventoryItemLink(unit, slot)
+			if link then
+				local _, _, quality, iLvl, _, _, _, _, equipLoc = GetItemInfo(link)
+				if iLvl and quality and quality >= 2 then
+					local scale = quality == 4 and 1.8618 or (quality == 3 and 1.3 or (quality == 5 and 2.0 or 1.0))
+					local weight = GS_SlotWeights[equipLoc] or 1.0
+					local score = math.floor(((iLvl - 91.45) / 0.65) * weight * scale)
+					if score > 0 then totalScore = totalScore + score end
+				end
+			end
+		end
+	end
+	return totalScore
+end
+
+function module:GearScore(statFrame, unit)
+	if not self.Initialized then return end
+
+	if not (_G.GearScore_GetScore or _G.GearScore_GetItemScore) then
+		statFrame:Hide()
+		return
+	end
+
+	unit = unit or "player"
+	statFrame:Show()
+
+	local score = 0
+
+	-- 1. Standard GearScore API Lookup
+	if _G.GearScore_GetScore then
+		local name = UnitName(unit)
+		if name then
+			score = _G.GearScore_GetScore(name, unit) or 0
+		end
+	end
+
+	-- 2. Direct Item Scan Fallback
+	if (not score or score <= 0) and _G.GearScore_GetItemScore then
+		local calculatedScore = 0
+		for slot = 1, 19 do
+			if slot ~= 4 and slot ~= 19 then -- Skip shirt and tabard
+				local link = GetInventoryItemLink(unit, slot)
+				if link then
+					local itemScore = _G.GearScore_GetItemScore(link)
+					if itemScore and itemScore > 0 then
+						calculatedScore = calculatedScore + itemScore
+					end
+				end
+			end
+		end
+		if calculatedScore > 0 then score = calculatedScore end
+	end
+
+	-- 3. Database Fallback
+	if (not score or score <= 0) and _G.GS_Data then
+		local realm = GetRealmName()
+		local name = UnitName(unit)
+		if realm and name and _G.GS_Data[realm] and _G.GS_Data[realm].Players and _G.GS_Data[realm].Players[name] then
+			score = _G.GS_Data[realm].Players[name].GearScore or 0
+		end
+	end
+
+	-- Determine quality color
+	local r, g, b = 1, 1, 1
+	if score > 0 then
+		if _G.GearScore_GetQuality then
+			local qr, qg, qb = _G.GearScore_GetQuality(score)
+			if qr then r, g, b = qr, qg, qb end
+		else
+			if score >= 5000 then r, g, b = 1.0, 0.5, 0.0
+			elseif score >= 4000 then r, g, b = 0.64, 0.21, 0.93
+			elseif score >= 3000 then r, g, b = 0.0, 0.44, 0.87
+			elseif score >= 2000 then r, g, b = 0.12, 1.0, 0.0
+			end
+		end
+	end
+
+	-- Display score value only (header title bar displays "GearScore")
+	statFrame.Label:SetText(score)
 	statFrame.Label:SetTextColor(r, g, b)
 end
 
@@ -996,6 +1066,8 @@ function module:PaperDollFrame_UpdateStatCategory(categoryFrame)
 
 	if category == "ITEM_LEVEL" then
 		categoryFrame.NameText:SetText(L["Item Level"])
+	elseif category == "GEARSCORE" then
+		categoryFrame.NameText:SetText(L["GearScore"] or "GearScore")
 	elseif category == "RESISTANCE" then
 		categoryFrame.NameText:SetText(L["Resistance"])
 	elseif category == "DEFENSES" then
@@ -1024,7 +1096,7 @@ function module:PaperDollFrame_UpdateStatCategory(categoryFrame)
 				end
 				statFrame:Show()
 
-				if stat == "ITEM_LEVEL" then
+				if stat == "ITEM_LEVEL" or stat == "GEARSCORE" then
 					statFrame:Height(30)
 					local label = statFrame.Label
 					label:Width(187)
@@ -1081,7 +1153,7 @@ function module:PaperDollFrame_UpdateStatCategory(categoryFrame)
 	end
 
 	for index = 1, numVisible do
-		if index % 2 == 0 or categoryInfo == PAPERDOLL_STATCATEGORIES["ITEM_LEVEL"] then
+		if index % 2 == 0 or categoryInfo == PAPERDOLL_STATCATEGORIES["ITEM_LEVEL"] or categoryInfo == PAPERDOLL_STATCATEGORIES["GEARSCORE"] then
 			local statFrame = categoryFrame.Stats[index]
 			if not statFrame.leftGrad then
 				statFrame.leftGrad = statFrame:CreateTexture(nil, "BACKGROUND")
