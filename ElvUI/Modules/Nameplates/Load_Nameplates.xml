@@ -14,4 +14,5 @@
 	<Script file="Elements\Elite.lua"/>
 	<Script file="Elements\Highlight.lua"/>
 	<Script file="Elements\IconFrame.lua"/>
+	<Script file="Elements\QuestGiverIcon.lua"/>
 </Ui>
