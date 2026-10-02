@@ -25,11 +25,11 @@ do
 	end
 
 	gameLocale = lang
-	ElvUI_[2] = ElvUI_[1].Libs.ACL:GetLocale("ElvUI_", gameLocale)
+	ElvUI[2] = ElvUI[1].Libs.ACL:GetLocale("ElvUI", gameLocale)
 end
 
 -- Step 3: Sync SavedVariables when the addon initializes
-local E = ElvUI_[1]
+local E = ElvUI[1]
 
 -- Step 3: Sync SavedVariables when the addon initializes
 local function SyncSavedVariablesLocale()
