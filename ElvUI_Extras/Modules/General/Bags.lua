@@ -1554,6 +1554,7 @@ function mod:SortAllSections(f)
 	local layout = f.currentLayout
 	for _, section in ipairs(layout.sections) do
 		if not section.frame.minimized then
+			section.db.ignoreList = section.db.ignoreList or {}
 			local ignoreList = section.db.ignoreList
 			local sortedButtons = {}
 			local ignoredButtons = {}
@@ -2353,6 +2354,7 @@ function mod:ConfigureContainer(f, isBank, db, numColumns, buttonSize, buttonSpa
 					showEmptyButtonTT(f)
 				elseif not draggingItem then
 					for _, section in ipairs(layout.sections) do
+						section.db.ignoreList = section.db.ignoreList or {}
 						local ignoreList = section.db.ignoreList
 						local storedPositions = section.db.storedPositions
 						for hash in pairs(storedPositions) do
