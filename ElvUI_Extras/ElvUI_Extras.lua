@@ -1907,7 +1907,7 @@ function core:GetOptions()
 					colors = {
 						order = 1,
 						type = "group",
-						name = L["Version: "].."1.10 (ElvUI 6.09)",
+						name = L["Version: "].."1.10 (ElvUI 6.10)",
 						guiInline = true,
 						get = function(info) return colorConvert(E.db.Extras[info[#info]]) end,
 						set = function(info, r, g, b)
@@ -2063,7 +2063,7 @@ function core:Initialize()
 	self.customColorAlpha = E.db.Extras.customColorAlpha
 	self.customColorBeta = E.db.Extras.customColorBeta
 
-	if E.version ~= '6.09' then
+	if E.version ~= '6.10' then
 		local CH = E:GetModule('Chat')
 		local msg = format(self.customColorAlpha.."ElvUI "..self.pluginColor.."Extras"..self.customColorAlpha..": |r"..self.customColorBad..
 					L["Plugin version mismatch! Please, download appropriate plugin version at"].." https://github.com/noname08662/ElvUI_Extras.")

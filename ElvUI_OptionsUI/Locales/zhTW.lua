@@ -805,6 +805,7 @@ L["PvP Queue"] = true
 L["PvP Text"] = "PvP文字"
 L["Quest Frames"] = "任務"
 L["Quest Starter"] = "任務接取物品"
+L["Quest Turn-In"] = true
 L["Quiver"] = true
 L["RAID_CONTROL"] = "團隊管理"
 L["RL / ML Icons"] = "團隊隊長/裝備分配圖示"

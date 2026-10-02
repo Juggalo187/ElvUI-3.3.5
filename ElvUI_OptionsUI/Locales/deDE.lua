@@ -805,6 +805,7 @@ L["PvP Queue"] = "PvP Warteschlange"
 L["PvP Text"] = true
 L["Quest Frames"] = "Quest Fenster"
 L["Quest Starter"] = "Quest beginnen"
+L["Quest Turn-In"] = true
 L["Quiver"] = true
 L["RAID_CONTROL"] = "Schlachtzugssteuerung"
 L["RL / ML Icons"] = "Schlachtzugsleister / Plündermeister Symbole"

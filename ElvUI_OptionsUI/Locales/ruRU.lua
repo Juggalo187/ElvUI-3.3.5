@@ -805,6 +805,7 @@ L["PvP Queue"] = true
 L["PvP Text"] = "Текст PvP"
 L["Quest Frames"] = "Задания"
 L["Quest Starter"] = "Начинает задание"
+L["Quest Turn-In"] = "Сдать задания"
 L["Quiver"] = true
 L["RAID_CONTROL"] = "Управление рейдом"
 L["RL / ML Icons"] = "Иконки лидера/ответственного"

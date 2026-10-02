@@ -809,6 +809,7 @@ L["PvP Queue"] = true
 L["PvP Text"] = "Texte PVP"
 L["Quest Frames"] = "Fenêtre de Quête"
 L["Quest Starter"] = true
+L["Quest Turn-In"] = true
 L["Quiver"] = true
 L["RAID_CONTROL"] = "Contrôle de raid"
 L["RL / ML Icons"] = true

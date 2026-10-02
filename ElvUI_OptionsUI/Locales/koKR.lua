@@ -808,6 +808,7 @@ L["PvP Queue"] = true
 L["PvP Text"] = "PVP 문자"
 L["Quest Frames"] = "퀘스트 창"
 L["Quest Starter"] = true
+L["Quest Turn-In"] = true
 L["Quiver"] = true
 L["RAID_CONTROL"] = "공격대 편성"
 L["RL / ML Icons"] = true

@@ -3816,7 +3816,7 @@ E.Options.args.nameplate = {
 						},
 						questGiverIcon = {
 							type = "group",
-							name = "Quest TurnIn Icons",
+							name = L["Quest Turn-Ins"],
 							order = 1000,
 							get = function(info) return E.db.nameplates.questGiverIcon[info[#info]] end,
 							set = function(info, value) 
