@@ -381,7 +381,6 @@ function NP:OnShow(isConfig, dontHideHighlight)
 		NP:Configure_Elite(frame)
 		NP:Configure_Highlight(frame)
 		NP:Configure_IconFrame(frame)
-		NP:Configure_QuestIcon(frame)
 	end
 
 	frame.CutawayHealth:Hide()
@@ -456,7 +455,6 @@ function NP:OnHide(isConfig, dontHideHighlight)
     frame.Elite:Hide()
     frame.CPoints:Hide()
     frame.IconFrame:Hide()
-	if frame.QuestIcon then frame.QuestIcon:Hide() end
     frame:Hide()
     frame.isTarget = nil
     frame.isTargetChanged = false
@@ -544,7 +542,6 @@ function NP:UpdateElement_All(frame, noTargetFrame, filterIgnore)
 	end
 
 	self:Update_IconFrame(frame)
-	self:Update_QuestIcon(frame)
 
 	if not filterIgnore then
 		self:StyleFilterUpdate(frame, "UpdateElement_All")
@@ -598,7 +595,6 @@ function NP:OnCreated(frame)
 	unitFrame.HealerIcon = self:Construct_HealerIcon(unitFrame)
 	unitFrame.CPoints = self:Construct_CPoints(unitFrame)
 	unitFrame.IconFrame = self:Construct_IconFrame(unitFrame)
-	unitFrame.QuestIcon = self:Construct_QuestIcon(unitFrame)
 	self:Construct_Glow(unitFrame)
 
 	self:QueueObject(Health)

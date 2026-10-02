@@ -320,12 +320,6 @@ P.nameplates = {
 	nameColoredGlow = false,
 	highlight = true,
 	loadDistance = 41,
-	questGiverIcon = {
-		enable = true,
-		size = 22,
-		xOffset = 0,
-		yOffset = 5,
-	},
 	
 	questIcons = {
 		enable = false,

@@ -3813,50 +3813,6 @@ E.Options.args.nameplate = {
 							step = 1
 								}
 							}
-						},
-						questGiverIcon = {
-							type = "group",
-							name = L["Quest Turn-Ins"],
-							order = 1000,
-							get = function(info) return E.db.nameplates.questGiverIcon[info[#info]] end,
-							set = function(info, value) 
-								E.db.nameplates.questGiverIcon[info[#info]] = value
-								NP:ConfigureAll() 
-							end,
-							args = {
-								enable = {
-									type = "toggle",
-									order = 1,
-									name = L["Enable"],
-									desc = L["Display quest icons above friendly NPC nameplates."],
-								},
-								spacer = {
-									type = "description",
-									order = 3,
-									name = "",
-								},
-								size = {
-									type = "range",
-									order = 4,
-									name = L["Icon Size"],
-									min = 12, max = 48, step = 1,
-									disabled = function() return not E.db.nameplates.questGiverIcon.enable end,
-								},
-								xOffset = {
-									type = "range",
-									order = 5,
-									name = L["X Offset"],
-									min = -50, max = 50, step = 1,
-									disabled = function() return not E.db.nameplates.questGiverIcon.enable end,
-								},
-								yOffset = {
-									type = "range",
-									order = 6,
-									name = L["Y Offset"],
-									min = -50, max = 50, step = 1,
-									disabled = function() return not E.db.nameplates.questGiverIcon.enable end,
-								},
-							},
 						}
 					}
 				},
