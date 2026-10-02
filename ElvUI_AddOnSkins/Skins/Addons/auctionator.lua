@@ -593,6 +593,11 @@ S:AddCallbackForAddon("Auctionator", "Auctionator", function()
 					skinItemButtom(btn)
 				end
 			end
+
+			local point, relativeTo, relativePoint, xOfs, yOfs = Atr_BagPanel:GetPoint()
+			Atr_BagPanel:ClearAllPoints()
+			Atr_BagPanel:SetPoint(point, relativeTo, relativePoint, xOfs + 4, yOfs + 15)
+
 		end
 
 		skinItemButtom(Atr_SellControls_Tex)
