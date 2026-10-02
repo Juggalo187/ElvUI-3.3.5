@@ -1,12 +1,52 @@
 local ElvUI = select(2, ...)
 
+local SupportedLocales = {
+	["deDE"] = true,
+	["esMX"] = true,
+	["frFR"] = true,
+	["koKR"] = true,
+	["ptBR"] = true,
+	["ruRU"] = true,
+	["zhCN"] = true,
+	["zhTW"] = true,
+}
+
 local gameLocale
-do -- Locale doesn't exist yet, make it exist.
+do
 	local convert = {["enGB"] = "enUS", ["esES"] = "esMX", ["itIT"] = "enUS"}
 	local lang = GetLocale()
 
-	gameLocale = convert[lang] or lang or "enUS"
-	ElvUI[2] = ElvUI[1].Libs.ACL:GetLocale("ElvUI", gameLocale)
+	-- Step 1: Map non-standard client locales (e.g. enGB -> enUS)
+	lang = convert[lang] or lang
+
+	-- Step 2: Validate against SupportedLocales, fallback to "enUS" if missing/unsupported
+	if not SupportedLocales[lang] then
+		lang = "enUS"
+	end
+
+	gameLocale = lang
+	ElvUI_[2] = ElvUI_[1].Libs.ACL:GetLocale("ElvUI_", gameLocale)
+end
+
+-- Step 3: Sync SavedVariables when the addon initializes
+local E = ElvUI_[1]
+
+-- Step 3: Sync SavedVariables when the addon initializes
+local function SyncSavedVariablesLocale()
+local lang = GetLocale()
+	if gameLocale == "enUS" then
+		if E.db and E.db.general and E.db.general.locale ~= "enUS" then
+			E.db.general.locale = "enUS"
+		end
+		if E.global and E.global.general and E.global.general.locale ~= "enUS" then
+			E.global.general.locale = "enUS"
+		end
+	else
+		if SupportedLocales[lang] then
+			E.db.general.locale = lang
+			E.global.general.locale = lang
+		end
+	end
 end
 
 local E, L, V, P, G = unpack(ElvUI); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
@@ -1224,7 +1264,7 @@ function E:DBConversions()
 		end
 	end
 
-	do -- <= 6.09
+	do -- <= 6.10
 		--Rename GameTooltip Mover
 		if E.db.movers and E.db.movers.TooltipMover then
 			E.db.movers.ElvTooltipMover = E.db.movers.TooltipMover
@@ -1260,6 +1300,7 @@ function E:Initialize()
 	self.private = self.charSettings.profile
 	self.db = self.data.profile
 	self.global = self.data.global
+	E.Libs.DualSpec:EnhanceDatabase(self.data,
 
 	self:CheckIncompatible()
 	self:DBConversions()
