@@ -2,6 +2,7 @@
 -- Ported from QGT_Achievements.lua by MrOBrian
 local E, L, V, P, G = unpack(ElvUI)
 local QGT = E:GetModule("ElvUI_QuestTracker")
+local S = E:GetModule("Skins")
 
 QG_TRACKER_Q           = QG_TRACKER_Q           or L["Q"]
 QG_TRACKER_A           = QG_TRACKER_A           or L["A"]
@@ -15,21 +16,11 @@ QG_TRACKER_TOGGLE      = QG_TRACKER_TOGGLE      or L["Click to switch between Qu
 WATCHFRAME_MAXACHIEVEMENTS = 10;
 
 function QGT_SetAchievementWatchBorder(enabled)
-	if (enabled) then
-		QGT_AchievementWatchFrame:SetBackdrop({
-			bgFile="Interface\\Characterframe\\UI-Party-Background",
-			edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
-			tile=1, tileSize=16, edgeSize=16,
-			insets={left=4, right=4, top=4, bottom=4}
-		});
-	else
-		QGT_AchievementWatchFrame:SetBackdrop({
-			bgFile="Interface\\Characterframe\\UI-Party-Background",
-			tile=1, tileSize=16,
-			insets={left=4, right=4, top=4, bottom=4}
-		});
+	QGT_AchievementWatchFrame:SetTemplate("Transparent")
+	if not enabled then
+		QGT_AchievementWatchFrame:SetBackdropBorderColor(0, 0, 0, 0)
 	end
-	QGT_AchievementWatchFrame:SetBackdropColor(0,0,0,QGT_Settings.Alpha);
+	QGT_AchievementWatchFrame:SetBackdropColor(0, 0, 0, QGT_Settings.Alpha or 0.7)
 end
 
 do
@@ -127,8 +118,8 @@ do
 	temp:SetHeight(18);
 	temp:SetPoint("TOPRIGHT", -4, -4);
 	temp:SetPoint("TOPLEFT", 4, -4);
-	temp:SetTexture(1, 1, 1);
-	temp:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0.3, 0.3, 0.3, 1);
+	temp:SetTexture(E.media.normTex);
+	temp:SetVertexColor(0.1, 0.1, 0.1, 0.6);
 
 	temp = QGT_AchievementWatchFrame:CreateFontString("QGT_AchievementWatchName", "ARTWORK", "GameFontNormal");
 	temp:SetPoint("TOPLEFT", 8, -6);
@@ -146,6 +137,7 @@ do
 
 	QGT_AchievementWatchFrameOptions = CreateFrame("BUTTON", "QGT_AchievementWatchFrameOptions", QGT_AchievementWatchFrame, "QGT_QuestWatchMiniButtonTemplate");
 	QGT_AchievementWatchFrameOptions:SetText("O");
+	QGT_AchievementWatchFrameOptions:SetSize(16, 16);
 	QGT_AchievementWatchFrameOptions:SetPoint("TOPRIGHT", -5, -4);
 	QGT_AchievementWatchFrameOptions:SetScript("OnClick",
 		function ()
@@ -166,7 +158,8 @@ do
 
 	QGT_AchievementWatchFrameMinimize = CreateFrame("BUTTON", "QGT_AchievementWatchFrameMinimize", QGT_AchievementWatchFrame, "QGT_QuestWatchMiniButtonTemplate");
 	QGT_AchievementWatchFrameMinimize:SetText("-");
-	QGT_AchievementWatchFrameMinimize:SetPoint("RIGHT", QGT_AchievementWatchFrameOptions, "LEFT", 0, 0);
+	QGT_AchievementWatchFrameMinimize:SetSize(16, 16);
+	QGT_AchievementWatchFrameMinimize:SetPoint("RIGHT", QGT_AchievementWatchFrameOptions, "LEFT", -2, 0);
 	QGT_AchievementWatchFrameMinimize:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 	QGT_AchievementWatchFrameMinimize:SetScript("OnClick",
 		function (self, button, down)
@@ -205,7 +198,8 @@ do
 
 	QGT_AchievementWatchFrameToggle = CreateFrame("BUTTON", "QGT_AchievementWatchFrameToggle", QGT_AchievementWatchFrame, "QGT_QuestWatchMiniButtonTemplate");
 	QGT_AchievementWatchFrameToggle:SetText(QG_TRACKER_Q);
-	QGT_AchievementWatchFrameToggle:SetPoint("RIGHT", QGT_AchievementWatchFrameMinimize, "LEFT", 0, 0);
+	QGT_AchievementWatchFrameToggle:SetSize(16, 16);
+	QGT_AchievementWatchFrameToggle:SetPoint("RIGHT", QGT_AchievementWatchFrameMinimize, "LEFT", -2, 0);
 	QGT_AchievementWatchFrameToggle:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 	QGT_AchievementWatchFrameToggle:SetScript("OnClick",
 		function (self, button, down)
@@ -239,7 +233,7 @@ do
 		end);
 
 	QGT_AchievementWatchFrameSlider = CreateFrame("Slider", "QGT_AchievementWatchFrameSlider", QGT_AchievementWatchFrame, "OptionsSliderTemplate");
-	QGT_AchievementWatchFrameSlider:SetWidth(16);
+	QGT_AchievementWatchFrameSlider:SetWidth(12);
 	QGT_AchievementWatchFrameSlider:SetHeight(200);
 	QGT_AchievementWatchFrameSliderText:SetText("");
 	QGT_AchievementWatchFrameSliderHigh:SetText("");
@@ -263,10 +257,26 @@ do
 		function ()
 			WatchFrame_Update();
 		end);
-	
+
+	-- Apply ElvUI Skins to Buttons & ScrollBar
+	if S then
+		S:HandleButton(QGT_AchievementWatchFrameOptions)
+		S:HandleButton(QGT_AchievementWatchFrameMinimize)
+		S:HandleButton(QGT_AchievementWatchFrameToggle)
+		if S.HandleScrollBar then
+			S:HandleScrollBar(QGT_AchievementWatchFrameSlider)
+		elseif S.HandleSliderFrame then
+			S:HandleSliderFrame(QGT_AchievementWatchFrameSlider)
+		end
+	end
+
 	for i=1, 40 do
 		temp = CreateFrame("Button", "QGT_AchievementWatchLine"..i, QGT_AchievementWatchFrame, "QGT_AchievementWatchButtonTemplate");
 		temp.statusBar = _G["QGT_AchievementWatchLine"..i.. "StatusBar"]
+		if temp.statusBar then
+			temp.statusBar:SetStatusBarTexture(E.media.normTex)
+			temp.statusBar:CreateBackdrop("Default")
+		end
 		temp:SetPoint("TOPLEFT", QGT_AchievementWatchFrame, 8, -22);
 		temp:SetHeight(13);
 		temp:SetWidth(240);
@@ -606,6 +616,7 @@ function QGT_AchievementWatch_Update()
 			
 			if (achieveLine[i].Icon) then
 				aLineIcon:SetTexture(achieveLine[i].Icon);
+				aLineIcon:SetTexCoord(unpack(E.TexCoords));
 				aLineIcon:Show();
 				if (j > 1) then yOffset = yOffset + 6; end
 				iconWidth = 16
@@ -622,6 +633,7 @@ function QGT_AchievementWatch_Update()
 				if (achieveLine[i].totalQuantity) then --statusBar
 					aLine:SetText("");
 					aLine.statusBar:Show();
+					aLine.statusBar:SetStatusBarTexture(E.media.normTex);
 					aLine.statusBar:GetStatusBarTexture():SetVertexColor(0,0.6,0,1);
 					aLine.statusBar:SetMinMaxValues(0, achieveLine[i].totalQuantity);
 					aLine.statusBar:SetValue(achieveLine[i].quantity or 0);
@@ -729,14 +741,6 @@ function QGT_AddTrackedAchievement(id)
 	WatchFrame_Update();
 end
 hooksecurefunc("AddTrackedAchievement", QGT_AddTrackedAchievement);
-
---function IsTrackedAchievement(id)
---	if (QGT_WatchAchievements[id] == true) then
---		return true;
---	else
---		return false;
---	end
---end
 
 function QGT_SetAchievements()
 	local k, v;

@@ -2,9 +2,9 @@
 -- Ported from QuestGuru_Tracker.lua by MrOBrian
 local E, L, V, P, G = unpack(ElvUI)
 local QGT = E:GetModule("ElvUI_QuestTracker")
+local S = E:GetModule("Skins")
 
--- Ensure QGT_Settings exists as an empty table at file-load time so the
--- frame-creation block below (which reads QGT_Settings.Alpha) doesn't error.
+-- Ensure QGT_Settings exists as an empty table at file-load time
 if QGT_Settings == nil then QGT_Settings = {} end
 
 QGT_PlayerAlive = false
@@ -49,61 +49,18 @@ QG_DATETIME      = "%m/%d/%Y %H:%M:%S"
 local lastColorPick
 
 -- ============================================================
---  DEFAULTS
--- ============================================================
-local defaultSettings = {
-    QuestWatch = {},
-    AchievementWatch = {},
-    ShowBorder = true,
-    Scale = 0.9,
-    Lines = 30,
-    Alpha = 0.7,
-    ShowHeaders = true,
-    QuestItemIcons = true,
-    ShowLevels = true,
-    Pin = false,
-    HideDuringCombat = false,
-    AutoUnTrack = false,
-    ShowCompletedObj = true,
-    ColorizeObj = false,
-    ColorizeObjZero = {r = 0.8, g = 0.2, b = 0.8},
-    ColorizeObjFull = {r = 0.3, g = 0.8, b = 1.0},
-    ColorizeObjComplete = {r = 0.1, g = 0.9, b = 1.0},
-    ClickThrough = false,
-    ShowQuestTooltips = true,
-    ShowPartyTooltips = true,
-    ShowQuestPercent = true,
-    Bullet = "-",
-    Anchor = "TOP",
-    LastTracker = "Q",
-    BothTrackers = false,
-}
-
--- ============================================================
---  BORDER HELPERS
+--  BORDER HELPERS (ElvUI Skinning)
 -- ============================================================
 function QGT_SetQuestWatchBorder(enabled)
-	if (enabled) then
-		QGT_QuestWatchFrame:SetBackdrop({
-			bgFile="Interface\\Characterframe\\UI-Party-Background",
-			edgeFile="Interface\\Tooltips\\UI-Tooltip-Border",
-			tile=1, tileSize=16, edgeSize=16,
-			insets={left=4, right=4, top=4, bottom=4}
-		});
-	else
-		QGT_QuestWatchFrame:SetBackdrop({
-			bgFile="Interface\\Characterframe\\UI-Party-Background",
-			tile=1, tileSize=16,
-			insets={left=4, right=4, top=4, bottom=4}
-		});
+	QGT_QuestWatchFrame:SetTemplate("Transparent")
+	if not enabled then
+		QGT_QuestWatchFrame:SetBackdropBorderColor(0, 0, 0, 0)
 	end
-	QGT_QuestWatchFrame:SetBackdropColor(0,0,0,QGT_Settings.Alpha);
+	QGT_QuestWatchFrame:SetBackdropColor(0, 0, 0, QGT_Settings.Alpha or 0.7)
 end
 
 -- ============================================================
 --  FRAME CREATION
---  (from original QuestGuru_Tracker.lua; unchanged except
---   options-panel block removed)
 -- ============================================================
 do
 	local temp, i;
@@ -194,8 +151,8 @@ do
 	temp:SetHeight(18);
 	temp:SetPoint("TOPRIGHT", -4, -4);
 	temp:SetPoint("TOPLEFT", 4, -4);
-	temp:SetTexture(1, 1, 1);
-	temp:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0.3, 0.3, 0.3, 1);
+	temp:SetTexture(E.media.normTex);
+	temp:SetVertexColor(0.1, 0.1, 0.1, 0.6);
 
 	temp = QGT_QuestWatchFrame:CreateFontString("QGT_QuestWatchQuestName", "ARTWORK", "GameFontNormal");
 	temp:SetPoint("TOPLEFT", 8, -6);
@@ -213,6 +170,7 @@ do
 
 	QGT_QuestWatchFrameOptions = CreateFrame("BUTTON", "QGT_QuestWatchFrameOptions", QGT_QuestWatchFrame, "QGT_QuestWatchMiniButtonTemplate");
 	QGT_QuestWatchFrameOptions:SetText("O");
+	QGT_QuestWatchFrameOptions:SetSize(16, 16);
 	QGT_QuestWatchFrameOptions:SetPoint("TOPRIGHT", -5, -4);
 	QGT_QuestWatchFrameOptions:SetScript("OnClick",
 		function ()
@@ -233,7 +191,8 @@ do
 
 	QGT_QuestWatchFrameMinimize = CreateFrame("BUTTON", "QGT_QuestWatchFrameMinimize", QGT_QuestWatchFrame, "QGT_QuestWatchMiniButtonTemplate");
 	QGT_QuestWatchFrameMinimize:SetText("-");
-	QGT_QuestWatchFrameMinimize:SetPoint("RIGHT", QGT_QuestWatchFrameOptions, "LEFT", 0, 0);
+	QGT_QuestWatchFrameMinimize:SetSize(16, 16);
+	QGT_QuestWatchFrameMinimize:SetPoint("RIGHT", QGT_QuestWatchFrameOptions, "LEFT", -2, 0);
 	QGT_QuestWatchFrameMinimize:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 	QGT_QuestWatchFrameMinimize:SetScript("OnClick",
 		function (self, button, down)
@@ -272,7 +231,8 @@ do
 
 	QGT_QuestWatchFrameToggle = CreateFrame("BUTTON", "QGT_QuestWatchFrameToggle", QGT_QuestWatchFrame, "QGT_QuestWatchMiniButtonTemplate");
 	QGT_QuestWatchFrameToggle:SetText(QG_TRACKER_A);
-	QGT_QuestWatchFrameToggle:SetPoint("RIGHT", QGT_QuestWatchFrameMinimize, "LEFT", 0, 0);
+	QGT_QuestWatchFrameToggle:SetSize(16, 16);
+	QGT_QuestWatchFrameToggle:SetPoint("RIGHT", QGT_QuestWatchFrameMinimize, "LEFT", -2, 0);
 	QGT_QuestWatchFrameToggle:RegisterForClicks("LeftButtonUp", "RightButtonUp");
 	QGT_QuestWatchFrameToggle:SetScript("OnClick",
 		function (self, button, down)
@@ -306,7 +266,7 @@ do
 		end);
 
 	QGT_QuestWatchFrameSlider = CreateFrame("Slider", "QGT_QuestWatchFrameSlider", QGT_QuestWatchFrame, "OptionsSliderTemplate");
-	QGT_QuestWatchFrameSlider:SetWidth(16);
+	QGT_QuestWatchFrameSlider:SetWidth(12);
 	QGT_QuestWatchFrameSlider:SetHeight(200);
 	QGT_QuestWatchFrameSliderText:SetText("");
 	QGT_QuestWatchFrameSliderHigh:SetText("");
@@ -330,6 +290,18 @@ do
 		function ()
 			WatchFrame_Update();
 		end);
+
+	-- Apply ElvUI Skins to Buttons & ScrollBar
+	if S then
+		S:HandleButton(QGT_QuestWatchFrameOptions)
+		S:HandleButton(QGT_QuestWatchFrameMinimize)
+		S:HandleButton(QGT_QuestWatchFrameToggle)
+		if S.HandleScrollBar then
+			S:HandleScrollBar(QGT_QuestWatchFrameSlider)
+		elseif S.HandleSliderFrame then
+			S:HandleSliderFrame(QGT_QuestWatchFrameSlider)
+		end
+	end
 
 	for i=1, 40 do
 		temp = CreateFrame("Button", "QGT_QuestWatchLine"..i, QGT_QuestWatchFrame, "QGT_QuestWatchButtonTemplate");
@@ -740,9 +712,8 @@ function QGT_OptionsSaveColor()
 	end
 end
 
--- Kept as a no-op stub for compatibility (was used to refresh the options gradient)
 function QGT_UpdateOptionsTrackerObjFade()
-	-- nothing to do; ElvUI options panel updates itself
+	-- No-op stub for options compatibility
 end
 
 -- ============================================================
@@ -764,9 +735,7 @@ function QGT_SetTrackerDefaults()
 
 	QGT_Settings.Alpha = 0.7
 	QGT_QuestWatchFrame:SetBackdropColor(0, 0, 0, QGT_Settings.Alpha)
-	QGT_QuestWatchFrameBackground:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0.3, 0.3, 0.3, QGT_Settings.Alpha)
 	QGT_AchievementWatchFrame:SetBackdropColor(0, 0, 0, QGT_Settings.Alpha)
-	QGT_AchievementWatchFrameBackground:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0.3, 0.3, 0.3, QGT_Settings.Alpha)
 
 	QGT_Settings.ShowHeaders = true
 	QGT_Settings.QuestItemIcons = true
@@ -883,9 +852,7 @@ function QGT_QuestWatchLoadSettings()
 		QGT_Settings.Alpha = 0.7
 	end
 	QGT_QuestWatchFrame:SetBackdropColor(0, 0, 0, QGT_Settings.Alpha)
-	QGT_QuestWatchFrameBackground:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0.3, 0.3, 0.3, QGT_Settings.Alpha)
 	QGT_AchievementWatchFrame:SetBackdropColor(0, 0, 0, QGT_Settings.Alpha)
-	QGT_AchievementWatchFrameBackground:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0.3, 0.3, 0.3, QGT_Settings.Alpha)
 
 	if (QGT_Settings.ShowHeaders ~= false) then
 		QGT_Settings.ShowHeaders = true
