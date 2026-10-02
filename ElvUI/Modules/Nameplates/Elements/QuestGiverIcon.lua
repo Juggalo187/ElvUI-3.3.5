@@ -10,7 +10,7 @@ P["nameplates"]["questGiverIcon"] = {
     yOffset = 12,
 }
 
--- Completed/Active Quest Texture
+-- Completed Quest Texture (?)
 local QUEST_COMPLETE_ICON = [[Interface\GossipFrame\ActiveQuestIcon]]
 
 -- Hidden tooltip for scanning unit quest status
@@ -25,12 +25,12 @@ local function CleanString(str)
     return string.lower(clean)
 end
 
--- Helper: Checks if the target NPC is related to an active/completed quest
+-- Helper: Checks if the target NPC is a completed quest turn-in
 local function IsNPCQuestTurnIn(frame, unit, rawNPCName)
     local cleanNPC = CleanString(rawNPCName)
     if cleanNPC == "" then return false end
 
-    -- 1. Tooltip Scan (Works when targeting, moused over, or via AwesomeWotLK unit token)
+    -- 1. Tooltip Scan (Most accurate when unit, target, or mouseover exists)
     local validUnit = nil
     if unit and UnitExists(unit) then
         validUnit = unit
@@ -48,7 +48,8 @@ local function IsNPCQuestTurnIn(frame, unit, rawNPCName)
             if line then
                 local text = line:GetText()
                 if text then
-                    if string.find(text, "%(Completed%)") or string.find(text, "%(Complete%)") or string.find(text, "1/1") then
+                    -- Ensure tooltip explicitly states the quest or objective is complete
+                    if string.find(text, "%(Completed%)") or string.find(text, "%(Complete%)") then
                         return true
                     end
                 end
@@ -56,7 +57,7 @@ local function IsNPCQuestTurnIn(frame, unit, rawNPCName)
         end
     end
 
-    -- 2. Quest Log Deep Scan (Scans Titles, Objectives Text, and Leaderboards)
+    -- 2. Quest Log Fallback (STRICT: Only check if quest is marked complete in quest log)
     local numEntries = GetNumQuestLogEntries()
     if numEntries and numEntries > 0 then
         local savedSelection = GetQuestLogSelection()
@@ -64,27 +65,27 @@ local function IsNPCQuestTurnIn(frame, unit, rawNPCName)
         for i = 1, numEntries do
             local questTitle, _, _, _, isHeader, _, isComplete = GetQuestLogTitle(i)
 
-            if not isHeader then
-                -- Check standard leaderboards (e.g. kill/item counters)
-                local numObjectives = GetNumQuestLeaderBoards(i) or 0
-                for j = 1, numObjectives do
-                    local objText = GetQuestLogLeaderBoard(j, i)
-                    if objText and string.find(string.lower(objText), cleanNPC, 1, true) then
-                        return true
-                    end
+            -- ONLY process if the quest is actually completed (isComplete == 1 or true)
+            if not isHeader and (isComplete == 1 or isComplete == true) then
+                -- Match Quest Title
+                if questTitle and string.find(string.lower(questTitle), cleanNPC, 1, true) then
+                    SelectQuestLogEntry(savedSelection)
+                    return true
                 end
 
-                -- Check Quest Objectives & Description Text (Handles Talk-To / Delivery quests like "Forsaken Duties")
+                -- Match Quest Objectives Text (For talk-to / delivery quests)
                 SelectQuestLogEntry(i)
-                local questDescription, questObjectives = GetQuestLogQuestText()
-
+                local _, questObjectives = GetQuestLogQuestText()
                 if questObjectives and string.find(string.lower(questObjectives), cleanNPC, 1, true) then
                     SelectQuestLogEntry(savedSelection)
                     return true
                 end
 
-                if questTitle and isComplete and (isComplete == 1 or isComplete == true) then
-                    if string.find(string.lower(questTitle), cleanNPC, 1, true) then
+                -- Match Leaderboard Objective text
+                local numObjectives = GetNumQuestLeaderBoards(i) or 0
+                for j = 1, numObjectives do
+                    local objText = GetQuestLogLeaderBoard(j, i)
+                    if objText and string.find(string.lower(objText), cleanNPC, 1, true) then
                         SelectQuestLogEntry(savedSelection)
                         return true
                     end
@@ -92,7 +93,6 @@ local function IsNPCQuestTurnIn(frame, unit, rawNPCName)
             end
         end
 
-        -- Restore player's previous quest log selection
         SelectQuestLogEntry(savedSelection)
     end
 
