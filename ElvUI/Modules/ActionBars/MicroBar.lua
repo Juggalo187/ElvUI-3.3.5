@@ -218,6 +218,8 @@ function AB:SetupAstralMicroButton()
 			if DC and DC.Open then
 				DC.Open()
 			end
+		if _G.ProjectAstral and ProjectAstral.ToggleMainMenu then
+			ProjectAstral:ToggleMainMenu()
 		end
 	end)
 
@@ -232,6 +234,8 @@ function AB:SetupAstralMicroButton()
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		GameTooltip:SetText("Project Astral - CallBoard", 1, 0.82, 0)
 		GameTooltip:AddLine("Toggle Daily CallBoard.", 1, 1, 1, true)
+		GameTooltip:SetText("Project Astral", 1, 0.82, 0)
+		GameTooltip:AddLine("Open the Astral hub.", 1, 1, 1, true)
 		GameTooltip:Show()
 	end)
 
@@ -250,11 +254,6 @@ function AB:SetupAstralMicroButton()
 	self:HandleMicroButton(button)
 end
 
--- ProjectEbonhold retires the PvP AND Skill Tree micro buttons: the unified
--- Character Progression button (EchoJournalMicroButton) now fronts the whole
--- Collections window (Echoes, Skill Tree, Transmogrify, Mounts, Companions).
--- Adopt it into the micro bar and take over the layout: the addon anchors the
--- buttons to MainMenuBarArtFrame itself, which would fight the mover.
 function AB:SetupEbonholdMicroButtons()
 	local echoButton, skillButton = _G.EchoJournalMicroButton, _G.SkillTreeMicroButton
 	if not echoButton then return end
@@ -273,18 +272,11 @@ function AB:SetupEbonholdMicroButtons()
 		end
 	end
 
-	-- The retired Skill Tree button stays off the bar (the addon force-hides
-	-- it from UpdateMicroButtons), but its events still drive the addon's own
-	-- bar layout; keep them off so it can't fight the micro bar. Its click
-	-- handler stays live for the "Toggle Skill Tree" binding.
 	if skillButton then
 		skillButton:UnregisterEvent("UPDATE_BINDINGS")
 		skillButton:UnregisterEvent("PLAYER_ENTERING_WORLD")
 	end
 
-	-- Unspent-point nudges land on the Character Progression button now, via
-	-- LockHighlight -- but HandleMicroButton kills the highlight texture, so
-	-- that flash would be invisible; flash the button itself instead.
 	_G.SkillTreeMicroButton_StartFlashing = function()
 		E:Flash(echoButton, 0.5, true)
 	end
@@ -293,8 +285,6 @@ function AB:SetupEbonholdMicroButtons()
 		echoButton:SetAlpha(1)
 	end
 
-	-- The overlay emblem icon is anchored for the stock button size; recenter
-	-- it ("soulgem" is the pre-redesign art, kept as a fallback)
 	for i = 1, echoButton:GetNumRegions() do
 		local region = select(i, echoButton:GetRegions())
 		if region:GetObjectType() == "Texture" and region:GetDrawLayer() == "OVERLAY" then
@@ -309,9 +299,6 @@ function AB:SetupEbonholdMicroButtons()
 		end
 	end
 
-	-- The alert bubbles pop up above the buttons; flip them below when the
-	-- micro bar sits in the top half of the screen (its default position).
-	-- The glow arrow only points down, so it is hidden when flipped.
 	local function repositionAlert(alert)
 		local button = alert.microButton
 		local _, y = button:GetCenter()
@@ -325,8 +312,6 @@ function AB:SetupEbonholdMicroButtons()
 		end
 	end
 
-	-- Both alerts (new echo/tome, unspent skill points) pop over the
-	-- Character Progression button -- the skill tree's own button is gone
 	local alerts = {echoButton.Alert, skillButton and skillButton.Alert}
 	for i = 1, #alerts do
 		local alert = alerts[i]
@@ -336,8 +321,6 @@ function AB:SetupEbonholdMicroButtons()
 		if alert:IsShown() then repositionAlert(alert) end
 	end
 
-	-- Show the key bound to the ElvUI toggle binding (Bindings.xml) in the
-	-- tooltip, like the standard micro buttons do
 	local function updateHotkeys()
 		echoButton.tooltipText = MicroButtonTooltipText("Character Progression", "Toggle Echo Journal")
 	end
@@ -346,6 +329,43 @@ function AB:SetupEbonholdMicroButtons()
 	hotkeyWatcher:RegisterEvent("UPDATE_BINDINGS")
 	hotkeyWatcher:SetScript("OnEvent", updateHotkeys)
 	updateHotkeys()
+end
+
+function AB:SetupFrostmourneMicroButtons()
+	if not string.find(string.lower(E.myrealm), "frostmourne", 1, true) then return end
+
+	local extraButtons = {
+		{ name = "ParagonMicroButton", after = "QuestLogMicroButton" },
+		{ name = "CollectionsMicroButton", after = "LFDMicroButton" },
+		{ name = "StoreMicroButton", after = "CollectionsMicroButton" },
+	}
+
+	for _, info in ipairs(extraButtons) do
+		local btnName = info.name
+		if _G[btnName] then
+			local alreadyAdded = false
+			for i = 1, #MICRO_BUTTONS do
+				if MICRO_BUTTONS[i] == btnName then
+					alreadyAdded = true
+					break
+				end
+			end
+
+			if not alreadyAdded then
+				local inserted = false
+				for i = 1, #MICRO_BUTTONS do
+					if MICRO_BUTTONS[i] == info.after then
+						tinsert(MICRO_BUTTONS, i + 1, btnName)
+						inserted = true
+						break
+					end
+				end
+				if not inserted then
+					tinsert(MICRO_BUTTONS, btnName)
+				end
+			end
+		end
+	end
 end
 
 function AB:SetupMicroBar()
@@ -366,6 +386,10 @@ function AB:SetupMicroBar()
 	
 	if string.find(string.lower(E.myrealm), "rogue-lite", 1, true) then
 		self:SetupEbonholdMicroButtons()
+	end
+
+	if string.find(string.lower(E.myrealm), "frostmourne", 1, true) then
+		self:SetupFrostmourneMicroButtons()
 	end
 
 	for i = 1, #MICRO_BUTTONS do

@@ -14,4 +14,5 @@ I've done limited testing on these servers so far.
 [Project-Astral](https://playastral.io/)<br>
 [Project-Ebonhold](https://project-ebonhold.com/)<br>
 [Triumvirate](https://www.triumvirate-wow.com/)<br>
+[Frostmourne](https://frostmourne.whitemane.gg/en/)<br>
 

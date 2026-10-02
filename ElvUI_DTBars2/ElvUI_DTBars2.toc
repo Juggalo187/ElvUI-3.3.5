@@ -1,4 +1,4 @@
-﻿## Interface: 30300
+## Interface: 30300
 ## Title: |cff1784d1E|r|cffe5e3e3lvUI|r |cff1784d1D|r|cffe5e3e3atatext|r |cff1784d1B|r|cffe5e3e3ar|r |cff1784d12|r
 ## Author: |cff9482c9Darth Predator|r
 ## Version: 8.1.5.0015

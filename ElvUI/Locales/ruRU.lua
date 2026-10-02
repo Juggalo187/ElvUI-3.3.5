@@ -1,4 +1,4 @@
-﻿-- Russian localization file for ruRU.
+-- Russian localization file for ruRU.
 local E = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local L = E.Libs.ACL:NewLocale("ElvUI", "ruRU")
 

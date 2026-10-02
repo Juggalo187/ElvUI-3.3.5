@@ -37,6 +37,36 @@ S:AddCallback("Skin_Misc", function()
 			S:HandleButton(menuButtons[i])
 		end
 	end
+	if string.find(string.lower(E.myrealm), "frostmourne", 1, true) then
+	-- Rebuffed creates these entries after ElvUI's initial skin pass. Skin them
+	-- when the game menu is shown, then re-anchor the backdrop to its new height.
+		GameMenuFrame:HookScript("OnShow", function()
+			for _, name in ipairs({
+				"GameMenuButtonRebuffedStore",
+				"GameMenuButtonHelpSupport",
+				"GameMenuButtonRebuffed"
+			}) do
+				local button = _G[name]
+				if button then
+					S:HandleButton(button)
+				end
+			end
+	
+			local frameTop = GameMenuFrame:GetTop()
+			local continueBottom = GameMenuButtonContinue:GetBottom()
+			if frameTop and continueBottom then
+				local requiredHeight = frameTop - continueBottom + 16
+				if GameMenuFrame:GetHeight() < requiredHeight then
+					GameMenuFrame:SetHeight(requiredHeight)
+				end
+			end
+	
+			if GameMenuFrame.backdrop then
+				GameMenuFrame.backdrop:ClearAllPoints()
+				GameMenuFrame.backdrop:SetOutside(GameMenuFrame)
+			end
+		end)
+	end
 
 	-- Static Popups
 	for i = 1, 4 do

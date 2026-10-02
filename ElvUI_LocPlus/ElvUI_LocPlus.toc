@@ -1,4 +1,4 @@
-﻿## Interface: 30300
+## Interface: 30300
 ## Author: Benik
 ## Version: 2.25
 ## Title: |cff1784d1E|r|cffe5e3e3lvUI|r |cff1784d1L|r|cffe5e3e3ocation|r |cff1784d1P|r|cffe5e3e3lus|r
