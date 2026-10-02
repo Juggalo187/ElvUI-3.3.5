@@ -1300,7 +1300,6 @@ function E:Initialize()
 	self.private = self.charSettings.profile
 	self.db = self.data.profile
 	self.global = self.data.global
-	E.Libs.DualSpec:EnhanceDatabase(self.data,
 
 	self:CheckIncompatible()
 	self:DBConversions()
