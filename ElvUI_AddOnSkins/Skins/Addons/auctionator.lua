@@ -162,6 +162,7 @@ S:AddCallbackForAddon("Auctionator", "Auctionator", function()
 			"Atr_Inventory_Skip",
 			"Atr_Inventory_Stop",
 			"Atr_Inventory_Duration",
+			"Atr_Inventory_ScrollFrame",
 		}
 
 		for _, name in ipairs(inventoryButtons) do
