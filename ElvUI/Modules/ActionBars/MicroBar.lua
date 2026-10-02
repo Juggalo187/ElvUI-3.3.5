@@ -4,6 +4,7 @@ local AB = E:GetModule("ActionBars")
 --Lua functions
 local _G = _G
 local unpack = unpack
+local tinsert = tinsert
 --WoW API / Variables
 local CreateFrame = CreateFrame
 local GameTooltip = GameTooltip
@@ -93,6 +94,21 @@ function AB:HandleMicroButton(button)
 	if disabled then
 		disabled:SetTexCoord(l, r, t, b)
 		disabled:SetInside(f)
+	end
+	
+	-- Frostmourne Icon Adjustments
+	if string.find(string.lower(E.myrealm), "frostmourne", 1, true) then
+		if button == _G.CollectionsMicroButton and _G.CollectionsMicroButtonIcon then
+			_G.CollectionsMicroButtonIcon:ClearAllPoints()
+			_G.CollectionsMicroButtonIcon:SetPoint("CENTER", button, "CENTER")
+		end
+
+		if button == _G.StoreMicroButton and _G.StoreMicroButtonIcon then
+			_G.StoreMicroButtonIcon:ClearAllPoints()
+			_G.StoreMicroButtonIcon:SetPoint("CENTER", button, "CENTER")
+		elseif button == _G.ParagonMicroButton and _G.ParagonMicroButtonIcon then
+			_G.ParagonMicroButtonIcon:SetInside(f)
+		end
 	end
 end
 
@@ -218,8 +234,6 @@ function AB:SetupAstralMicroButton()
 			if DC and DC.Open then
 				DC.Open()
 			end
-		if _G.ProjectAstral and ProjectAstral.ToggleMainMenu then
-			ProjectAstral:ToggleMainMenu()
 		end
 	end)
 
