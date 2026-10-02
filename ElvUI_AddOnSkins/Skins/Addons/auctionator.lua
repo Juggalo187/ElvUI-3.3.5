@@ -596,7 +596,7 @@ S:AddCallbackForAddon("Auctionator", "Auctionator", function()
 
 			local point, relativeTo, relativePoint, xOfs, yOfs = Atr_BagPanel:GetPoint()
 			Atr_BagPanel:ClearAllPoints()
-			Atr_BagPanel:SetPoint(point, relativeTo, relativePoint, xOfs + 4, yOfs + 15)
+			Atr_BagPanel:SetPoint(point, relativeTo, relativePoint, xOfs + 3, yOfs + 14)
 
 		end
 
