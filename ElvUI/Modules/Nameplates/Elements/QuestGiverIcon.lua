@@ -2,6 +2,7 @@ local E, L, V, P, G = unpack(select(2, ...))
 local NP = E:GetModule("NamePlates")
 
 -- Default Profile Settings
+P["nameplates"] = P["nameplates"] or {}
 P["nameplates"]["questGiverIcon"] = {
     enable = true,
     size = 22,
@@ -9,43 +10,100 @@ P["nameplates"]["questGiverIcon"] = {
     yOffset = 12,
 }
 
--- Completed Quest Texture (?)
+-- Completed/Active Quest Texture
 local QUEST_COMPLETE_ICON = [[Interface\GossipFrame\ActiveQuestIcon]]
 
--- Helper: Scans Quest Log for completed quests matching the NPC's name
-local function PlayerHasCompletedQuestForNPC(npcName)
-    if not npcName or npcName == "" then return false end
+-- Hidden tooltip for scanning unit quest status
+local scanTooltip = CreateFrame("GameTooltip", "ElvUI_QuestIconScanTooltip", nil, "GameTooltipTemplate")
+scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
 
-    local currentSelection = GetQuestLogSelection()
-    local numEntries = GetNumQuestLogEntries()
-    local isTurnInNPC = false
+-- Helper: Strip WoW color formatting (|cff... and |r) and whitespace
+local function CleanString(str)
+    if not str then return "" end
+    local clean = str:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|r", "")
+    clean = clean:match("^%s*(.-)%s*$") or ""
+    return string.lower(clean)
+end
 
-    for i = 1, numEntries do
-        local questTitle, level, questTag, suggestedGroup, isHeader, isCollapsed, isComplete = GetQuestLogTitle(i)
-        
-        -- Process only finished quests (isComplete == 1)
-        if not isHeader and isComplete == 1 then
-            SelectQuestLogEntry(i)
-            local questDescription, questObjectives = GetQuestLogQuestText()
-            
-            if (questObjectives and string.find(questObjectives, npcName, 1, true)) or 
-               (questDescription and string.find(questDescription, npcName, 1, true)) then
-                isTurnInNPC = true
-                break
+-- Helper: Checks if the target NPC is related to an active/completed quest
+local function IsNPCQuestTurnIn(frame, unit, rawNPCName)
+    local cleanNPC = CleanString(rawNPCName)
+    if cleanNPC == "" then return false end
+
+    -- 1. Tooltip Scan (Works when targeting, moused over, or via AwesomeWotLK unit token)
+    local validUnit = nil
+    if unit and UnitExists(unit) then
+        validUnit = unit
+    elseif UnitExists("target") and CleanString(UnitName("target")) == cleanNPC then
+        validUnit = "target"
+    elseif UnitExists("mouseover") and CleanString(UnitName("mouseover")) == cleanNPC then
+        validUnit = "mouseover"
+    end
+
+    if validUnit then
+        scanTooltip:ClearLines()
+        scanTooltip:SetUnit(validUnit)
+        for i = 1, scanTooltip:NumLines() do
+            local line = _G["ElvUI_QuestIconScanTooltipTextLeft" .. i]
+            if line then
+                local text = line:GetText()
+                if text then
+                    if string.find(text, "%(Completed%)") or string.find(text, "%(Complete%)") or string.find(text, "1/1") then
+                        return true
+                    end
+                end
             end
         end
     end
 
-    -- Restore previous quest log selection
-    if currentSelection and currentSelection > 0 then
-        SelectQuestLogEntry(currentSelection)
+    -- 2. Quest Log Deep Scan (Scans Titles, Objectives Text, and Leaderboards)
+    local numEntries = GetNumQuestLogEntries()
+    if numEntries and numEntries > 0 then
+        local savedSelection = GetQuestLogSelection()
+
+        for i = 1, numEntries do
+            local questTitle, _, _, _, isHeader, _, isComplete = GetQuestLogTitle(i)
+
+            if not isHeader then
+                -- Check standard leaderboards (e.g. kill/item counters)
+                local numObjectives = GetNumQuestLeaderBoards(i) or 0
+                for j = 1, numObjectives do
+                    local objText = GetQuestLogLeaderBoard(j, i)
+                    if objText and string.find(string.lower(objText), cleanNPC, 1, true) then
+                        return true
+                    end
+                end
+
+                -- Check Quest Objectives & Description Text (Handles Talk-To / Delivery quests like "Forsaken Duties")
+                SelectQuestLogEntry(i)
+                local questDescription, questObjectives = GetQuestLogQuestText()
+
+                if questObjectives and string.find(string.lower(questObjectives), cleanNPC, 1, true) then
+                    SelectQuestLogEntry(savedSelection)
+                    return true
+                end
+
+                if questTitle and isComplete and (isComplete == 1 or isComplete == true) then
+                    if string.find(string.lower(questTitle), cleanNPC, 1, true) then
+                        SelectQuestLogEntry(savedSelection)
+                        return true
+                    end
+                end
+            end
+        end
+
+        -- Restore player's previous quest log selection
+        SelectQuestLogEntry(savedSelection)
     end
 
-    return isTurnInNPC
+    return false
 end
 
 -- 1. Construct Element Frame
 function NP:Construct_QuestIcon(frame)
+    if not frame then return end
+    if frame.QuestIcon then return frame.QuestIcon end
+
     local questIcon = CreateFrame("Frame", nil, frame)
     questIcon:SetSize(22, 22)
 
@@ -54,48 +112,92 @@ function NP:Construct_QuestIcon(frame)
     questIcon.Texture = texture
 
     questIcon:Hide()
+    frame.QuestIcon = questIcon
     return questIcon
 end
 
 -- 2. Configure Placement & Size
 function NP:Configure_QuestIcon(frame)
+    if not frame then return end
     local questIcon = frame.QuestIcon
     if not questIcon then return end
 
-    local db = (NP.db and NP.db.questGiverIcon) or P.nameplates.questGiverIcon
-    if not db.enable then
+    local db = (E.db and E.db.nameplates and E.db.nameplates.questGiverIcon) or P.nameplates.questGiverIcon
+    if not db or not db.enable then
         questIcon:Hide()
         return
     end
 
     questIcon:ClearAllPoints()
-    if frame.Health:IsShown() then
-        questIcon:SetPoint("BOTTOM", frame.Health, "TOP", db.xOffset, db.yOffset)
+    if frame.Health and frame.Health:IsShown() then
+        questIcon:SetPoint("BOTTOM", frame.Health, "TOP", db.xOffset or 0, db.yOffset or 12)
+    elseif frame.HealthBar and frame.HealthBar:IsShown() then
+        questIcon:SetPoint("BOTTOM", frame.HealthBar, "TOP", db.xOffset or 0, db.yOffset or 12)
+    elseif frame.Name and frame.Name:IsShown() then
+        questIcon:SetPoint("BOTTOM", frame.Name, "TOP", db.xOffset or 0, db.yOffset or 12)
     else
-        questIcon:SetPoint("BOTTOM", frame.Name, "TOP", db.xOffset, db.yOffset)
+        questIcon:SetPoint("BOTTOM", frame, "TOP", db.xOffset or 0, db.yOffset or 12)
     end
 
-    questIcon:SetSize(db.size, db.size)
+    questIcon:SetSize(db.size or 22, db.size or 22)
+    questIcon:SetFrameLevel((frame:GetFrameLevel() or 10) + 10)
 end
 
 -- 3. Update State
 function NP:Update_QuestIcon(frame)
+    if not frame then return end
+
+    if not frame.QuestIcon then
+        self:Construct_QuestIcon(frame)
+    end
+
     local questIcon = frame.QuestIcon
     if not questIcon then return end
 
-    local db = (NP.db and NP.db.questGiverIcon) or P.nameplates.questGiverIcon
-
-    -- Check if enabled and frame is a friendly NPC
-    if not db.enable or frame.UnitType ~= "FRIENDLY_NPC" then
+    local db = (E.db and E.db.nameplates and E.db.nameplates.questGiverIcon) or P.nameplates.questGiverIcon
+    if not db or not db.enable then
         questIcon:Hide()
         return
     end
 
-    -- Turn-in Check
-    if PlayerHasCompletedQuestForNPC(frame.UnitName) then
+    -- Ignore Player Nameplates
+    if frame.UnitType == "FRIENDLY_PLAYER" or frame.UnitType == "ENEMY_PLAYER" then
+        questIcon:Hide()
+        return
+    end
+
+    -- Extract Nameplate NPC Name
+    local unit = frame.unit
+    local unitName = frame.UnitName
+    if not unitName or unitName == "" then
+        if frame.Name and frame.Name.GetText then
+            unitName = frame.Name:GetText()
+        end
+    end
+
+    -- Check turn-in status
+    if IsNPCQuestTurnIn(frame, unit, unitName) then
+        self:Configure_QuestIcon(frame)
         questIcon.Texture:SetTexture(QUEST_COMPLETE_ICON)
         questIcon:Show()
     else
         questIcon:Hide()
     end
 end
+
+-- Refresh Plates on Quest & Target/Mouseover Events
+local eventFrame = CreateFrame("Frame")
+eventFrame:RegisterEvent("QUEST_LOG_UPDATE")
+eventFrame:RegisterEvent("UNIT_QUEST_LOG_CHANGED")
+eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+eventFrame:RegisterEvent("PLAYER_TARGET_CHANGED")
+eventFrame:RegisterEvent("UPDATE_MOUSEOVER_UNIT")
+eventFrame:SetScript("OnEvent", function()
+    if NP and NP.Initialized then
+        if NP.ForEachVisiblePlate then
+            NP:ForEachVisiblePlate("Update_QuestIcon")
+        elseif NP.ForEachPlate then
+            NP:ForEachPlate("Update_QuestIcon")
+        end
+    end
+end)
