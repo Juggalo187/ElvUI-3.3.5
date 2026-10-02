@@ -1756,7 +1756,8 @@ function mod:ConfigureContainer(f, isBank, db, numColumns, buttonSize, buttonSpa
 	for i, section in ipairs(sections) do
 		local sectionFrame = layoutSections[i] and layoutSections[i].frame
 
-		section.buttonPositions = {}
+		section.storedPositions = section.storedPositions or {}
+		local storedPositions = section.storedPositions
 		section.numColumns = section.numColumns or numColumns
 
 		local columns = section.numColumns
