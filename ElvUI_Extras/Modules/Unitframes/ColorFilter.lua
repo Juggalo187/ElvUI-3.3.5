@@ -1687,8 +1687,7 @@ function mod:UpdateAll(db)
 
 	for _, frame in ipairs(core:AggregateUnitFrames()) do
 		local unit = frame.unitframeType
-		local unitSettings = db.units and db.units[unit]
-		if unitSettings and unitSettings.enabled and unitSettings.statusbars then
+		if db.units[unit].enabled then
 			if not metaTable.units[unit] then
 				metaTable.units[unit] = {}
 				metaTable.events[unit] = {}
@@ -1699,7 +1698,7 @@ function mod:UpdateAll(db)
 
 			self:ConstructHighlight(frame)
 
-			for statusbar, bar in pairs(unitSettings.statusbars) do
+			for statusbar, bar in pairs(db.units[unit].statusbars) do
 				local targetBar = frame.colorFilter[statusbar]
 				if targetBar and bar.enabled then
 					enabled[statusbar] = true

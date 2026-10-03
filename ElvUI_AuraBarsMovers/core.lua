@@ -25,12 +25,10 @@ P['abm'] = {
 }
 
 function ABM:PlayerABmove()
-	local frame = _G["ElvUF_Player"]
-	local auraBar = frame and frame.AuraBars
-	if not auraBar then return end
+	local auraBar = _G["ElvUF_Player"].AuraBars
 	--Create Holder frame for our AuraBar Mover
 	local holder = CreateFrame('Frame', nil, auraBar)
-	holder:Point("BOTTOM", frame, "TOP", 0, 0)
+	holder:Point("BOTTOM", _G["ElvUF_Player"], "TOP", 0, 0)
 	auraBar:SetPoint("BOTTOM", holder, "TOP", 0, 0)
 	auraBar.Holder = holder
 
@@ -39,12 +37,10 @@ function ABM:PlayerABmove()
 end
 
 function ABM:TargetABmove()
-	local frame = _G["ElvUF_Target"]
-	local auraBar = frame and frame.AuraBars
-	if not auraBar then return end
+	local auraBar = _G["ElvUF_Target"].AuraBars
 	--Create Holder frame for our AuraBar Mover
 	local holder = CreateFrame('Frame', nil, auraBar)
-	holder:Point("BOTTOM", frame, "TOP", 0, 0)
+	holder:Point("BOTTOM", _G["ElvUF_Target"], "TOP", 0, 0)
 	auraBar:SetPoint("BOTTOM", holder, "TOP", 0, 0)
 	auraBar.Holder = holder
 
@@ -53,12 +49,10 @@ function ABM:TargetABmove()
 end
 
 function ABM:FocusABmove()
-	local frame = _G["ElvUF_Focus"]
-	local auraBar = frame and frame.AuraBars
-	if not auraBar then return end
+	local auraBar = _G["ElvUF_Focus"].AuraBars
 	--Create Holder frame for our AuraBar Mover
 	local holder = CreateFrame('Frame', nil, auraBar)
-	holder:Point("BOTTOM", frame, "TOP", 0, 0)
+	holder:Point("BOTTOM", _G["ElvUF_Focus"], "TOP", 0, 0)
 	auraBar:SetPoint("BOTTOM", holder, "TOP", 0, 0)
 	auraBar.Holder = holder
 
@@ -67,12 +61,10 @@ function ABM:FocusABmove()
 end
 
 function ABM:PetABmove()
-	local frame = _G["ElvUF_Pet"]
-	local auraBar = frame and frame.AuraBars
-	if not auraBar then return end
+	local auraBar = _G["ElvUF_Pet"].AuraBars
 	--Create Holder frame for our AuraBar Mover
 	local holder = CreateFrame('Frame', nil, auraBar)
-	holder:Point("BOTTOM", frame, "TOP", 0, 0)
+	holder:Point("BOTTOM", _G["ElvUF_Pet"], "TOP", 0, 0)
 	auraBar:SetPoint("BOTTOM", holder, "TOP", 0, 0)
 	auraBar.Holder = holder
 

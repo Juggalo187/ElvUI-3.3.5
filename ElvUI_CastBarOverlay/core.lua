@@ -131,8 +131,6 @@ end
 
 --Initiate update/reset of castbar
 local function ConfigureCastbar(unit, unitframe)
-	if not unitframe or not unitframe.Castbar or not E.db.CBO[unit] then return end
-
 	local db = E.db.CBO[unit];
 	local cdb = E.db.unitframe.units[unit].castbar;
 	local castbar = unitframe.Castbar
@@ -149,8 +147,6 @@ end
 
 --Initiate update of unit
 function CBO:UpdateSettings(unit)
-	if not E.db.CBO[unit] or not E.db.unitframe.units[unit] then return end
-
 	local db = E.db.CBO[unit];
 	local cdb = E.db.unitframe.units[unit].castbar;
 
