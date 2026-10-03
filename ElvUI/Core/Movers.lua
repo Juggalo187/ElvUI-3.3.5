@@ -112,6 +112,42 @@ local function CreateMover(parent, name, text, overlay, snapOffset, postdrag, sh
 		end
 
 		local point1, anchor1, secondaryPoint1, x1, y1 = split(delim, anchorString)
+		if anchor1 and not _G[anchor1] then
+			local offsetX, offsetY = tonumber(x1) or 0, tonumber(y1) or 0
+			local panelWidth = E.db.chat and E.db.chat.panelWidth or 0
+			local panelHeight = E.db.chat and E.db.chat.panelHeight or 0
+			local screenHeight = E.UIParent:GetHeight()
+			local migratedChatAnchor = false
+
+			if anchor1 == "LeftChatPanel" then
+				migratedChatAnchor = true
+				if secondaryPoint1 == "BOTTOMRIGHT" or secondaryPoint1 == "TOPRIGHT" then
+					offsetX = panelWidth + offsetX
+					secondaryPoint1 = secondaryPoint1 == "TOPRIGHT" and "TOPLEFT" or "BOTTOMLEFT"
+				end
+				if secondaryPoint1 == "TOPLEFT" then
+					offsetY = offsetY + panelHeight - screenHeight
+				end
+				anchor1 = E.UIParent:GetName()
+			elseif anchor1 == "RightChatPanel" then
+				migratedChatAnchor = true
+				if secondaryPoint1 == "BOTTOMLEFT" or secondaryPoint1 == "TOPLEFT" then
+					offsetX = offsetX - panelWidth
+					secondaryPoint1 = secondaryPoint1 == "TOPLEFT" and "TOPRIGHT" or "BOTTOMRIGHT"
+				end
+				if secondaryPoint1 == "TOPRIGHT" then
+					offsetY = offsetY + panelHeight - screenHeight
+				end
+				anchor1 = E.UIParent:GetName()
+			else
+				point1, anchor1, secondaryPoint1, x1, y1 = split(",", GetPoint(parent))
+			end
+
+			if migratedChatAnchor then
+				x1, y1 = offsetX, offsetY
+			end
+			E.db.movers[name] = format("%s,%s,%s,%s,%s", point1, anchor1, secondaryPoint1, x1, y1)
+		end
 		f:Point(point1, anchor1, secondaryPoint1, x1, y1)
 		f.anchor = anchor
 	else

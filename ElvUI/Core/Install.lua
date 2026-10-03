@@ -33,6 +33,125 @@ local RAID_CLASS_COLORS = RAID_CLASS_COLORS
 
 local CURRENT_PAGE = 0
 local MAX_PAGE = 8
+local layoutTooltipState
+
+local function HasClassPet()
+	return E.myclass == "HUNTER" or E.myclass == "WARLOCK" or E.myclass == "DEATHKNIGHT"
+end
+
+local function ConfigureClassLayout(layout)
+	local hasClassPet = HasClassPet()
+	local units = E.db.unitframe.units
+
+	units.pet.enable = hasClassPet
+	units.pet.castbar.enable = hasClassPet
+	units.pettarget.enable = hasClassPet
+	E.db.actionbar.barPet.enabled = true
+
+	if layout ~= "skulytheme" then
+		E.db.movers.ElvUF_PlayerSwingBarMover = IsAddOnLoaded("ElvUI_RaidMarkers")
+			and _G.ElvUI_RaidMarkersBar
+			and "TOP,ElvUI_RaidMarkersBar,BOTTOM,0,-4"
+			or "BOTTOM,ElvUIParent,BOTTOM,0,272"
+	end
+
+	if hasClassPet and layout ~= "minimal" then
+		E.db.movers.ElvUF_PetMover = "BOTTOM,ElvUIParent,BOTTOM,-341,42"
+		E.db.movers.ElvUF_PetCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,-341,0"
+		E.db.movers.ElvBar_Pet = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-4,282"
+	end
+
+	if layout ~= "minimal" and E.myclass == "DEATHKNIGHT" then
+		E.db.movers.ClassBarMover = layout == "skulytheme"
+			and "BOTTOM,ElvUIParent,BOTTOM,-293,355"
+			or "BOTTOM,ElvUIParent,BOTTOM,-341,110"
+	elseif layout ~= "minimal" and E.myclass == "DRUID" then
+		E.db.movers.ClassBarMover = layout == "skulytheme"
+			and "BOTTOM,ElvUIParent,BOTTOM,-293,355"
+			or "BOTTOM,ElvUIParent,BOTTOM,-341,110"
+	elseif layout ~= "minimal" and E.myclass == "SHAMAN" then
+		E.db.movers.ElvBar_Totem = "BOTTOM,ElvUIParent,BOTTOM,0,55"
+	end
+
+	if layout == "pet" and hasClassPet then
+		units.pet.width = 220
+		units.pet.height = 52
+		units.pet.health.frequentUpdates = true
+		units.pettarget.width = 150
+	end
+end
+
+local function ConfigureLayoutActionBars(layout)
+	local layouts = {
+		balanced = {main = {8, 44}, chatWidth = 472, buttons = 6, perRow = 3, buttonSize = 22, formation = "balanced"},
+		tank = {main = {10, 36}, chatWidth = 448, buttons = 6, perRow = 3, buttonSize = 24, formation = "tank"},
+		melee = {main = {12, 36}, chatWidth = 448, buttons = 6, perRow = 3, buttonSize = 22, formation = "melee"},
+		dpsCaster = {main = {8, 44}, chatWidth = 440, buttons = 8, perRow = 4, buttonSize = 20, formation = "caster"},
+		healer = {main = {8, 36}, chatWidth = 440, buttons = 6, perRow = 3, buttonSize = 22, formation = "healer"},
+		raid10 = {main = {10, 32}, chatWidth = 448, buttons = 3, perRow = 3, buttonSize = 20, formation = "raid10"},
+		raid25 = {main = {12, 30}, chatWidth = 440, buttons = 6, perRow = 2, buttonSize = 20, formation = "raid25"},
+		arena = {main = {12, 32}, chatWidth = 472, buttons = 4, perRow = 2, buttonSize = 20, formation = "arena"},
+		battleground = {main = {12, 28}, chatWidth = 440, buttons = 6, perRow = 3, buttonSize = 18, formation = "battleground"},
+		dungeon = {main = {8, 40}, chatWidth = 448, buttons = 6, perRow = 3, buttonSize = 22, formation = "dungeon"},
+		questing = {main = {10, 36}, chatWidth = 472, buttons = 6, perRow = 3, buttonSize = 22, formation = "questing"},
+		pet = {main = {8, 40}, chatWidth = 448, buttons = 6, perRow = 3, buttonSize = 22, formation = "pet"},
+		compact = {main = {12, 28}, chatWidth = 420, buttons = 3, perRow = 3, buttonSize = 18, formation = "compact"},
+	}
+	local config = layouts[layout]
+	if not config then return end
+
+	local maxChatWidth = math.max(320, math.floor((E.UIParent:GetWidth() - 360) / 2))
+	E.db.chat.panelWidth = math.min(config.chatWidth, maxChatWidth)
+	local centerWidth = E.UIParent:GetWidth() - (E.db.chat.panelWidth * 2)
+	local usableWidth = math.max(120, centerWidth - 36)
+
+	local mainBar = E.db.actionbar.bar1
+	mainBar.enabled = true
+	mainBar.buttons = config.main[1]
+	mainBar.buttonsPerRow = config.main[1]
+	mainBar.buttonspacing = 2
+	mainBar.buttonsize = math.min(config.main[2], math.floor((usableWidth - mainBar.buttonspacing * (mainBar.buttonsPerRow - 1) - 12) / mainBar.buttonsPerRow))
+	mainBar.visibility = ""
+	E.db.movers.ElvAB_1 = "BOTTOM,ElvUIParent,BOTTOM,0,18"
+
+	local formations = {
+		balanced = {positions = {{-1, 0}, {0, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}, {-1, 2}, {0, 2}, {1, 2}}, rowStep = 52, startY = 72},
+		tank = {positions = {{-0.8, 0}, {-1, 1}, {-0.8, 2}, {0, 0}, {0, 1}, {0, 2}, {0.8, 0}, {1, 1}, {0.8, 2}}, rowStep = 52, startY = 72},
+		melee = {positions = {{0, 0}, {-1, 0}, {1, 0}, {-1, 1}, {0, 1}, {1, 1}, {-1, 2}, {0, 2}, {1, 2}}, rowStep = 52, startY = 72},
+		caster = {positions = {{0, 0}, {-1, 0}, {1, 0}, {0, 1}, {-1, 1}, {1, 1}, {0, 2}, {-1, 2}, {1, 2}}, rowStep = 62, startY = 72},
+		healer = {positions = {{-1, 0}, {1, 0}, {0, 1}, {-1, 1}, {1, 1}, {0, 0}, {-1, 2}, {1, 2}, {0, 2}}, rowStep = 52, startY = 72},
+		raid10 = {positions = {{-1, 0}, {1, 0}, {-1, 1}, {1, 1}, {-1, 2}, {1, 2}, {-1, 3}, {1, 3}, {0, 0}}, rowStep = 32, startY = 55},
+		raid25 = {positions = {{-1, 0}, {0, 0}, {1, 0}, {-0.7, 1}, {0.7, 1}, {0, 1}, {-1, 2}, {0, 2}, {1, 2}}, rowStep = 68, startY = 72},
+		arena = {positions = {{0, 0}, {-1, 1}, {1, 1}, {-1, 2}, {0, 2}, {1, 2}, {-1, 3}, {1, 3}, {0, 4}}, rowStep = 46, startY = 55},
+		battleground = {positions = {{-0.6, 0}, {0.6, 0}, {-1, 1}, {0, 1}, {1, 1}, {-0.6, 2}, {0.6, 2}, {-1, 0}, {1, 2}}, rowStep = 52, startY = 72},
+		dungeon = {positions = {{-0.65, 0}, {0, 0}, {0.65, 0}, {-1, 1}, {0, 1}, {1, 1}, {-0.65, 2}, {0, 2}, {0.65, 2}}, rowStep = 52, startY = 72},
+		questing = {positions = {{-1, 0}, {0, 0}, {1, 0}, {-0.7, 1}, {0.7, 1}, {0, 1}, {-1, 2}, {0, 2}, {1, 2}}, rowStep = 52, startY = 72},
+		pet = {positions = {{0, 0}, {-0.7, 0}, {0.7, 0}, {-1, 1}, {0, 1}, {1, 1}, {-0.7, 2}, {0, 2}, {0.7, 2}}, rowStep = 52, startY = 72},
+		compact = {positions = {{-0.75, 0}, {-0.75, 1}, {-0.75, 2}, {0, 0}, {0, 1}, {0, 2}, {0.75, 0}, {0.75, 1}, {0.75, 2}}, rowStep = 36, startY = 65},
+	}
+	local formation = formations[config.formation]
+	local columnOffset = math.min(120, math.max(42, (usableWidth / 2) - 42))
+
+	for index = 2, 10 do
+		local bar = E.db.actionbar["bar"..index]
+		if bar and (index <= 6 or IsAddOnLoaded("ElvUI_ExtraActionBars")) then
+			local position = formation.positions[index - 1]
+			local buttons = config.buttons
+			local perRow = math.min(buttons, config.perRow)
+			bar.buttonspacing = 2
+			local buttonSize = math.min(config.buttonSize, math.floor((usableWidth - bar.buttonspacing * (perRow - 1) - 12) / perRow))
+			bar.enabled = true
+			bar.mouseover = false
+			bar.alpha = 1
+			bar.buttons = buttons
+			bar.buttonsPerRow = perRow
+			bar.point = "BOTTOMLEFT"
+			bar.buttonsize = buttonSize
+			bar.visibility = "[vehicleui] hide; show"
+			E.db.movers["ElvAB_"..index] = "BOTTOM,ElvUIParent,BOTTOM,"..(position[1] * columnOffset)..","..(formation.startY + position[2] * formation.rowStep)
+		end
+	end
+end
 
 local function SetupChat(noDisplayMsg)
 	FCF_ResetChatWindows() -- Monitor this
@@ -248,12 +367,15 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		E.db.actionbar.bar1.buttons = 8
 		E.db.actionbar.bar1.buttonsize = 50
 		E.db.actionbar.bar1.buttonspacing = 1
+		E.db.actionbar.bar1.buttonsPerRow = P.actionbar.bar1.buttonsPerRow
 		E.db.actionbar.bar1.visibility = ""
 		E.db.actionbar.bar2.buttons = 9
+		E.db.actionbar.bar2.buttonsPerRow = P.actionbar.bar2.buttonsPerRow
 		E.db.actionbar.bar2.buttonsize = 38
 		E.db.actionbar.bar2.buttonspacing = 1
 		E.db.actionbar.bar2.enabled = true
 		E.db.actionbar.bar2.visibility = ""
+		E.db.actionbar.bar3.enabled = true
 		E.db.actionbar.bar3.buttons = 8
 		E.db.actionbar.bar3.buttonsize = 50
 		E.db.actionbar.bar3.buttonspacing = 1
@@ -265,6 +387,22 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		E.db.actionbar.bar5.visibility = "[vehicleui] hide; show"
 		E.db.actionbar.bar6.enabled = false
 		E.db.actionbar.bar6.visibility = "[vehicleui] hide; show"
+		if IsAddOnLoaded("ElvUI_ExtraActionBars") then
+			for i = 7, 10 do
+				local bar = E.db.actionbar["bar"..i]
+				if bar then
+					bar.enabled = false
+				end
+			end
+		end
+		E.db.general.bottomPanel = P.general.bottomPanel
+		E.db.nameplates.useTargetScale = P.nameplates.useTargetScale
+		E.db.nameplates.targetScale = P.nameplates.targetScale
+		E.db.nameplates.nonTargetTransparency = P.nameplates.nonTargetTransparency
+		E.db.nameplates.lowHealthThreshold = P.nameplates.lowHealthThreshold
+		E.db.nameplates.threat.goodScale = P.nameplates.threat.goodScale
+		E.db.nameplates.threat.badScale = P.nameplates.threat.badScale
+		E.db.nameplates.threat.useThreatColor = P.nameplates.threat.useThreatColor
 		
 		
 		--Auras
@@ -289,6 +427,9 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		E.db.databars.experience.orientation = "HORIZONTAL"
 		E.db.databars.experience.textSize = 12
 		E.db.databars.experience.width = 350
+		E.db.databars.experience.questXP.enable = true
+		E.db.databars.experience.questXP.questCurrentZoneOnly = true
+		E.db.databars.experience.questXP.questCompletedOnly = false
 		E.db.databars.reputation.enable = true
 		E.db.databars.reputation.height = 10
 		E.db.databars.reputation.orientation = "HORIZONTAL"
@@ -307,14 +448,13 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		E.db.movers.ElvAB_2 = "BOTTOM,ElvUIParent,BOTTOM,0,4"
 		E.db.movers.ElvAB_3 = "BOTTOM,ElvUIParent,BOTTOM,0,138"
 		E.db.movers.ElvAB_5 = "BOTTOM,ElvUIParent,BOTTOM,-92,57"
-		if E.myclass == "SHAMAN" then
-			E.db.movers.ElvBar_Totem = "BOTTOM,ElvUIParent,BOTTOM,0,55"
-		end
 		E.db.movers.ElvUF_FocusMover = "BOTTOM,ElvUIParent,BOTTOM,342,59"
 		E.db.movers.ElvUF_PartyMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,248"
-		E.db.movers.ElvUF_PetMover = "BOTTOM,ElvUIParent,BOTTOM,-341,99"
+		E.db.movers.ElvUF_PetMover = "BOTTOM,ElvUIParent,BOTTOM,-341,42"
+		E.db.movers.ElvUF_PetCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,-341,0"
 		E.db.movers.ElvUF_PlayerCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,96"
 		E.db.movers.ElvUF_PlayerMover = "BOTTOM,ElvUIParent,BOTTOM,-341,138"
+		E.db.movers.ElvUF_PlayerSwingBarMover = "BOTTOM,ElvUIParent,BOTTOM,0,272"
 		E.db.movers.ElvUF_Raid40Mover = "TOPLEFT,ElvUIParent,BOTTOMLEFT,4,482"
 		E.db.movers.ElvUF_RaidMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,248"
 		E.db.movers.ElvUF_RaidpetMover = "TOPLEFT,ElvUIParent,BOTTOMLEFT,4,737"
@@ -329,6 +469,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		E.db.movers.ShiftAB = "TOPLEFT,ElvUIParent,BOTTOMLEFT,4,769"
 		E.db.movers.TempEnchantMover = "TOPRIGHT,ElvUIParent,TOPRIGHT,-4,-257"
 		E.db.movers.TotemBarMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,485,4"
+		E.db.movers.ElvBar_Pet = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-4,282"
 		E.db.movers.VehicleSeatMover = "TOPLEFT,ElvUIParent,TOPLEFT,4,-4"
 		--Tooltip
 		E.db.tooltip.fontSize = 10
@@ -444,9 +585,40 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 		--	These are changes that deviate from the shared base layout
 		--]]
 
-		if layout == "dpsCaster" then
+		if layout == "tank" then
+			E.db.nameplates.useTargetScale = true
+			E.db.nameplates.targetScale = 1.35
+			E.db.nameplates.nonTargetTransparency = 0.65
+			E.db.nameplates.lowHealthThreshold = 0.5
+			E.db.nameplates.threat.useThreatColor = true
+			E.db.nameplates.threat.goodScale = 0.9
+			E.db.nameplates.threat.badScale = 1.35
+			E.db.unitframe.units.player.health.frequentUpdates = true
+			E.db.unitframe.units.target.health.frequentUpdates = true
+			E.db.unitframe.units.player.height = 66
+			E.db.unitframe.units.target.height = 66
+			E.db.unitframe.units.player.aurabar.attachTo = "FRAME"
+			E.db.unitframe.units.target.aurabar.attachTo = "FRAME"
+			E.db.unitframe.units.player.threatStyle = "HEALTHBORDER"
+			E.db.unitframe.units.target.threatStyle = "HEALTHBORDER"
+			E.db.movers.ElvUF_PlayerMover = "BOTTOM,ElvUIParent,BOTTOM,-341,138"
+			E.db.movers.ElvUF_TargetMover = "BOTTOM,ElvUIParent,BOTTOM,342,138"
+		elseif layout == "melee" then
 			E.db.movers.ElvUF_PlayerCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,243"
 			E.db.movers.ElvUF_TargetCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,97"
+			E.db.unitframe.units.player.aurabar.attachTo = "FRAME"
+			E.db.unitframe.units.target.aurabar.attachTo = "FRAME"
+			E.db.nameplates.useTargetScale = true
+			E.db.nameplates.targetScale = 1.2
+			E.db.movers.ElvUF_PlayerMover = "BOTTOM,ElvUIParent,BOTTOM,-341,138"
+			E.db.movers.ElvUF_TargetMover = "BOTTOM,ElvUIParent,BOTTOM,342,138"
+		elseif layout == "dpsCaster" then
+			E.db.movers.ElvUF_PlayerCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,243"
+			E.db.movers.ElvUF_TargetCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,97"
+			E.db.unitframe.units.player.castbar.width = 407
+			E.db.unitframe.units.target.castbar.width = 407
+			E.db.unitframe.units.player.power.height = 26
+			E.db.unitframe.units.target.power.height = 26
 		elseif layout == "healer" then
 			E.db.movers.ElvUF_PlayerCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,243"
 			E.db.movers.ElvUF_TargetCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,97"
@@ -455,8 +627,128 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.movers.ShiftAB = "TOPLEFT,ElvUIParent,BOTTOMLEFT,4,273"
 			--E.db.unitframe.units.party.enable = false
 			E.db.unitframe.units.party.health.frequentUpdates = true
-			E.db.unitframe.units.raid.visibility = "[nogroup] hide;show"
+			E.db.unitframe.units.raid.visibility = "[@raid6,noexists] hide;show"
 			E.db.unitframe.units.raid40.health.frequentUpdates = true
+			E.db.unitframe.units.party.width = 250
+			E.db.unitframe.units.party.height = 82
+			E.db.unitframe.units.party.debuffs.enable = true
+			E.db.unitframe.units.party.buffs.enable = true
+		elseif layout == "raid10" then
+			E.db.unitframe.units.raid.enable = true
+			E.db.unitframe.units.raid.visibility = "[@raid6,noexists] hide;show"
+			E.db.unitframe.units.raid.numGroups = 2
+			E.db.unitframe.units.raid.width = 88
+			E.db.unitframe.units.raid.height = 40
+			E.db.unitframe.units.raid40.enable = false
+			E.db.movers.ElvUF_RaidMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,248"
+		elseif layout == "raid25" then
+			E.db.unitframe.units.raid.enable = true
+			E.db.unitframe.units.raid.visibility = "[@raid6,noexists] hide;[@raid26,exists] hide;show"
+			E.db.unitframe.units.raid.numGroups = 5
+			E.db.unitframe.units.raid.width = 80
+			E.db.unitframe.units.raid.height = 36
+			E.db.unitframe.units.raid40.enable = true
+			E.db.unitframe.units.raid40.visibility = "[@raid26,noexists] hide;show"
+			E.db.unitframe.units.raid40.numGroups = 8
+			E.db.unitframe.units.raid40.width = 68
+			E.db.unitframe.units.raid40.height = 30
+			E.db.movers.ElvUF_RaidMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,248"
+			E.db.movers.ElvUF_Raid40Mover = "TOPLEFT,ElvUIParent,BOTTOMLEFT,4,482"
+		elseif layout == "arena" then
+			E.db.unitframe.units.arena.enable = true
+			E.db.unitframe.units.arena.width = 246
+			E.db.unitframe.units.arena.height = 47
+			E.db.unitframe.units.arena.spacing = 18
+			E.db.movers.ArenaHeaderMover = "TOPLEFT,ElvUIParent,TOPLEFT,20,-270"
+			E.db.nameplates.useTargetScale = true
+			E.db.nameplates.targetScale = 1.25
+			E.db.nameplates.nonTargetTransparency = 0.4
+		elseif layout == "battleground" then
+			E.db.unitframe.units.raid.enable = true
+			E.db.unitframe.units.raid.visibility = "[@raid6,noexists] hide;[@raid26,exists] hide;show"
+			E.db.unitframe.units.raid.numGroups = 8
+			E.db.unitframe.units.raid.width = 74
+			E.db.unitframe.units.raid.height = 34
+			E.db.unitframe.units.raid40.enable = true
+			E.db.unitframe.units.raid40.visibility = "[@raid26,noexists] hide;show"
+			E.db.unitframe.units.raid40.width = 64
+			E.db.unitframe.units.raid40.height = 28
+			E.db.movers.ElvUF_RaidMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,248"
+			E.db.movers.ElvUF_Raid40Mover = "TOPLEFT,ElvUIParent,BOTTOMLEFT,4,482"
+			E.db.nameplates.useTargetScale = true
+			E.db.nameplates.targetScale = 1.2
+			E.db.nameplates.threat.useThreatColor = true
+		elseif layout == "dungeon" then
+			E.db.unitframe.units.party.enable = true
+			E.db.unitframe.units.party.visibility = "[group:party] show;hide"
+			E.db.unitframe.units.party.width = 220
+			E.db.unitframe.units.party.height = 62
+			E.db.unitframe.units.party.health.frequentUpdates = true
+			E.db.unitframe.units.party.healPrediction.enable = true
+			E.db.unitframe.units.party.buffs.enable = true
+			E.db.unitframe.units.party.debuffs.enable = true
+			E.db.unitframe.units.raid.enable = true
+			E.db.unitframe.units.raid.visibility = "[group:raid] show;hide"
+			E.db.unitframe.units.raid.numGroups = 8
+			E.db.unitframe.units.raid.width = 74
+			E.db.unitframe.units.raid.height = 34
+			E.db.unitframe.units.raid40.enable = false
+			E.db.movers.ElvUF_PartyMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,4,248"
+			E.db.movers.ElvUF_RaidMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,-20,288"
+		elseif layout == "questing" then
+			E.db.nameplates.useTargetScale = true
+			E.db.nameplates.targetScale = 1.25
+			E.db.nameplates.nonTargetTransparency = 0.45
+			E.db.unitframe.units.raid.width = 74
+			E.db.unitframe.units.raid.height = 34
+		elseif layout == "minimal" then
+			E:ResetMovers("")
+			if not E.db.movers then E.db.movers = {} end
+			E:CopyTable(E.db.unitframe.units, P.unitframe.units)
+			E:CopyTable(E.db.actionbar, P.actionbar)
+			E.db.databars.experience.orientation = "VERTICAL"
+			E.db.databars.experience.width = 10
+			E.db.databars.experience.height = 235
+			local chatTopOffset = E.UIParent:GetHeight() - E.db.chat.panelHeight
+			E.db.movers.ExperienceBarMover = "TOPRIGHT,ElvUIParent,TOPRIGHT,-"..E.db.chat.panelWidth..",-"..chatTopOffset
+			E.db.actionbar.bar4.enabled = true
+			E.db.actionbar.bar4.buttons = 12
+			E.db.actionbar.bar4.buttonsPerRow = 1
+			E.db.actionbar.bar4.buttonsize = 18
+			E.db.actionbar.bar4.buttonspacing = 1
+			E.db.actionbar.bar4.backdropSpacing = 2
+			E.db.movers.ElvAB_4 = "TOPLEFT,LeftChatPanel,TOPRIGHT,0,0"
+			E.db.databars.reputation.width = 10
+			E.db.databars.reputation.height = 180
+			E.db.databars.reputation.orientation = "VERTICAL"
+			E.db.movers.ReputationBarMover = "TOPLEFT,LeftChatPanel,TOPRIGHT,26,0"
+			if IsAddOnLoaded("ElvUI_ExtraActionBars") then
+				for i = 7, 10 do
+					local bar = E.db.actionbar["bar"..i]
+					if bar then
+						bar.enabled = false
+					end
+				end
+			end
+			E.db.general.bottomPanel = P.general.bottomPanel
+			E.db.general.minimap.size = P.general.minimap.size
+			E.db.nameplates.nonTargetTransparency = P.nameplates.nonTargetTransparency
+		elseif layout == "compact" then
+			E.db.chat.panelHeight = 190
+			E.db.chat.panelWidth = 400
+			E.db.chat.fontSize = 9
+			E.db.general.minimap.size = 190
+			E.db.unitframe.units.player.width = 180
+			E.db.unitframe.units.player.height = 68
+			E.db.unitframe.units.target.width = 180
+			E.db.unitframe.units.target.height = 68
+			for i = 1, 3 do
+				local bar = E.db.actionbar["bar"..i]
+				bar.buttons = 12
+				bar.buttonsPerRow = 12
+				bar.buttonsize = 36
+				bar.buttonspacing = 1
+			end
 		elseif layout == "skulytheme" then
 			-- ============================================
 			-- SKULYTHEME LAYOUT
@@ -478,15 +770,10 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.databars.reputation.height = 10
 			E.db.databars.reputation.width = 222
 			
-			E.db.databars.experience.questXP.enable = true
-			E.db.databars.experience.questXP.questCompletedOnly = true
-			E.db.databars.experience.questXP.questCurrentZoneOnly = true
 			E.db.databars.experience.orientation = "VERTICAL"
 			E.db.databars.experience.width = 10
 			E.db.databars.experience.height = 235
-			E.db.databars.experience.questCompletedOnly = true
 			E.db.databars.experience.textSize = 12
-			E.db.databars.experience.questCurrentZoneOnly = true
 			
 			-- GENERAL
 			E.db.currentTutorial = 1
@@ -728,14 +1015,16 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			if ExtraActionBarsLoaded then
 			for i = 7, 10 do
 				local bar = E.db.actionbar["bar"..i]
-				bar.enabled = true
-				bar.backdropSpacing = 0
-				bar.buttons = 12
-				bar.point = "BOTTOMLEFT"
-				bar.buttonsize = 25
-				bar.buttonspacing = -1
-				bar.buttonsPerRow = 12
-				bar.visibility = "[vehicleui] hide; show"
+				if bar then
+					bar.enabled = true
+					bar.backdropSpacing = 0
+					bar.buttons = 12
+					bar.point = "BOTTOMLEFT"
+					bar.buttonsize = 25
+					bar.buttonspacing = -1
+					bar.buttonsPerRow = 12
+					bar.visibility = "[vehicleui] hide; show"
+				end
 			end
 			
 			
@@ -789,6 +1078,7 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 			E.db.movers.ElvAB_6 = "BOTTOM,ElvUIParent,BOTTOM,0,100"
 			E.db.movers.ElvUF_PlayerMover = "BOTTOM,ElvUIParent,BOTTOM,-293,403"
 			E.db.movers.ElvUF_PetMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-399,299"
+			E.db.movers.ElvUF_PetCastbarMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-399,245"
 			E.db.movers.TotemBarMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,431,248"
 			
 			E.db.movers.ElvUF_PartyMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,568,4"
@@ -802,6 +1092,84 @@ function E:SetupLayout(layout, noDataReset, noDisplayMsg)
 				NP:StyleFilterConfigure()
 				NP:ForEachPlate("StyleFilterClear")
 			end
+		end
+
+		ConfigureClassLayout(layout)
+
+		if layout ~= "skulytheme" and layout ~= "minimal" then
+			ConfigureLayoutActionBars(layout)
+
+			local frameWidth, castWidth, frameYOffset = 270, 270, 8
+
+			if layout == "tank" then
+				frameWidth, castWidth, frameYOffset = 270, 300, 4
+				E.db.unitframe.units.player.height = 66
+				E.db.unitframe.units.target.height = 66
+			elseif layout == "melee" then
+				frameWidth, castWidth, frameYOffset = 270, 280, 8
+			elseif layout == "dpsCaster" then
+				frameYOffset = 12
+				castWidth = 407
+			elseif layout == "healer" then
+				frameYOffset = 12
+				castWidth = 407
+				E.db.movers.ElvUF_RaidMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,260,300"
+			elseif layout == "raid10" then
+				frameWidth, castWidth = 250, 300
+			elseif layout == "raid25" then
+				frameWidth, castWidth = 240, 280
+			elseif layout == "arena" then
+				frameWidth, castWidth = 250, 280
+			elseif layout == "battleground" then
+				frameWidth, castWidth = 240, 260
+			elseif layout == "dungeon" then
+				frameWidth, castWidth = 280, 300
+			elseif layout == "questing" then
+				frameWidth, castWidth = 250, 270
+			elseif layout == "pet" then
+				frameWidth, castWidth = 260, 280
+			elseif layout == "compact" then
+				frameWidth, castWidth = 180, 180
+				frameYOffset = 8
+			end
+
+			local frameY = math.max(0, E.db.chat.panelHeight - E.db.unitframe.units.player.height + frameYOffset)
+			local maxFrameWidth = math.max(120, math.floor((E.UIParent:GetWidth() - (E.db.chat.panelWidth * 2) - 48) / 2))
+			frameWidth = math.min(frameWidth, maxFrameWidth)
+			castWidth = math.min(castWidth, frameWidth)
+			E.db.unitframe.units.focus.width = 150
+			E.db.unitframe.units.focus.castbar.width = 150
+			E.db.unitframe.units.player.width = frameWidth
+			E.db.unitframe.units.target.width = frameWidth
+			E.db.unitframe.units.player.castbar.width = castWidth
+			E.db.unitframe.units.target.castbar.width = castWidth
+			local sideOffset = E.db.chat.panelWidth + 18
+			E.db.movers.ElvUF_PlayerMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,"..sideOffset..","..frameY
+			E.db.movers.ElvUF_TargetMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-"..sideOffset..","..frameY
+			E.db.movers.ElvUF_PlayerCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,355"
+			E.db.movers.ElvUF_TargetCastbarMover = "BOTTOM,ElvUIParent,BOTTOM,0,424"
+			E.db.movers.ElvUF_TargetTargetMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-"..sideOffset..","..(frameY - 80)
+			E.db.movers.ElvUF_FocusMover = "BOTTOMRIGHT,ElvUIParent,BOTTOMRIGHT,-508,50"
+
+			if HasClassPet() then
+				E.db.movers.ElvUF_PetMover = "TOPLEFT,ElvUF_Player,BOTTOMLEFT,0,-8"
+				E.db.movers.ElvUF_PetCastbarMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,"..sideOffset..",0"
+				if layout == "pet" then
+					E.db.unitframe.units.pet.castbar.width = E.db.unitframe.units.pet.width
+				end
+			end
+
+			if E.myclass == "DEATHKNIGHT" or E.myclass == "DRUID" then
+				E.db.movers.ClassBarMover = "BOTTOMLEFT,ElvUIParent,BOTTOMLEFT,"..sideOffset..","..(frameY - 24)
+			end
+		end
+
+		if layout ~= "skulytheme" and layout ~= "minimal" then
+			E.db.databars.experience.width = 10
+			E.db.databars.experience.height = 180
+			E.db.databars.experience.orientation = "VERTICAL"
+			local chatTopOffset = E.UIParent:GetHeight() - E.db.chat.panelHeight
+			E.db.movers.ExperienceBarMover = "TOPRIGHT,ElvUIParent,TOPRIGHT,-"..E.db.chat.panelWidth..",-"..chatTopOffset
 		end
 		
 	end
@@ -894,6 +1262,11 @@ local function ResetAll()
 	InstallSlider.Min:SetText("")
 	InstallSlider.Max:SetText("")
 	InstallSlider.Cur:SetText("")
+	if ElvUIInstallFrame.LayoutCards then
+		for _, card in ipairs(ElvUIInstallFrame.LayoutCards) do
+			card:Hide()
+		end
+	end
 	ElvUIInstallFrame.SubTitle:SetText("")
 	ElvUIInstallFrame.Desc1:SetText("")
 	ElvUIInstallFrame.Desc2:SetText("")
@@ -1002,21 +1375,15 @@ local function SetPage(PageNum)
 		f.Desc3:SetText(L["Importance: |cff07D400High|r"])
 	elseif PageNum == 6 then
 		f.SubTitle:SetText(L["Layout"])
-		f.Desc1:SetText(L["You can now choose what layout you wish to use based on your combat role."])
-		f.Desc2:SetText(L["This will change the layout of your unitframes and actionbars."])
-		f.Desc3:SetText(L["Importance: |cffD3CF00Medium|r"])
-		InstallOption1Button:Show()
-		InstallOption1Button:SetScript("OnClick", function() E.db.layoutSet = nil E:SetupLayout("tank") end)
-		InstallOption1Button:SetText(L["Tank / Physical DPS"])
-		InstallOption2Button:Show()
-		InstallOption2Button:SetScript("OnClick", function() E.db.layoutSet = nil E:SetupLayout("healer") end)
-		InstallOption2Button:SetText(L["Healer"])
-		InstallOption3Button:Show()
-		InstallOption3Button:SetScript("OnClick", function() E.db.layoutSet = nil E:SetupLayout("dpsCaster") end)
-		InstallOption3Button:SetText(L["Caster DPS"])
-		InstallOption4Button:Show()
-		InstallOption4Button:SetScript("OnClick", function() E.db.layoutSet = nil E:SetupLayout("skulytheme") end)
-		InstallOption4Button:SetText("Skuly Layout")
+		f.Desc1:SetText(L["Choose a starting layout. You can customize it afterward."])
+		f.Desc2:SetText(L["Applying resets unit frames and movers; presets may also change bars and panels."])
+		f:Size(550, 455)
+
+		for _, card in ipairs(f.LayoutCards) do
+			card:Show()
+			local selected = E.db.layoutSet == card.layout or (card.layout == "balanced" and E.db.layoutSet == "tank")
+			card.selected:SetText(selected and L["Selected"] or "")
+		end
 	elseif PageNum == 7 then
 		f.SubTitle:SetText(L["Auras"])
 		f.Desc1:SetText(L["Select the type of aura system you want to use with ElvUI's unitframes. Set to Aura Bar & Icons to use both aura bars and icons, set to icons only to only see icons."])
@@ -1248,6 +1615,90 @@ function E:Install()
 		end)
 		S:HandleButton(f.Option4, true)
 
+		f.LayoutCards = {}
+		local layouts = {
+			{"balanced", L["Balanced"], L["Split player and target frames with centered cast bars and clear space between them."]},
+			{"tank", L["Tank"], L["Threat-focused frames stay low while shorter cast bars sit above each frame."]},
+			{"melee", L["Melee"], L["Player and target frames flank separate center lanes for their cast bars."]},
+			{"dpsCaster", L["Caster DPS"], L["Wide cast bars line up above their matching player and target frames."]},
+			{"healer", L["Healer"], L["Party and raid frames use a dedicated left column; cast bars align above player and target."]},
+			{"raid10", L["Raid 10"], L["A compact 10-player grid sits above chat, clear of your player and target frames."]},
+			{"raid25", L["Raid 25"], L["Raid and raid-40 grids use separate anchors and switch by roster size."]},
+			{"arena", L["Arena"], L["Arena opponents sit upper-left, away from player and target frames."]},
+			{"battleground", L["Battleground"], L["Compact raid grids stay above chat and leave the lower combat area open."]},
+			{"dungeon", L["Dungeon"], L["A dedicated party-frame column adds larger health bars, auras, and healing prediction."]},
+			{"questing", L["Questing"], L["Player and target frames sit closer to center, with a more prominent target nameplate."]},
+			{"pet", L["Pet Class"], L["Pet and pet-target frames sit beneath the player; the pet action bar stays at the right edge."]},
+			{"minimal", L["Minimal"], L["Uses default frame and action-bar positions and settings."]},
+			{"compact", L["Compact"], L["Smaller frames and action buttons use a tighter, centered arrangement."]},
+			{"skulytheme", L["Skuly's Personal Layout"], L["Apply Skuly's custom arrangement and settings."]},
+		}
+
+		for index, info in ipairs(layouts) do
+			local layoutID, layoutTitle, layoutDescription = info[1], info[2], info[3]
+			local card = CreateFrame("Button", nil, f, "UIPanelButtonTemplate")
+			local column = (index - 1) % 5
+			local row = math.floor((index - 1) / 5)
+			card:Size(100, 64)
+			card:Point("TOPLEFT", f, "TOPLEFT", 14 + (column * 104), -145 - (row * 72))
+			card.layout = layoutID
+			S:HandleButton(card, true)
+
+			card.title = card:CreateFontString(nil, "OVERLAY")
+			card.title:FontTemplate(nil, 11, "OUTLINE")
+			card.title:Point("TOPLEFT", 5, -7)
+			card.title:Point("TOPRIGHT", -5, -7)
+			card.title:SetHeight(38)
+			card.title:SetJustifyH("CENTER")
+			card.title:SetJustifyV("MIDDLE")
+			card.title:SetWordWrap(true)
+			card.title:SetText(layoutTitle)
+
+			card.selected = card:CreateFontString(nil, "OVERLAY")
+			card.selected:FontTemplate(nil, 10, "OUTLINE")
+			card.selected:Point("BOTTOM", 0, 6)
+
+			card:HookScript("OnEnter", function(self)
+				GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+				if not layoutTooltipState then
+					local r, g, b, a = GameTooltip:GetBackdropColor()
+					layoutTooltipState = {
+						strata = GameTooltip:GetFrameStrata(),
+						level = GameTooltip:GetFrameLevel(),
+						r = r, g = g, b = b, a = a,
+					}
+				end
+				GameTooltip:SetFrameStrata("TOOLTIP")
+				GameTooltip:SetFrameLevel(self:GetFrameLevel() + 100)
+				GameTooltip:SetBackdropColor(0, 0, 0, 1)
+				GameTooltip:SetText(layoutTitle, 0, 1, 0)
+				GameTooltip:AddLine(layoutDescription, 0, 1, 0, true)
+				GameTooltip:AddLine(L["Click to apply this layout."], 0, 1, 0, true)
+				GameTooltip:Show()
+			end)
+			card:HookScript("OnLeave", function()
+				GameTooltip:Hide()
+				if layoutTooltipState then
+					GameTooltip:SetFrameStrata(layoutTooltipState.strata)
+					GameTooltip:SetFrameLevel(layoutTooltipState.level)
+					GameTooltip:SetBackdropColor(layoutTooltipState.r, layoutTooltipState.g, layoutTooltipState.b, layoutTooltipState.a)
+					layoutTooltipState = nil
+				end
+			end)
+
+			card:SetScript("OnClick", function(self)
+				E.db.layoutSet = nil
+				E:SetupLayout(self.layout)
+				for _, layoutCard in ipairs(f.LayoutCards) do
+					local isSelected = E.db.layoutSet == layoutCard.layout
+						or (layoutCard.layout == "balanced" and E.db.layoutSet == "tank")
+					layoutCard.selected:SetText(isSelected and L["Selected"] or "")
+				end
+			end)
+
+			f.LayoutCards[index] = card
+		end
+
 		f.SubTitle = f:CreateFontString(nil, "OVERLAY")
 		f.SubTitle:FontTemplate(nil, 15, nil)
 		f.SubTitle:Point("TOP", 0, -40)
@@ -1272,10 +1723,6 @@ function E:Install()
 		closeButton:SetScript("OnClick", function() f:Hide() end)
 		S:HandleCloseButton(closeButton)
 
-		f.tutorialImage = f:CreateTexture("InstallTutorialImage", "OVERLAY")
-		f.tutorialImage:Size(256, 128)
-		f.tutorialImage:SetTexture(E.Media.Textures.Logo)
-		f.tutorialImage:Point("BOTTOM", 0, 70)
 	end
 
 	ElvUIInstallFrame:Show()
