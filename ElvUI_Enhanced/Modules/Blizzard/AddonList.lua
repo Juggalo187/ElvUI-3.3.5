@@ -83,6 +83,7 @@ local function AddonList_Update()
 		entry = _G["ElvUI_AddonListEntry"..i]
 
 		if addonIndex > numEntries then
+			entry.id = nil
 			entry:Hide()
 		else
 			local name, title, _, enabled, loadable, reason = GetAddOnInfo(addonIndex)
@@ -188,6 +189,8 @@ local function AddonTooltip_BuildDeps(...)
 end
 
 local function AddonTooltip_Update(self)
+	if not self or not self.id then return end
+
 	local name, title, notes, _, _, security = GetAddOnInfo(self.id)
 	if not name then return end
 
@@ -321,7 +324,14 @@ function mod:AddonList()
 		AddonList_Update()
 
 		if GameTooltip:IsShown() then
-			AddonTooltip_Update(GameTooltip:GetOwner())
+			local owner = GameTooltip:GetOwner()
+			if owner and owner:GetParent() == self then
+				if owner.id then
+					AddonTooltip_Update(owner)
+				else
+					GameTooltip:Hide()
+				end
+			end
 		end
 	end)
 
