@@ -8,6 +8,7 @@
 
 local E, L, V, P, G = unpack(ElvUI)
 local QGT = E:GetModule("ElvUI_QuestTracker")
+local S = E:GetModule("Skins")
 
 -- ============================================================
 --  QuestWatch: main update
@@ -378,6 +379,23 @@ function QGT_QuestWatch_Update()
 						QGT_WATCHFRAME_NUM_ITEMS = watchItemIndex;
 						itemButton = CreateFrame("BUTTON", "WatchFrameItem" .. watchItemIndex, QGT_QuestWatchFrame, "WatchFrameItemButtonTemplate");
 						itemButton:SetScript("OnLeave", WatchFrameItem_OnLeave);
+					end
+					if not itemButton.isSkinned then
+						local icon = _G["WatchFrameItem"..watchItemIndex.."IconTexture"]
+						local normal = _G["WatchFrameItem"..watchItemIndex.."NormalTexture"]
+						local cooldown = _G["WatchFrameItem"..watchItemIndex.."Cooldown"]
+
+						itemButton:CreateBackdrop()
+						itemButton.backdrop:SetAllPoints()
+						itemButton:StyleButton()
+						itemButton:Size(25)
+
+						normal:SetAlpha(0)
+						icon:SetInside()
+						icon:SetTexCoord(unpack(E.TexCoords))
+						E:RegisterCooldown(cooldown)
+
+						itemButton.isSkinned = true
 					end
 					itemButton:Show();
 					itemButton:ClearAllPoints();

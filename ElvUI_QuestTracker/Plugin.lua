@@ -59,6 +59,13 @@ function QGT_SetQuestWatchBorder(enabled)
 	QGT_QuestWatchFrame:SetBackdropColor(0, 0, 0, QGT_Settings.Alpha or 0.7)
 end
 
+function QGT_SetTrackerAlpha(alpha)
+	QGT_QuestWatchFrame:SetBackdropColor(0, 0, 0, alpha)
+	QGT_QuestWatchFrameBackground:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0.3, 0.3, 0.3, alpha)
+	QGT_AchievementWatchFrame:SetBackdropColor(0, 0, 0, alpha)
+	QGT_AchievementWatchFrameBackground:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0.3, 0.3, 0.3, alpha)
+end
+
 -- ============================================================
 --  FRAME CREATION
 -- ============================================================
@@ -734,8 +741,7 @@ function QGT_SetTrackerDefaults()
 	QGT_Settings.AchievementWatch.Minimized = false
 
 	QGT_Settings.Alpha = 0.7
-	QGT_QuestWatchFrame:SetBackdropColor(0, 0, 0, QGT_Settings.Alpha)
-	QGT_AchievementWatchFrame:SetBackdropColor(0, 0, 0, QGT_Settings.Alpha)
+	QGT_SetTrackerAlpha(QGT_Settings.Alpha)
 
 	QGT_Settings.ShowHeaders = true
 	QGT_Settings.QuestItemIcons = true
@@ -851,8 +857,7 @@ function QGT_QuestWatchLoadSettings()
 	if (QGT_Settings.Alpha == nil) then
 		QGT_Settings.Alpha = 0.7
 	end
-	QGT_QuestWatchFrame:SetBackdropColor(0, 0, 0, QGT_Settings.Alpha)
-	QGT_AchievementWatchFrame:SetBackdropColor(0, 0, 0, QGT_Settings.Alpha)
+	QGT_SetTrackerAlpha(QGT_Settings.Alpha)
 
 	if (QGT_Settings.ShowHeaders ~= false) then
 		QGT_Settings.ShowHeaders = true

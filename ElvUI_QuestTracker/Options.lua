@@ -91,10 +91,7 @@ function QGT:GetOptions()
 				get = function() return db.Alpha end,
 				set = function(_, v)
 					db.Alpha = v
-					QGT_QuestWatchFrame:SetBackdropColor(0, 0, 0, v)
-					QGT_QuestWatchFrameBackground:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0.3, 0.3, 0.3, v)
-					QGT_AchievementWatchFrame:SetBackdropColor(0, 0, 0, v)
-					QGT_AchievementWatchFrameBackground:SetGradientAlpha("VERTICAL", 0, 0, 0, 0, 0.3, 0.3, 0.3, v)
+					QGT_SetTrackerAlpha(v)
 				end,
 			},
             Scale = {
