@@ -510,8 +510,14 @@ S:AddCallbackForAddon("Auctionator", "Auctionator", function()
 
 		if Atr_Search_Box then S:HandleEditBox(Atr_Search_Box) end
 		if Atr_Search_Button then S:HandleButton(Atr_Search_Button) end
-		if Atr_Adv_Search_Button then S:HandleButton(Atr_Adv_Search_Button) end
-		if Atr_Adv_Search_CB then S:HandleCheckBox(Atr_Adv_Search_CB) end
+		if Atr_Adv_Search_CB then
+			S:HandleButton(Atr_Adv_Search_CB, true)
+			Atr_Adv_Search_CB:Size(78, 22)
+			if Atr_Adv_Search_Label then
+				Atr_Adv_Search_Label:ClearAllPoints()
+				Atr_Adv_Search_Label:Point("CENTER")
+			end
+		end
 		if Atr_Exact_Search_Button then S:HandleButton(Atr_Exact_Search_Button) end
 		
 		if Atr_Search_ClearBut then 
@@ -523,11 +529,8 @@ S:AddCallbackForAddon("Auctionator", "Auctionator", function()
 			Atr_Search_Button:Point("LEFT", Atr_Search_Box, "RIGHT", 6, 0)
 		end
 
-		if Atr_Adv_Search_Button then
-			Atr_Adv_Search_Button:Height(22)
-			if Atr_Search_Button then
-				Atr_Adv_Search_Button:Point("LEFT", Atr_Search_Button, "RIGHT", 5, 0)
-			end
+		if Atr_Adv_Search_CB and Atr_Search_Button then
+			Atr_Adv_Search_CB:Point("LEFT", Atr_Search_Button, "RIGHT", 5, 0)
 		end
 
 		-- Shopping List Buttons

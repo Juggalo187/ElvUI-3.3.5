@@ -14,10 +14,18 @@ local expertise
 local displayString = ""
 local lastPanel
 
-local function OnEvent(self)
-    lastPanel = self
+local function UpdateExpertise(self)
     expertise = GetExpertise()
     self.text:SetFormattedText(displayString, expertise)
+end
+
+local function OnEvent(self, event)
+    lastPanel = self
+    UpdateExpertise(self)
+
+    if event == "PLAYER_ENTERING_WORLD" then
+        E:Delay(1, UpdateExpertise, self)
+    end
 end
 
 local function OnEnter(self)
@@ -43,4 +51,4 @@ local function ValueColorUpdate(hex)
 end
 E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
-DT:RegisterDatatext("Expertise", {"COMBAT_RATING_UPDATE", "PLAYER_ENTERING_WORLD"}, OnEvent, nil, nil, OnEnter, nil, L["Expertise"])
+DT:RegisterDatatext("Expertise", {"COMBAT_RATING_UPDATE", "PLAYER_ENTERING_WORLD", "PLAYER_EQUIPMENT_CHANGED"}, OnEvent, nil, nil, OnEnter, nil, L["Expertise"])
