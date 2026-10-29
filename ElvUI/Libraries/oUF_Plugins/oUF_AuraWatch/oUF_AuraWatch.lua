@@ -295,8 +295,13 @@ local function Update(self, event, unit)
 		else
 			if element.strictMatching then
 				key = spellID
-			else
+			elseif texture then
 				key = name..texture
+			elseif spellID then
+				local _, _, spellTexture = GetSpellInfo(spellID)
+				key = spellTexture and name..spellTexture
+			else
+				key = nil
 			end
 
 			icon = icons[key]
